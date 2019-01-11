@@ -9,14 +9,15 @@ import javafx.scene.control.CheckBox;
 import javafx.stage.Stage;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Controller;
 import wat.semestr7.bachelor.mvc.controller.ProfitableOffersController;
 import wat.semestr7.bachelor.mvc.controller.PropertiesController;
 
 import java.util.HashSet;
 import java.util.Set;
 
-@Component
-public class SelectedCurrenciesController {
+@Controller
+public class SelectedCurrenciesFxmlController {
     @Autowired
     private PropertiesController propertiesController;
     @Autowired
@@ -122,7 +123,7 @@ public class SelectedCurrenciesController {
         Alert alert = new Alert(Alert.AlertType.ERROR);
         alert.setTitle("Błąd!");
         alert.setContentText("Wybierz przynajmniej jedną parę walutową.");
-        alert.setHeaderText("Header");
+        alert.setHeaderText("Nie zaznaczono żadnej pary walutowej.");
         alert.showAndWait();
     }
 }

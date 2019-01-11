@@ -1,5 +1,6 @@
 package wat.semestr7.bachelor.mvc.view.profitable;
 
+import javafx.scene.layout.VBox;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import wat.semestr7.bachelor.mvc.controller.PropertiesController;
@@ -11,7 +12,7 @@ import java.util.Set;
 import java.util.function.Predicate;
 
 @Component
-public class ProfitableOffersView
+public class ProfitableOffersView extends VBox
 {
     @Autowired
     private PropertiesController propertiesController;
