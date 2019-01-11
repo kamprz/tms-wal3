@@ -16,6 +16,7 @@ import wat.semestr7.bachelor.mvc.model.crawling.formatter.CurrencyDto;
 
 import javax.annotation.PostConstruct;
 import java.util.*;
+import java.util.stream.Collectors;
 
 @Component()
 @Scope("singleton")
@@ -58,65 +59,72 @@ public class AllOffersView extends GridPane {
 
     public void open()
     {
+        getChildren().clear();
+        setAlignment(Pos.CENTER);
+        this.setPadding(new Insets(10));
+
         Set<String> selectedCurrencies = allOffersController.getSelectedCurrencies();
         List<String> pln = new LinkedList<>();
         List<String> foreign = new LinkedList<>();
+        singleCurrencyViews = new HashMap<>();
+
         for(String str : selectedCurrencies)
         {
             if(str.toLowerCase().contains("pln")) pln.add(str);
             else foreign.add(str);
         }
-        foreign.remove("EURUSD");
-        pln.add("EURUSD");
-
-        singleCurrencyViews = new HashMap<>();
 
         for(String symbol : selectedCurrencies)
         {
             SingleCurrencyView singleCurrencyView = new SingleCurrencyView(symbol,5);
             singleCurrencyViews.put(symbol, singleCurrencyView);
-
         }
 
-        /*for(int i =0; i< 2; i++)
+        //stage.setHeight();
+        while(Math.abs(pln.size() - foreign.size()) > 1)
         {
-            ColumnConstraints constraints = new ColumnConstraints(945);
-            getColumnConstraints().add(constraints);
-        }*/
+            if(pln.size() > foreign.size())
+            {
+                String removed = pln.remove(pln.size() - 1);
+                foreign.add(0,removed);
+            }
+            else
+            {
+                String removed = foreign.remove(foreign.size() - 1);
+                pln.add(removed);
+            }
+        }
+        Collections.sort(pln);
+        Collections.sort(foreign);
+        for(int i=0;i<pln.size();i++)
+        {
+            this.add(singleCurrencyViews.get(pln.get(i)),0,i);
+        }
 
-        setAlignment(Pos.CENTER);
-
-        this.addColumn(0,
-                singleCurrencyViews.get("EURPLN"),
-                singleCurrencyViews.get("USDPLN"),
-                singleCurrencyViews.get("CHFPLN"),
-                singleCurrencyViews.get("GBPPLN"),
-                singleCurrencyViews.get("EURUSD"));
-        this.addColumn(1,
-                singleCurrencyViews.get("EURGBP"),
-                singleCurrencyViews.get("EURCHF"),
-                singleCurrencyViews.get("GBPUSD"),
-                singleCurrencyViews.get("USDCHF"),
-                singleCurrencyViews.get("GBPCHF"));
-
-        this.setPadding(new Insets(10));
-        setStage();
+        for(int i=0;i<foreign.size();i++)
+        {
+            this.add(singleCurrencyViews.get(foreign.get(i)),1,i);
+        }
+        int rows, columns;
+        if(pln.size() + foreign.size() > 1) columns = 2;
+        else columns = 1;
+        rows = pln.size()>foreign.size() ? pln.size() : foreign.size();
+        setStage(columns,rows);
     }
 
-    private void setStage()
+    private void setStage(int columns, int rows)
     {
         if(stage==null)   stage = new Stage();
         else stage.show();
         stage.setTitle("All offers");
         AnchorPane pane = new AnchorPane();
         pane.getChildren().add(this);
-
         //pane.setMinWidth(940);
         //pane.setMinHeight(230);
-        stage.setMinWidth(950);
-        stage.setHeight(210);
-        stage.setScene(new Scene(pane, 300, 275));
-        stage.setMaximized(true);
+        stage.setMinWidth(475 * columns);
+        int bonusHeight = 55;
+        stage.setHeight(205 * rows + bonusHeight);
+        stage.setScene(new Scene(pane));
         // primaryStage.setFullScreen(true);
         stage.show();
     }

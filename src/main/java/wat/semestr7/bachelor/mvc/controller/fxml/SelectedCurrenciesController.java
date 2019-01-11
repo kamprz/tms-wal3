@@ -61,7 +61,7 @@ public class SelectedCurrenciesController {
             propertiesController.setSelectedCurrencies(selected);
             profitableOffersController.openProfitableView();
             Stage stage = (Stage) selectButton.getScene().getWindow();
-            stage.close();
+            //stage.close();
         };
         selectButton.addEventHandler(ActionEvent.ANY, handler);
     }

@@ -29,6 +29,8 @@ public class SingleCurrencyView extends HBox {
     private int numberOfOffers;
     private ObservableList<OfferView> buyOffers = FXCollections.observableArrayList();
     private ObservableList<OfferView> sellOffers = FXCollections.observableArrayList();
+    private int height = 200;
+    private int width = 910;
 
     public SingleCurrencyView(String symbol, int numberOfOffers)
     {
@@ -46,8 +48,8 @@ public class SingleCurrencyView extends HBox {
     {
         this.setPadding(new Insets(10));
         this.setSpacing(10);
-        this.setMaxHeight(170);
-        this.setMinWidth(910);
+        this.setMaxHeight(height);
+        this.setMinWidth(width);
         this.setBorder(new Border(new BorderStroke(Color.BLACK,
                 BorderStrokeStyle.SOLID, CornerRadii.EMPTY, BorderWidths.DEFAULT)));
 
