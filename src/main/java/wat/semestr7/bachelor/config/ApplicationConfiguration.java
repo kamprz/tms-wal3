@@ -37,11 +37,9 @@ public class ApplicationConfiguration extends Application {
 
 	@Override
 	public void start(Stage primaryStage) throws Exception {
-		Rectangle2D visualBounds = Screen.getPrimary().getVisualBounds();
-		double width = visualBounds.getWidth();
-		double height = visualBounds.getHeight();
 
-		primaryStage.setScene(new Scene(rootNode, width, height));
+
+		primaryStage.setScene(new Scene(rootNode));
 		primaryStage.centerOnScreen();
 		primaryStage.show();
 

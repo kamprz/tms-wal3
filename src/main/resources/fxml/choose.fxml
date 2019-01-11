@@ -11,21 +11,21 @@
 <?import javafx.scene.shape.Line?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/8.0.172-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="wat.semestr7.bachelor.mvc.controller.fxml.SelectedCurrenciesController">
+<AnchorPane prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/8.0.121" xmlns:fx="http://javafx.com/fxml/1" fx:controller="wat.semestr7.bachelor.mvc.controller.fxml.SelectedCurrenciesController">
    <children>
-      <CheckBox fx:id="chEURPLN" layoutX="77.0" layoutY="212.0" mnemonicParsing="false" text="EUR / PLN">
+      <CheckBox fx:id="chEURPLN" layoutX="41.0" layoutY="212.0" mnemonicParsing="false" text="EUR / PLN">
          <effect>
             <SepiaTone />
          </effect></CheckBox>
-      <CheckBox fx:id="chUSDPLN" layoutX="77.0" layoutY="250.0" mnemonicParsing="false" text="USD / PLN">
+      <CheckBox fx:id="chUSDPLN" layoutX="41.0" layoutY="250.0" mnemonicParsing="false" text="USD / PLN">
          <effect>
             <SepiaTone />
          </effect></CheckBox>
-      <CheckBox fx:id="chCHFPLN" layoutX="77.0" layoutY="287.0" mnemonicParsing="false" text="CHF / PLN">
+      <CheckBox fx:id="chCHFPLN" layoutX="164.0" layoutY="212.0" mnemonicParsing="false" text="CHF / PLN">
          <effect>
             <SepiaTone />
          </effect></CheckBox>
-      <CheckBox fx:id="chGBPPLN" layoutX="77.0" layoutY="325.0" mnemonicParsing="false" text="GBP / PLN">
+      <CheckBox fx:id="chGBPPLN" layoutX="164.0" layoutY="250.0" mnemonicParsing="false" text="GBP / PLN">
          <effect>
             <SepiaTone />
          </effect></CheckBox>
@@ -55,7 +55,7 @@
          </effect></CheckBox>
       <Label layoutX="70.0" layoutY="159.0" prefHeight="32.0" prefWidth="161.0" text="Pary złotówkowe" />
       <Label layoutX="336.0" layoutY="159.0" prefHeight="32.0" prefWidth="161.0" text="Inne pary walutowe" />
-      <Label layoutX="139.0" layoutY="84.0" prefHeight="85.0" prefWidth="363.0" text="Wybierz pary walutowe do obserwowania" textFill="#5e2222">
+      <Label layoutX="138.0" layoutY="59.0" prefHeight="85.0" prefWidth="363.0" text="Wybierz pary walutowe do obserwowania" textFill="#5e2222">
          <font>
             <Font size="17.0" />
          </font>
@@ -68,7 +68,16 @@
       </Label>
       <Line endX="100.0" layoutX="151.0" layoutY="192.0" startX="-100.0" />
       <Line endX="100.0" layoutX="400.0" layoutY="192.0" startX="-100.0" />
-      <Button fx:id="selectButton" layoutX="440.0" layoutY="336.0" mnemonicParsing="false" prefHeight="32.0" prefWidth="96.0" text="Wybierz">
+      <Button fx:id="selectButton" layoutX="438.0" layoutY="337.0" mnemonicParsing="false" prefHeight="32.0" prefWidth="96.0" text="Wybierz">
+         <effect>
+            <ColorAdjust />
+         </effect></Button>
+      <Button fx:id="selectAll" layoutX="61.0" layoutY="337.0" mnemonicParsing="false" prefHeight="32.0" text="Zaznacz wszystkie">
+         <effect>
+            <ColorAdjust />
+         </effect>
+      </Button>
+      <Button fx:id="disselectAll" layoutX="248.0" layoutY="337.0" mnemonicParsing="false" prefHeight="32.0" text="Odznacz wszystkie" >
          <effect>
             <ColorAdjust />
          </effect></Button>
