@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.CheckBox?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.effect.ColorAdjust?>
+<?import javafx.scene.effect.InnerShadow?>
+<?import javafx.scene.effect.SepiaTone?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.shape.Line?>
+<?import javafx.scene.text.Font?>
+
+<AnchorPane prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/8.0.172-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="wat.semestr7.bachelor.mvc.controller.fxml.SelectedCurrenciesController">
+   <children>
+      <CheckBox fx:id="chEURPLN" layoutX="77.0" layoutY="212.0" mnemonicParsing="false" text="EUR / PLN">
+         <effect>
+            <SepiaTone />
+         </effect></CheckBox>
+      <CheckBox fx:id="chUSDPLN" layoutX="77.0" layoutY="250.0" mnemonicParsing="false" text="USD / PLN">
+         <effect>
+            <SepiaTone />
+         </effect></CheckBox>
+      <CheckBox fx:id="chCHFPLN" layoutX="77.0" layoutY="287.0" mnemonicParsing="false" text="CHF / PLN">
+         <effect>
+            <SepiaTone />
+         </effect></CheckBox>
+      <CheckBox fx:id="chGBPPLN" layoutX="77.0" layoutY="325.0" mnemonicParsing="false" text="GBP / PLN">
+         <effect>
+            <SepiaTone />
+         </effect></CheckBox>
+      <CheckBox fx:id="chEURCHF" layoutX="303.0" layoutY="288.0" mnemonicParsing="false" text="EUR / CHF">
+         <effect>
+            <SepiaTone />
+         </effect></CheckBox>
+      <CheckBox fx:id="chEURGBP" layoutX="303.0" layoutY="251.0" mnemonicParsing="false" text="EUR / GBP">
+         <effect>
+            <SepiaTone />
+         </effect></CheckBox>
+      <CheckBox fx:id="chEURUSD" layoutX="303.0" layoutY="213.0" mnemonicParsing="false" text="EUR / USD">
+         <effect>
+            <SepiaTone />
+         </effect></CheckBox>
+      <CheckBox fx:id="chGBPUSD" layoutX="423.0" layoutY="212.0" mnemonicParsing="false" text="GBP / USD">
+         <effect>
+            <SepiaTone />
+         </effect></CheckBox>
+      <CheckBox fx:id="chUSDCHF" layoutX="423.0" layoutY="250.0" mnemonicParsing="false" text="USD / CHF">
+         <effect>
+            <SepiaTone />
+         </effect></CheckBox>
+      <CheckBox fx:id="chGBPCHF" layoutX="423.0" layoutY="287.0" mnemonicParsing="false" text="GBP / CHF">
+         <effect>
+            <SepiaTone />
+         </effect></CheckBox>
+      <Label layoutX="70.0" layoutY="159.0" prefHeight="32.0" prefWidth="161.0" text="Pary złotówkowe" />
+      <Label layoutX="336.0" layoutY="159.0" prefHeight="32.0" prefWidth="161.0" text="Inne pary walutowe" />
+      <Label layoutX="139.0" layoutY="84.0" prefHeight="85.0" prefWidth="363.0" text="Wybierz pary walutowe do obserwowania" textFill="#5e2222">
+         <font>
+            <Font size="17.0" />
+         </font>
+      </Label>
+      <ImageView fitHeight="150.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true" />
+      <Label layoutX="14.0" layoutY="4.0" prefHeight="66.0" prefWidth="583.0" text="Walutomat Observer">
+         <font>
+            <Font size="24.0" />
+         </font>
+      </Label>
+      <Line endX="100.0" layoutX="151.0" layoutY="192.0" startX="-100.0" />
+      <Line endX="100.0" layoutX="400.0" layoutY="192.0" startX="-100.0" />
+      <Button fx:id="selectButton" layoutX="440.0" layoutY="336.0" mnemonicParsing="false" prefHeight="32.0" prefWidth="96.0" text="Wybierz">
+         <effect>
+            <ColorAdjust />
+         </effect></Button>
+   </children>
+   <effect>
+      <InnerShadow />
+   </effect>
+</AnchorPane>
