@@ -41,8 +41,7 @@ public class Formatter {
     }
 
     private WalutomatDataFrame getWalutomatOffersDataFrame(String walutomatOffersJsonString) throws IOException {
-        int howManyOffers = Integer.parseInt(propertiesController.getProperties().getProperty("offers"));
-        return new WalutomatDataFrame(objectMapper.readValue(walutomatOffersJsonString,WalutomatJsonHolder.class), howManyOffers);
+        return new WalutomatDataFrame(objectMapper.readValue(walutomatOffersJsonString,WalutomatJsonHolder.class));
     }
 
 }

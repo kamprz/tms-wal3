@@ -1,5 +1,7 @@
 package wat.semestr7.bachelor.mvc.controller;
 
+import javafx.scene.Parent;
+import javafx.scene.layout.VBox;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import wat.semestr7.bachelor.listener.NewDataListener;
@@ -28,6 +30,9 @@ public class ProfitableOffersController implements NewDataListener
     @Autowired
     private AllOffersController allOffersController;
 
+    public ProfitableOffersController() {
+    }
+
     @PostConstruct
     private void subscribe()
     {
@@ -36,11 +41,12 @@ public class ProfitableOffersController implements NewDataListener
 
     @Override
     public void newDataReceived(Map<String, CurrencyDto> newData) {
-        profitableOffersView.newDataReceivedSignal();
-        List<ProfitableOfferDto> profitableOffers = profitSearcher.getProfitableOffers(newData);
-
-        if(!profitableOffers.isEmpty())
+        System.out.println("new data");
+        if(profitableOffersView.isOpened())
         {
+            System.out.println("Prof new data");
+            profitableOffersView.newDataReceivedSignal();
+            List<ProfitableOfferDto> profitableOffers = profitSearcher.getProfitableOffers(newData);
             profitableOffersView.updateProfitableCurrencies(getProfitableCurrencies(profitableOffers));
             profitableOffersView.updateProfitableOffers(profitableOffers);
         }
@@ -59,15 +65,5 @@ public class ProfitableOffersController implements NewDataListener
             set.add(offer.getSymbol());
         }
         return set;
-    }
-
-    public void openAllOffersView()
-    {
-
-    }
-
-    public void openProfitableView()
-    {
-        allOffersController.openView();
     }
 }

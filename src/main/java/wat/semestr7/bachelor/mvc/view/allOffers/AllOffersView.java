@@ -3,6 +3,7 @@ package wat.semestr7.bachelor.mvc.view.allOffers;
 
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
+import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Label;
 import javafx.scene.layout.AnchorPane;
@@ -26,22 +27,16 @@ public class AllOffersView extends GridPane {
     private Map<String, SingleCurrencyView> singleCurrencyViews;
     private Stage stage;
 
-    @PostConstruct
-    private void init()
-    {
-        System.out.println("Creating AllOffersView");
-    }
-
     private int counter = 1;
     private long lastTimeMilis = 0;
+    private boolean isOpened = false;
 
     public void printData(Map<String, CurrencyDto> newData)
     {
-        //if(singleCurrencyViews ==null) open();
-        if(counter %10 == 0)
+        if(counter %1 == 0)
         {
             long now = System.currentTimeMillis();
-            System.out.println("\nAllOffersView : " + counter + ". Data received. Time from last tick : " + (now - lastTimeMilis)/1000 + "s. Current time = " + new Date());
+            System.out.println("AllOffersView : " + counter + ". Data received. Time from last tick : " + (now - lastTimeMilis)/1000 + "s. Current time = " + new Date());
             lastTimeMilis = now;
         }
         counter++;
@@ -54,6 +49,7 @@ public class AllOffersView extends GridPane {
     public void close()
     {
         stage.close();
+        isOpened=false;
     }
 
 
@@ -76,7 +72,7 @@ public class AllOffersView extends GridPane {
 
         for(String symbol : selectedCurrencies)
         {
-            SingleCurrencyView singleCurrencyView = new SingleCurrencyView(symbol,5);
+            SingleCurrencyView singleCurrencyView = new SingleCurrencyView(symbol);
             singleCurrencyViews.put(symbol, singleCurrencyView);
         }
 
@@ -110,6 +106,7 @@ public class AllOffersView extends GridPane {
         else columns = 1;
         rows = pln.size()>foreign.size() ? pln.size() : foreign.size();
         setStage(columns,rows);
+        isOpened=true;
     }
 
     private void setStage(int columns, int rows)
@@ -127,5 +124,9 @@ public class AllOffersView extends GridPane {
         stage.setScene(new Scene(pane));
         // primaryStage.setFullScreen(true);
         stage.show();
+    }
+
+    public boolean isOpened() {
+        return isOpened;
     }
 }

@@ -10,9 +10,9 @@ import java.util.Map;
 @Data
 public class WalutomatDataFrame
 {
-    private int howManyOffers;
     private Map<String, WalutomatOffers> currencies = new HashMap<>();
-    public WalutomatDataFrame(WalutomatJsonHolder pojo, int howManyOffers)
+    private int howManyOffers = 5;
+    public WalutomatDataFrame(WalutomatJsonHolder pojo)
     {
         currencies.put("EURPLN", new WalutomatOffers(pojo.bidEURPLN,pojo.askEURPLN));
         currencies.put("USDPLN", new WalutomatOffers(pojo.bidUSDPLN,pojo.askUSDPLN));
@@ -25,8 +25,6 @@ public class WalutomatDataFrame
         currencies.put("GBPUSD", new WalutomatOffers(pojo.bidGBPUSD,pojo.askGBPUSD));
         currencies.put("USDCHF", new WalutomatOffers(pojo.bidUSDCHF,pojo.askUSDCHF));
         currencies.put("GBPCHF", new WalutomatOffers(pojo.bidGBPCHF,pojo.askGBPCHF));
-
-        this.howManyOffers = howManyOffers;
     }
     public WalutomatOffers getCurrency(String symbol)
     {

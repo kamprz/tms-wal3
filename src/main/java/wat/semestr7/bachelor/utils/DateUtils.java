@@ -7,9 +7,14 @@ public class DateUtils
 {
     public static String transformOffersDate(WalutomatOffer offer)
     {
-        String date = offer.getSince();
-        String day = date.substring(0,date.indexOf("T"));
-        String time = date.substring(date.indexOf("T")+1,date.indexOf("."));
-        return day + " " + time;
+        try{
+            String date = offer.getSince();
+            String day = date.substring(0,date.indexOf("T"));
+            String time = date.substring(date.indexOf("T")+1,date.indexOf("."));
+            return day + " " + time;
+        }
+        catch(Exception e){
+            return "";
+        }
     }
 }

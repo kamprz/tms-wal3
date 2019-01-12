@@ -12,6 +12,8 @@
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
+<?import javafx.scene.paint.RadialGradient?>
+<?import javafx.scene.paint.Stop?>
 <?import javafx.scene.shape.Circle?>
 <?import javafx.scene.shape.Line?>
 <?import javafx.scene.text.Font?>
@@ -258,6 +260,20 @@
           <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="200.0" prefWidth="200.0">
                <children>
                   <ListView fx:id="listView" prefHeight="200.0" prefWidth="681.0" />
+                  <Circle layoutX="123.0" layoutY="100.0" radius="100.0" stroke="BLACK" strokeType="INSIDE">
+                     <fill>
+                        <RadialGradient centerX="0.5113636363636364" centerY="0.5" radius="0.5">
+                           <stops>
+                              <Stop color="BLACK" />
+                              <Stop color="#2a1382" offset="0.007246376811594203" />
+                              <Stop color="#68cfd9" offset="0.39492753623188404" />
+                              <Stop color="#69d0db" offset="0.7282608695652174" />
+                              <Stop color="WHITE" offset="1.0" />
+                           </stops>
+                        </RadialGradient>
+                     </fill>
+                  </Circle>
+                  <Circle fill="#fdfff3" layoutX="323.0" layoutY="86.0" radius="100.0" stroke="BLACK" strokeType="INSIDE" />
                </children>
             </AnchorPane>
         </content>

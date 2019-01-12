@@ -26,13 +26,12 @@ public class SingleCurrencyView extends HBox {
     private Label tmsBid;
     private Label tmsAsk;
     private TableView<OfferView> rightBuyOffers; //to sell by me
-    private int numberOfOffers;
     private ObservableList<OfferView> buyOffers = FXCollections.observableArrayList();
     private ObservableList<OfferView> sellOffers = FXCollections.observableArrayList();
     private int height = 200;
     private int width = 910;
 
-    public SingleCurrencyView(String symbol, int numberOfOffers)
+    public SingleCurrencyView(String symbol)
     {
         super();
         leftSellOffers = new TableView();
@@ -41,7 +40,6 @@ public class SingleCurrencyView extends HBox {
         this.symbol = new Label(symbol);
         tmsAsk = new Label();
         tmsBid = new Label();
-        this.numberOfOffers = numberOfOffers;
         init();
     }
     private void init()

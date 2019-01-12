@@ -28,7 +28,7 @@ public class AllOffersController implements NewDataListener
 
     @Override
     public void newDataReceived(Map<String, CurrencyDto> newData) {
-        view.printData(newData);
+        if(view.isOpened()) view.printData(newData);
     }
 
     public void allOffersViewOpened()

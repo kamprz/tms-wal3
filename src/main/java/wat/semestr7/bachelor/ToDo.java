@@ -6,7 +6,7 @@ public class ToDo
         - Exception handling
             - properties
             - crawling
-
+    platform shoow later w singleoffersview
 
      */
 }

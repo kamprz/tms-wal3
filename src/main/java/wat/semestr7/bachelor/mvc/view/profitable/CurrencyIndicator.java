@@ -5,7 +5,7 @@ import javafx.geometry.Pos;
 import javafx.scene.control.Label;
 import javafx.scene.effect.DropShadow;
 import javafx.scene.layout.HBox;
-import javafx.scene.paint.Paint;
+import javafx.scene.paint.*;
 import javafx.scene.shape.Circle;
 import javafx.scene.shape.StrokeType;
 import javafx.scene.text.Font;
@@ -34,15 +34,20 @@ public class CurrencyIndicator extends HBox {
     private void init()
     {
         currencySymbol.setFont(new Font("Arial",17));
-        circleIndicator.setFill(Paint.valueOf("#1fff3f"));
         circleIndicator.setRadius(20.0);
         circleIndicator.setStroke(Paint.valueOf("#000000"));
         circleIndicator.setStrokeType(StrokeType.INSIDE);
         circleIndicator.setEffect(new DropShadow());
+        turnOff();
+
         setAlignment(Pos.CENTER);
         setPadding(new Insets(30));
         setSpacing(30);
 
         getChildren().addAll(currencySymbol,circleIndicator);
+    }
+    public void setColor(RadialGradient gradient)
+    {
+        circleIndicator.setFill(gradient);
     }
 }
