@@ -11,7 +11,7 @@ import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
-import wat.semestr7.bachelor.mvc.model.crawling.formatter.CurrencyDto;
+import wat.semestr7.bachelor.mvc.model.crawling.CurrencyDto;
 import wat.semestr7.bachelor.mvc.model.crawling.formatter.walutomat.WalutomatOffer;
 import wat.semestr7.bachelor.utils.DateUtils;
 
@@ -62,21 +62,27 @@ public class SingleCurrencyView extends HBox {
         currencyInfo.getChildren().addAll(symbol,tmsBid,tmsAsk);
         this.getChildren().addAll(leftSellOffers,currencyInfo,rightBuyOffers);
         setAlignment(Pos.CENTER);
-        //prawa kupna
     }
 
     public void setData(CurrencyDto dto)
     {
         Platform.runLater(() -> {
-            tmsBid.setText(String.format("%.4f",dto.getTmsBid()).replace(",","."));
-            tmsAsk.setText(String.format("%.4f",dto.getTmsAsk()).replace(",","."));
-            setOffers(dto.getTopAsks(),sellOffers);
-            setOffers(dto.getTopBids(),buyOffers);
-            leftSellOffers.refresh();
-            rightBuyOffers.refresh();
+            try {
+                tmsBid.setText(String.format("%.4f", dto.getTmsBid()).replace(",", "."));
+                tmsAsk.setText(String.format("%.4f", dto.getTmsAsk()).replace(",", "."));
+                setOffers(dto.getTopAsks(), sellOffers);
+                setOffers(dto.getTopBids(), buyOffers);
+                leftSellOffers.refresh();
+                rightBuyOffers.refresh();
+            }
+            catch (Exception e)
+            {
+                System.out.println("Setting data to " + dto.getSymbol() + "tables crashed.");
+                leftSellOffers.refresh();
+                rightBuyOffers.refresh();
+            }
         });
     }
-
 
     private void setTable(String rateString , int columnMinWidth, TableView tableView, ObservableList<OfferView> data)
     {
@@ -100,7 +106,6 @@ public class SingleCurrencyView extends HBox {
         tableView.setEditable(false);
         tableView.setItems(data);
     }
-
 
     private void setOffers(List<WalutomatOffer> offers, ObservableList<OfferView> viewList)
     {

@@ -5,6 +5,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import wat.semestr7.bachelor.exception.ServerJsonFormatChangedException;
 import wat.semestr7.bachelor.mvc.controller.PropertiesController;
+import wat.semestr7.bachelor.mvc.model.crawling.CurrencyDto;
 import wat.semestr7.bachelor.mvc.model.crawling.formatter.tms.TmsDataFrame;
 import wat.semestr7.bachelor.mvc.model.crawling.formatter.tms.TmsJsonHolder;
 import wat.semestr7.bachelor.mvc.model.crawling.formatter.walutomat.WalutomatDataFrame;

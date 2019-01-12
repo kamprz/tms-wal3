@@ -27,8 +27,6 @@ public class OfferView {
         this.since.set(since);
     }
 
-
-
     public String getRate() {
         return rate.get();
     }

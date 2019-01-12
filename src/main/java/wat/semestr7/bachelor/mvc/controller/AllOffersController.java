@@ -3,7 +3,7 @@ package wat.semestr7.bachelor.mvc.controller;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import wat.semestr7.bachelor.listener.NewDataListener;
-import wat.semestr7.bachelor.mvc.model.crawling.formatter.CurrencyDto;
+import wat.semestr7.bachelor.mvc.model.crawling.CurrencyDto;
 import wat.semestr7.bachelor.mvc.view.allOffers.AllOffersView;
 
 import javax.annotation.PostConstruct;
@@ -49,6 +49,10 @@ public class AllOffersController implements NewDataListener
     public void openView()
     {
         view.open();
+    }
+
+    public boolean isOpened(){
+        return view.isOpened();
     }
 
     public Set<String> getSelectedCurrencies()

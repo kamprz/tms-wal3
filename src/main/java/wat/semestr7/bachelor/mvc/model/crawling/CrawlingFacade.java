@@ -6,7 +6,6 @@ import wat.semestr7.bachelor.exception.CrawlingException;
 import wat.semestr7.bachelor.exception.JsonParsingException;
 import wat.semestr7.bachelor.exception.ServerJsonFormatChangedException;
 import wat.semestr7.bachelor.mvc.controller.CrawlingController;
-import wat.semestr7.bachelor.mvc.model.crawling.formatter.CurrencyDto;
 import wat.semestr7.bachelor.mvc.model.crawling.formatter.Formatter;
 
 import java.util.Map;

@@ -3,24 +3,19 @@ package wat.semestr7.bachelor.mvc.view.allOffers;
 
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
-import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.control.Label;
+import javafx.scene.image.Image;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.GridPane;
 import javafx.stage.Stage;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 import wat.semestr7.bachelor.mvc.controller.AllOffersController;
-import wat.semestr7.bachelor.mvc.model.crawling.formatter.CurrencyDto;
+import wat.semestr7.bachelor.mvc.model.crawling.CurrencyDto;
 
-import javax.annotation.PostConstruct;
 import java.util.*;
-import java.util.stream.Collectors;
 
 @Component()
-@Scope("singleton")
 public class AllOffersView extends GridPane {
     @Autowired
     private AllOffersController allOffersController;
@@ -33,13 +28,13 @@ public class AllOffersView extends GridPane {
 
     public void printData(Map<String, CurrencyDto> newData)
     {
-        if(counter %1 == 0)
+        /*if(counter %1 == 0)
         {
             long now = System.currentTimeMillis();
             System.out.println("AllOffersView : " + counter + ". Data received. Time from last tick : " + (now - lastTimeMilis)/1000 + "s. Current time = " + new Date());
             lastTimeMilis = now;
         }
-        counter++;
+        counter++;*/
         for(Map.Entry<String, CurrencyDto> entry : newData.entrySet())
         {
             singleCurrencyViews.get(entry.getKey()).setData(entry.getValue());
@@ -113,7 +108,8 @@ public class AllOffersView extends GridPane {
     {
         if(stage==null)   stage = new Stage();
         else stage.show();
-        stage.setTitle("All offers");
+        stage.setTitle("Szczegóły zleceń");
+        stage.getIcons().add(new Image("/stageIcon.png"));
         AnchorPane pane = new AnchorPane();
         pane.getChildren().add(this);
         //pane.setMinWidth(940);
@@ -124,6 +120,7 @@ public class AllOffersView extends GridPane {
         stage.setScene(new Scene(pane));
         // primaryStage.setFullScreen(true);
         stage.show();
+        stage.setOnCloseRequest(event -> isOpened=false);
     }
 
     public boolean isOpened() {

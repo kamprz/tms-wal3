@@ -5,7 +5,7 @@ import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Controller;
 import wat.semestr7.bachelor.listener.NewDataListener;
 import wat.semestr7.bachelor.mvc.model.crawling.CrawlingFacade;
-import wat.semestr7.bachelor.mvc.model.crawling.formatter.CurrencyDto;
+import wat.semestr7.bachelor.mvc.model.crawling.CurrencyDto;
 import wat.semestr7.bachelor.mvc.view.profitable.ProfitableOffersView;
 
 import javax.annotation.PostConstruct;
@@ -45,8 +45,12 @@ public class CrawlingController
         }
     }
 
+    private int counter=1;
     public void newDataSubmitted(Map<String, CurrencyDto> newData)
     {
+
+        if(++counter%100==0) System.out.println(".");
+        else System.out.print(".");
         setLastCrawlingTime(System.currentTimeMillis());
         for(NewDataListener listener : listeners)
         {

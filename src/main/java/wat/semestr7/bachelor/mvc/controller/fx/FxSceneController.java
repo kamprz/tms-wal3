@@ -20,6 +20,7 @@ public class FxSceneController
     {
         mainStage.setScene(selectingCurrenciesScene);
         profitableOffersView.setOpened(false);
+        mainStage.setTitle("Wybór par walutowych");
     }
 
     public void switchToProfitableScene()
@@ -27,6 +28,7 @@ public class FxSceneController
         profitableOffersView.resetView();
         mainStage.setScene(profitableScene);
         profitableOffersView.setOpened(true);
+        mainStage.setTitle("Korzystne zlecenia");
     }
 
     public void setMainStage(Stage stage)

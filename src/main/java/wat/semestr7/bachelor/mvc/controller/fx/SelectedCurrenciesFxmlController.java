@@ -10,6 +10,7 @@ import javafx.scene.control.CheckBox;
 import javafx.stage.Stage;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import wat.semestr7.bachelor.mvc.controller.AllOffersController;
 import wat.semestr7.bachelor.mvc.controller.ProfitableOffersController;
 import wat.semestr7.bachelor.mvc.controller.PropertiesController;
 
@@ -24,6 +25,8 @@ public class SelectedCurrenciesFxmlController {
     private ProfitableOffersController profitableOffersController;
     @Autowired
     private FxSceneController fxSceneController;
+    @Autowired
+    private AllOffersController allOffersController;
     @FXML
     private Button selectButton;
     @FXML
@@ -54,7 +57,7 @@ public class SelectedCurrenciesFxmlController {
     @FXML
     void initialize()
     {
-        selectPrevious();
+        Set<String> previous = selectPrevious();
         selectButton.addEventHandler(ActionEvent.ANY, event -> {
             Set<String> selected = new HashSet<>();
             for(String symbol : propertiesController.getAllExistingCurrencies())
@@ -65,6 +68,11 @@ public class SelectedCurrenciesFxmlController {
             {
                 propertiesController.setSelectedCurrencies(selected);
                 fxSceneController.switchToProfitableScene();
+                if(allOffersController.isOpened() && !selected.equals(previous))
+                {
+                    allOffersController.closeView();
+                    allOffersController.openView();
+                }
             }
             else popupDialog();
         });
@@ -90,13 +98,14 @@ public class SelectedCurrenciesFxmlController {
         return selectButton.getParent();
     }
 
-    private void selectPrevious()
+    private Set<String> selectPrevious()
     {
         Set<String> selectedCurrencies = propertiesController.getSelectedCurrencies();
         for(String currencySymbol : propertiesController.getSelectedCurrencies())
         {
             mapSymbolToCheckBox(currencySymbol).setSelected(true);
         }
+        return selectedCurrencies;
     }
 
     private void popupDialog()

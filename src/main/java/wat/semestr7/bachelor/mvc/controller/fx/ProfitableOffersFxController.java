@@ -5,6 +5,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import wat.semestr7.bachelor.mvc.controller.AllOffersController;
 import wat.semestr7.bachelor.mvc.controller.ProfitableOffersController;
+import wat.semestr7.bachelor.mvc.view.PropertiesView;
 
 @Controller
 public class ProfitableOffersFxController {
@@ -16,21 +17,21 @@ public class ProfitableOffersFxController {
     private AllOffersController allOffersController;
     @Autowired
     private ProfitableOffersController profitableOffersController;
+    @Autowired
+    private PropertiesView propertiesView;
 
     public void getAllOffers()
     {
-        System.out.println("get all offers");
         allOffersController.openView();
     }
 
     public void changeSelectedCurrencies(Parent sceneElement)
     {
-        System.out.println("Change");
         fxSceneController.switchToSelectingScene();
     }
 
     public void openOptions()
     {
-        System.out.println("Get all options");
+        propertiesView.open();
     }
 }

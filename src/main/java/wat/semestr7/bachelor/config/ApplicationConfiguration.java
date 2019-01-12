@@ -6,6 +6,7 @@ import javafx.geometry.Rectangle2D;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Label;
+import javafx.scene.image.Image;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.VBox;
@@ -21,6 +22,7 @@ import org.springframework.context.annotation.ComponentScan;
 import wat.semestr7.bachelor.mvc.controller.CrawlingController;
 import wat.semestr7.bachelor.mvc.controller.PropertiesController;
 import wat.semestr7.bachelor.mvc.controller.fx.FxSceneController;
+import wat.semestr7.bachelor.mvc.view.PropertiesView;
 import wat.semestr7.bachelor.mvc.view.allOffers.AllOffersView;
 import wat.semestr7.bachelor.mvc.view.profitable.CurrencyIndicator;
 import wat.semestr7.bachelor.mvc.view.profitable.NewDataIndicator;
@@ -50,40 +52,20 @@ public class ApplicationConfiguration extends Application {
 
 	@Override
 	public void start(Stage primaryStage) throws Exception {
-		GridPane box = new GridPane();
-		//ProfitableOffersView profitableOffersView = context.getBean("profitableOffersView", ProfitableOffersView.class);
-
-
-		//box.getChildren().add(profitableOffersView);
-		//box.getChildren().add(rootNode);
 		Scene scene = new Scene(rootNode);
+
 		FxSceneController fxSceneController = context.getBean("fxSceneController", FxSceneController.class);
 		fxSceneController.setSelectingCurrenciesScene(scene);
 		fxSceneController.setMainStage(primaryStage);
-		primaryStage.setScene(scene);
 
+		primaryStage.setScene(scene);
+		primaryStage.setTitle("Wybór par walutowych");
+		primaryStage.getIcons().add(new Image("/stageIcon.png"));
 		primaryStage.centerOnScreen();
 		primaryStage.show();
 
 		CrawlingController controller = context.getBean("crawlingController", CrawlingController.class);
 		controller.startCrawling();
-		//Stage primaryStage = new Stage();
-		/*Thread.sleep(3000);
-		primaryStage.setTitle("Hello World");
-		System.out.println("debug");
-		AllOffersView view = context.getBean("allOffersView", AllOffersView.class);
-
-		AnchorPane pane = new AnchorPane();
-		pane.getChildren().add(view);
-
-		//pane.setMinWidth(940);
-		//pane.setMinHeight(230);
-		primaryStage.setMinWidth(950);
-		primaryStage.setHeight(210);
-		primaryStage.setScene(new Scene(pane, 300, 275));
-		primaryStage.setMaximized(true);
-		// primaryStage.setFullScreen(true);
-		primaryStage.show();*/
 	}
 
 	@Override

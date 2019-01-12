@@ -1,4 +1,4 @@
-package wat.semestr7.bachelor.mvc.model.crawling.formatter;
+package wat.semestr7.bachelor.mvc.model.crawling;
 
 import lombok.Data;
 import wat.semestr7.bachelor.mvc.model.crawling.formatter.tms.TmsCurrency;

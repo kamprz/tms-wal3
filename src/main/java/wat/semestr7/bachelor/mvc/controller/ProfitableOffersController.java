@@ -1,11 +1,9 @@
 package wat.semestr7.bachelor.mvc.controller;
 
-import javafx.scene.Parent;
-import javafx.scene.layout.VBox;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import wat.semestr7.bachelor.listener.NewDataListener;
-import wat.semestr7.bachelor.mvc.model.crawling.formatter.CurrencyDto;
+import wat.semestr7.bachelor.mvc.model.crawling.CurrencyDto;
 import wat.semestr7.bachelor.mvc.model.profitable.ProfitSearcher;
 import wat.semestr7.bachelor.mvc.model.profitable.ProfitableOfferDto;
 import wat.semestr7.bachelor.mvc.view.profitable.ProfitableOffersView;
@@ -41,10 +39,8 @@ public class ProfitableOffersController implements NewDataListener
 
     @Override
     public void newDataReceived(Map<String, CurrencyDto> newData) {
-        System.out.println("new data");
         if(profitableOffersView.isOpened())
         {
-            System.out.println("Prof new data");
             profitableOffersView.newDataReceivedSignal();
             List<ProfitableOfferDto> profitableOffers = profitSearcher.getProfitableOffers(newData);
             profitableOffersView.updateProfitableCurrencies(getProfitableCurrencies(profitableOffers));

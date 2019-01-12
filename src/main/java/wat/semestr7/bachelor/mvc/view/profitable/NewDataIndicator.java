@@ -1,5 +1,6 @@
 package wat.semestr7.bachelor.mvc.view.profitable;
 
+import javafx.concurrent.Task;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.CycleMethod;
 import javafx.scene.paint.RadialGradient;
@@ -8,6 +9,8 @@ import javafx.scene.shape.Circle;
 
 import java.util.LinkedList;
 import java.util.List;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 public class NewDataIndicator extends Circle
 {
@@ -21,6 +24,8 @@ public class NewDataIndicator extends Circle
     private double focusAngle =360, focusDistance = 0., centerX=0.5, centerY=0.5, radius=0.6;
     private boolean proportional = true;
     private RadialGradient gradient;
+    private Runnable indicate;
+
 
     private Boolean isIndicating = false;
     private final Object lock = new Object();
@@ -29,6 +34,48 @@ public class NewDataIndicator extends Circle
     {
         super();
         init();
+    }
+
+    private Task<Void> getTask()
+    {
+        Task<Void> task = new Task<Void>()
+        {
+            @Override
+            protected Void call() throws Exception {
+                try{
+                    double var = 0.01;
+                    while (var < 0.8) {
+                        try {
+                            Thread.sleep(6);
+                        } catch (InterruptedException e) {
+                            e.printStackTrace();
+                        }
+                        var += 0.01;
+                        changeStop.remove(3);
+                        changeStop.add(new Stop(var, s4Color));
+                        setFill(new RadialGradient(focusAngle, focusDistance, centerX, centerY, radius, proportional, CycleMethod.NO_CYCLE, changeStop));
+                    }
+                    while (var > 0.01) {
+                        try {
+                            Thread.sleep(6);
+                        } catch (InterruptedException e) {
+                            e.printStackTrace();
+                        }
+                        var -= 0.01;
+                        changeStop.remove(3);
+                        changeStop.add(new Stop(var, s4Color));
+                        setFill(new RadialGradient(focusAngle, focusDistance, centerX, centerY, radius, proportional, CycleMethod.NO_CYCLE, changeStop));
+                    }
+                    setIndicating(false);
+                }
+                catch(Exception e){
+                    System.out.println("NewDataIndicator Thread broke.\n" + e);
+                    setIndicating(false);
+                }
+                finally{return null;}
+            }
+        };
+        return task;
     }
 
     private void init() {
@@ -42,35 +89,48 @@ public class NewDataIndicator extends Circle
         gradient = new RadialGradient(focusAngle, focusDistance, centerX, centerY, radius, proportional, CycleMethod.NO_CYCLE, stop);
         setFill(gradient);
         setRadius(20.);
+
+        /*indicate = new Thread(() -> {
+            try{
+                double var = 0.01;
+                while (var < 0.8) {
+                    try {
+                        Thread.sleep(6);
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+                    var += 0.01;
+                    changeStop.remove(3);
+                    changeStop.add(new Stop(var, s4Color));
+                    setFill(new RadialGradient(focusAngle, focusDistance, centerX, centerY, radius, proportional, CycleMethod.NO_CYCLE, changeStop));
+                }
+                while (var > 0.01) {
+                    try {
+                        Thread.sleep(6);
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+                    var -= 0.01;
+                    changeStop.remove(3);
+                    changeStop.add(new Stop(var, s4Color));
+                    setFill(new RadialGradient(focusAngle, focusDistance, centerX, centerY, radius, proportional, CycleMethod.NO_CYCLE, changeStop));
+                }
+                setIndicating(false);
+            }
+            catch(Exception e){
+                System.out.println("NewDataIndicator Thread broke.\n" + e);
+                setIndicating(false);
+            }
+        });*/
     }
     public void newData()
     {
         if(!getIndicating())
         {
-            setIndicating(true);
-            new Thread(() -> {
-                double var = 0.01;
-                while(var < 0.8)
-                {
-                    try {Thread.sleep(6);}
-                    catch (InterruptedException e) { e.printStackTrace(); }
-                    var+=0.01;
-                    changeStop.remove(3);
-                    changeStop.add(new Stop(var,s4Color));
-                    setFill(new RadialGradient(focusAngle,focusDistance,centerX,centerY,radius,proportional,CycleMethod.NO_CYCLE,changeStop));
-                }
-                while(var > 0.01)
-                {
-                    try {Thread.sleep(6);}
-                    catch (InterruptedException e) { e.printStackTrace(); }
-                    var-=0.01;
-                    changeStop.remove(3);
-                    changeStop.add(new Stop(var,s4Color));
-                    setFill(new RadialGradient(focusAngle,focusDistance,centerX,centerY,radius,proportional,CycleMethod.NO_CYCLE,changeStop));
-                }
-                setIndicating(false);
+            synchronized (lock) {
+                setIndicating(true);
+                new Thread(getTask()).start();
             }
-            ).start();
         }
     }
 

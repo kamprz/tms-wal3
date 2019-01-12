@@ -1,16 +1,20 @@
 package wat.semestr7.bachelor.mvc.view.profitable;
 
 import javafx.application.Platform;
+import javafx.beans.property.ObjectProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.event.EventHandler;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
+import javafx.stage.Stage;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import wat.semestr7.bachelor.mvc.controller.PropertiesController;
@@ -64,7 +68,7 @@ public class ProfitableOffersView extends VBox
         setCurrencyIndicatorsPane();
     }
 
-    public Parent setView()
+    private Parent setView()
     {
         setBackground(background);
         setUpperBox();
@@ -74,7 +78,6 @@ public class ProfitableOffersView extends VBox
         return this;
     }
 
-    private int counter = 1;
     public void updateProfitableOffers(List<ProfitableOfferDto> offers)
     {
         Platform.runLater(() -> {
@@ -85,14 +88,17 @@ public class ProfitableOffersView extends VBox
 
     public void updateProfitableCurrencies(Set<String> currencies)
     {
-        for(String currency : currencies)
-        {
-            currencyIndicators.get(currency).turnOn();
-        }
-        for(String absentCurrency : propertiesController.getSelectedCurrencies())
-        {
-            if(!currencies.contains(absentCurrency)) currencyIndicators.get(absentCurrency).turnOff();
-        }
+        Platform.runLater(() -> {
+            for(String currency : currencies)
+            {
+                currencyIndicators.get(currency).turnOn();
+            }
+            for(String absentCurrency : propertiesController.getSelectedCurrencies())
+            {
+                if(!currencies.contains(absentCurrency)) currencyIndicators.get(absentCurrency).turnOff();
+            }
+        });
+
     }
 
     public void newDataReceivedSignal()
@@ -118,7 +124,6 @@ public class ProfitableOffersView extends VBox
         newDataIndicator = new NewDataIndicator();
         AnchorPane.setRightAnchor(newDataIndicator,30.);
         AnchorPane.setTopAnchor(newDataIndicator,20.);
-
         upperPane.getChildren().addAll(label,newDataIndicator);
         upperPane.setBackground(new Background(
                 new BackgroundFill(Color.valueOf("#e1f2ff"),
@@ -193,15 +198,13 @@ public class ProfitableOffersView extends VBox
         bottomBox.setAlignment(Pos.CENTER);
 
         Button allOffersMenu = new Button("Szczegóły zleceń");
-
-
         Button changeSelected = new Button("Zmiana par walutowych");
         Button options = new Button("Opcje");
-        //options.addEventHandler(ActionEvent.ACTION, event -> fxController.openOptions());
 
         allOffersMenu.setOnAction(event -> fxController.getAllOffers());
         changeSelected.setOnAction(event -> fxController.changeSelectedCurrencies(profitableOffers));
         options.setOnAction(event -> fxController.openOptions());
+
         bottomBox.getChildren().addAll(changeSelected,options,allOffersMenu);
         getChildren().add(bottomBox);
     }
