@@ -163,7 +163,7 @@ public class PropertiesView extends VBox
     {
         for (Map.Entry<String, TextField> entry : textFieldMap.entrySet()) {
             try {
-                if (entry.getKey().length() == 6) Integer.parseInt(entry.getValue().getText());
+                if (entry.getKey().length() == 6 || entry.getKey().equals(offertsString)) Integer.parseInt(entry.getValue().getText());
                 else if (entry.getKey().equals(commissionString)) Double.parseDouble(entry.getValue().getText());
                 else if (entry.getKey().equals(profitString)) Double.parseDouble(entry.getValue().getText());
                 if(entry.getValue().getText().charAt(0) == '-')
@@ -179,7 +179,9 @@ public class PropertiesView extends VBox
             }
             catch(IllegalArgumentException e)
             {
-                throw new IllegalArgumentException(entry.getKey());
+                String field = entry.getKey();
+                if(field.equalsIgnoreCase("ofert")) field = "Liczba ofert";
+                throw new IllegalArgumentException(field);
             }
         }
         return properties;
