@@ -11,12 +11,12 @@ import org.springframework.boot.builder.SpringApplicationBuilder;
 import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.context.annotation.ComponentScan;
 import wat.semestr7.bachelor.mvc.controller.CrawlingController;
-import wat.semestr7.bachelor.mvc.controller.fx.FxMainStageController;
+import wat.semestr7.bachelor.mvc.controller.FxMainStageController;
 
 @SpringBootApplication
 @ComponentScan(basePackages = "wat.semestr7.bachelor")
-public class ApplicationConfiguration extends Application {
-
+public class ApplicationConfiguration extends Application
+{
 	private ConfigurableApplicationContext context;
 	private Parent rootNode;
 
@@ -31,7 +31,6 @@ public class ApplicationConfiguration extends Application {
 		rootNode = loader.load();
 	}
 
-
 	@Override
 	public void start(Stage primaryStage) throws Exception {
 		Scene scene = new Scene(rootNode);
@@ -39,7 +38,7 @@ public class ApplicationConfiguration extends Application {
 		FxMainStageController fxMainStageController = context.getBean("fxMainStageController", FxMainStageController.class);
 		fxMainStageController.setSelectingCurrenciesScene(scene);
 		fxMainStageController.setMainStage(primaryStage);
-		
+
 		primaryStage.setScene(scene);
 		primaryStage.setTitle("Wybór par walutowych");
 		primaryStage.getIcons().add(new Image("/stageIcon.png"));

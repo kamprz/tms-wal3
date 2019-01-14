@@ -10,7 +10,7 @@ import java.net.URL;
 
 @Component
 public class HttpCrawler {
-    public String getHttpJson(String urlToRead) throws CrawlingException
+    String getHttpJson(String urlToRead) throws CrawlingException
     {
         try{
             StringBuilder result = new StringBuilder();

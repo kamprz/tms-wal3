@@ -6,9 +6,7 @@ import org.springframework.stereotype.Controller;
 import wat.semestr7.bachelor.listener.NewDataListener;
 import wat.semestr7.bachelor.mvc.model.crawling.CrawlingFacade;
 import wat.semestr7.bachelor.mvc.model.crawling.CurrencyDto;
-import wat.semestr7.bachelor.mvc.view.profitable.ProfitableOffersView;
 
-import javax.annotation.PostConstruct;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
@@ -17,59 +15,27 @@ import java.util.Set;
 public class CrawlingController
 {
     @Autowired
-    private ProfitableOffersView profitableOffersView;
-    @Autowired
     private CrawlingFacade crawler;
     @Autowired
     private PropertiesController propertiesController;
+    @Autowired
+    private FxMainStageController fxMainStageController;
 
     private Set<NewDataListener> listeners = new HashSet<>();
     private Thread crawlingThread;
     private long lastCrawlingTime =  System.currentTimeMillis();
     private final Object lastCrawlingTimeLock = new Object();
-    private long maxTimeWithoutData;
-
-    @PostConstruct
-    private void init()
-    {
-        maxTimeWithoutData = Integer.parseInt(propertiesController.getProperties().getProperty("maxTimeWithoutDataInMilis"));
-    }
+    private Integer maxTimeWithoutData;
     
     @Scheduled(cron = "*/10 * * * * *")
     private void checkIfCrawlerIsWorking()
     {
+        if(maxTimeWithoutData==null) init();
         long now =  System.currentTimeMillis();
         if(now - getLastCrawlingTime() > maxTimeWithoutData)
         {
             resetCrawler();
         }
-    }
-
-    private int counter=1;
-    public void newDataSubmitted(Map<String, CurrencyDto> newData)
-    {
-        if(++counter%100==0) System.out.println(".");
-        else System.out.print(".");
-        setLastCrawlingTime(System.currentTimeMillis());
-        for(NewDataListener listener : listeners)
-        {
-            listener.newDataReceived(newData);
-        }
-        try { Thread.sleep(1000); }
-        catch (InterruptedException e) { e.printStackTrace(); }
-    }
-
-    public void getCrawlingException(Exception ex)
-    {
-        profitableOffersView.handleException(ex);
-    }
-
-    public void addListener(NewDataListener listener) {
-        listeners.add(listener);
-    }
-
-    public void removeListener(NewDataListener listener) {
-        listeners.remove(listener);
     }
 
     public void startCrawling()
@@ -78,29 +44,57 @@ public class CrawlingController
         crawlingThread.start();
     }
 
-    public void stopCrawling()
+    public void newDataSubmitted(Map<String, CurrencyDto> newData)
     {
-        crawlingThread.interrupt();
+        setLastCrawlingTime(System.currentTimeMillis());
+        for(NewDataListener listener : listeners)
+        {
+            listener.newDataReceived(newData);
+        }
+        holdOn();
     }
 
-    public void resetCrawler()
+    public void throwCrawlingException(Exception ex)
     {
-        crawlingThread.interrupt();
-        crawlingThread = new Thread(crawler);
-        crawlingThread.start();
+        fxMainStageController.throwCriticalDataCrawlingError(ex);
     }
 
-    public long getLastCrawlingTime() {
+    void addListener(NewDataListener listener) {
+        listeners.add(listener);
+    }
+
+    void removeListener(NewDataListener listener) {
+        listeners.remove(listener);
+    }
+
+    private void resetCrawler()
+    {
+        crawlingThread.interrupt();
+        startCrawling();
+    }
+
+    private long getLastCrawlingTime() {
         synchronized (lastCrawlingTimeLock)
         {
             return lastCrawlingTime;
         }
     }
 
-    public void setLastCrawlingTime(long lastCrawlingTime) {
+    private void setLastCrawlingTime(long lastCrawlingTime) {
         synchronized (lastCrawlingTimeLock)
         {
             this.lastCrawlingTime = lastCrawlingTime;
         }
+    }
+
+    private void init()
+    {
+        maxTimeWithoutData = Integer.parseInt(propertiesController.getProperties().getProperty("maxTimeWithoutDataInMilis"));
+    }
+
+    private void holdOn()
+    {
+        try { Thread.sleep(1000); }
+        catch (InterruptedException e) { e.printStackTrace(); }
     }
 }

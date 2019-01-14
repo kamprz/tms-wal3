@@ -13,7 +13,7 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Semaphore;
 
-public class NewDataIndicator extends Circle
+class NewDataIndicator extends Circle
 {
     private Stop s1 = new Stop(0, Color.valueOf("#2a1382"));
     private Stop s2 = new Stop(1.0,Color.WHITE);
@@ -22,15 +22,23 @@ public class NewDataIndicator extends Circle
     private List<Stop> stop = new LinkedList<>();
     private Color s4Color = Color.valueOf("#69d0db");
     private List<Stop> changeStop = new LinkedList<>();
-    private double focusAngle =360, focusDistance = 0., centerX=0.5, centerY=0.5, radius=0.6;
+    private double focusAngle=360, focusDistance=0., centerX=0.5, centerY=0.5, radius=0.6;
     private boolean proportional = true;
     private final ExecutorService executorService = Executors.newFixedThreadPool(2);
     private final Semaphore semaphore = new Semaphore(1);
 
-    public NewDataIndicator()
+    NewDataIndicator()
     {
         super();
         init();
+    }
+
+    void newData()
+    {
+        if(semaphore.tryAcquire())
+        {
+            executorService.execute(getTask());
+        }
     }
 
     private Task<Void> getTask()
@@ -41,25 +49,22 @@ public class NewDataIndicator extends Circle
             protected Void call() throws Exception {
                 try{
                     double var = 0.01;
-                    //System.out.println("NewDataIndicator Task: 1");
                     while (var < 0.8) {
-                        try { Thread.sleep(6); }
+                        try { Thread.sleep(4); }
                         catch (InterruptedException e) { e.printStackTrace(); }
                         var += 0.01;
                         changeStop.remove(3);
                         changeStop.add(new Stop(var, s4Color));
                         setFill(new RadialGradient(focusAngle, focusDistance, centerX, centerY, radius, proportional, CycleMethod.NO_CYCLE, changeStop));
                     }
-                    //System.out.println("NewDataIndicator Task: 2");
                     while (var > 0.01) {
-                        try { Thread.sleep(6); }
+                        try { Thread.sleep(4); }
                         catch (InterruptedException e) { e.printStackTrace(); }
                         var -= 0.01;
                         changeStop.remove(3);
                         changeStop.add(new Stop(var, s4Color));
                         setFill(new RadialGradient(focusAngle, focusDistance, centerX, centerY, radius, proportional, CycleMethod.NO_CYCLE, changeStop));
                     }
-                    //System.out.println("NewDataIndicator Task: 3");
                 }
                 catch(Exception e){
                     System.out.println("NewDataIndicator Task broke.\n" + e);
@@ -85,13 +90,5 @@ public class NewDataIndicator extends Circle
         setFill(gradient);
         setRadius(20.);
 
-    }
-    public void newData()
-    {
-        if(semaphore.tryAcquire())
-        {
-            //new Thread(getTask()).start();
-            executorService.execute(getTask());
-        }
     }
 }

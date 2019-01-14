@@ -1,4 +1,4 @@
-package wat.semestr7.bachelor.mvc.controller.fx;
+package wat.semestr7.bachelor.mvc.controller;
 
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -8,9 +8,6 @@ import javafx.scene.control.Button;
 import javafx.scene.control.CheckBox;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import wat.semestr7.bachelor.mvc.controller.AllOffersController;
-import wat.semestr7.bachelor.mvc.controller.ProfitableOffersController;
-import wat.semestr7.bachelor.mvc.controller.PropertiesController;
 
 import java.util.HashSet;
 import java.util.List;
@@ -20,8 +17,6 @@ import java.util.Set;
 public class SelectedCurrenciesFxmlController {
     @Autowired
     private PropertiesController propertiesController;
-    @Autowired
-    private ProfitableOffersController profitableOffersController;
     @Autowired
     private FxMainStageController fxMainStageController;
     @Autowired
@@ -100,12 +95,6 @@ public class SelectedCurrenciesFxmlController {
         });
     }
 
-    public Parent setView()
-    {
-        selectPrevious();
-        return selectButton.getParent();
-    }
-
     private Set<String> selectPrevious()
     {
         Set<String> selectedCurrencies = propertiesController.getSelectedCurrencies();
@@ -139,17 +128,3 @@ public class SelectedCurrenciesFxmlController {
         else return chGBPCHF;
     }
 }
-
-
-/*
-1=USDPLN
-2=EURPLN
-3=CHFPLN
-4=GBPPLN
-5=EURUSD
-6=EURGBP
-7=EURCHF
-8=GBPUSD
-9=USDCHF
-10=GBPCHF
- */

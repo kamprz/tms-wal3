@@ -11,12 +11,4 @@ public class TmsCurrency
 {
     private double bid;
     private double ask;
-
-    public double getBid() {
-        return bid;
-    }
-
-    public double getAsk() {
-        return ask;
-    }
 }

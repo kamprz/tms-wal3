@@ -11,7 +11,7 @@ import java.util.Map;
 public class WalutomatDataFrame
 {
     private Map<String, WalutomatOffers> currencies = new HashMap<>();
-    private int howManyOffers = 5;
+    private int howManyOffers;
     public WalutomatDataFrame(WalutomatJsonHolder pojo, int howManyOffers)
     {
         currencies.put("EURPLN", new WalutomatOffers(pojo.bidEURPLN,pojo.askEURPLN));
@@ -26,10 +26,6 @@ public class WalutomatDataFrame
         currencies.put("USDCHF", new WalutomatOffers(pojo.bidUSDCHF,pojo.askUSDCHF));
         currencies.put("GBPCHF", new WalutomatOffers(pojo.bidGBPCHF,pojo.askGBPCHF));
         this.howManyOffers = howManyOffers;
-    }
-    public WalutomatOffers getCurrency(String symbol)
-    {
-       return currencies.get(symbol);
     }
 
     public List<WalutomatOffer> getTopBids(String symbol)

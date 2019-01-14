@@ -5,51 +5,21 @@ import java.util.Properties;
 
 public abstract class PropertiesDao
 {
-    protected String filePath;
-    protected final Properties loadPropertiesFromFile(String filePath)
+    String filePath;
+    final Properties loadPropertiesFromFile(String filePath) throws IOException
     {
         Properties properties = new Properties();
-        InputStream input = null;
-        try
-        {
-            input = new FileInputStream(filePath);
-            if (input == null) {
-                System.out.println("Sorry, unable to find " + filePath);
-                return null;
-            }
-            properties.load(input);
-
-        }
-        catch (IOException ex) { ex.printStackTrace(); }
-        finally
-        {
-            if (input != null)
-            {
-                try { input.close(); }
-                catch (IOException e) { e.printStackTrace(); }
-            }
-        }
+        InputStream input = new FileInputStream(filePath);
+        properties.load(input);
+        input.close();
         return properties;
     }
 
-    protected final void savePropertiesToFile(Properties properties, String filePath)
+    final void savePropertiesToFile(Properties properties, String filePath)  throws IOException
     {
-        OutputStream output = null;
-        try
-        {
-            output = new FileOutputStream(filePath);
-            properties.store(output, null);
-        }
-        catch (IOException io) { io.printStackTrace(); }
-        finally
-        {
-            if (output != null)
-            {
-                try { output.close(); }
-                catch (IOException e) { e.printStackTrace(); }
-            }
-        }
+        OutputStream output = new FileOutputStream(filePath);
+        properties.store(output, null);
+        output.close();
     }
-
     protected abstract void loadProperties();
 }

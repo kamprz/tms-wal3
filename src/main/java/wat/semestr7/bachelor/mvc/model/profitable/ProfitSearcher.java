@@ -2,6 +2,7 @@ package wat.semestr7.bachelor.mvc.model.profitable;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import wat.semestr7.bachelor.mvc.controller.ProfitableOffersController;
 import wat.semestr7.bachelor.mvc.controller.PropertiesController;
 import wat.semestr7.bachelor.mvc.model.crawling.CurrencyDto;
 import wat.semestr7.bachelor.mvc.model.crawling.formatter.tms.TmsCurrency;
@@ -14,61 +15,16 @@ import java.util.stream.Collectors;
 @Service
 public class ProfitSearcher {
     @Autowired
-    private PropertiesController propertiesController;
-
-    private  Map<String,List<WalutomatOffer>> getPotentiallyProfitableOffers(Map<String, CurrencyDto> frame)
-    {
-        Map<String,List<WalutomatOffer>> profitableOffers = new HashMap<>();
-        Properties properties = propertiesController.getProperties();
-
-        for(String symbol : propertiesController.getSelectedCurrencies())
-        {
-            List<WalutomatOffer> offers = new LinkedList<>();
-            CurrencyDto currency = frame.get(symbol);
-            double pips = 0.0001 * Integer.parseInt(properties.getProperty(symbol));
-
-            double tmsAsk = currency.getTmsAsk();
-            double tmsBid = currency.getTmsBid();
-
-            for(WalutomatOffer offer : currency.getTopBids())
-            {
-                if(offer.getRate() > tmsAsk + pips)
-                {
-                    offers.add(offer);
-                }
-                else break;
-            }
-
-            if(offers.isEmpty())
-            {
-
-                for(WalutomatOffer offer : currency.getTopAsks())
-                {
-                    if(offer.getRate() < tmsBid - pips)
-                    {
-                        offers.add(offer);
-                    }
-                    else break;
-                }
-            }
-            if(!offers.isEmpty())
-            {
-                profitableOffers.put(symbol,offers);
-            }
-        }
-        return profitableOffers;
-    }
+    private ProfitableOffersController controller;
 
     public List<ProfitableOfferDto> getProfitableOffers(Map<String,CurrencyDto> allData)
     {
         List<ProfitableOfferDto> result = new LinkedList<>();
-        Properties properties = propertiesController.getProperties();
+        Properties properties = controller.getProperties();
+        double commission = Double.parseDouble(controller.getProperties().getProperty("Prowizja"));
+        BigDecimal minimalProfit = new BigDecimal(properties.getProperty("Zysk"));
 
         Map<String,List<WalutomatOffer>> walutomatOffersPerCurrency = getPotentiallyProfitableOffers(allData);
-
-        double commission = Double.parseDouble(propertiesController.getProperties().getProperty("Prowizja"));
-
-        BigDecimal minimalProfit = new BigDecimal(properties.getProperty("Zysk"));
 
         for(Map.Entry<String, List<WalutomatOffer>> entry : walutomatOffersPerCurrency.entrySet())
         {
@@ -78,7 +34,6 @@ public class ProfitSearcher {
             List<WalutomatOffer> offers = entry.getValue();
             double pips = 0.0001 * Integer.parseInt(properties.getProperty(symbol));
             TmsCurrency tms = allData.get(entry.getKey()).getTmsRates();
-
             if(offers.get(0).isBid()) profitableOffer.setAction(ProfitableOfferDto.Action.SELL);
             else profitableOffer.setAction(ProfitableOfferDto.Action.BUY);
 
@@ -94,8 +49,40 @@ public class ProfitSearcher {
             profitableOffer.setEstimatedProfit(profit);
             if(profit.compareTo(minimalProfit) > 0) result.add(profitableOffer);
         }
-        Comparator<ProfitableOfferDto> c = (o1, o2) -> (int)(o1.getEstimatedProfit().doubleValue() - o2.getEstimatedProfit().doubleValue());
+        Comparator<ProfitableOfferDto> c = (o1, o2) -> (int)((o2.getEstimatedProfit().doubleValue() - o1.getEstimatedProfit().doubleValue()) * 100);
         return result.stream().sorted(c).collect(Collectors.toList());
+    }
+
+    private  Map<String,List<WalutomatOffer>> getPotentiallyProfitableOffers(Map<String, CurrencyDto> frame)
+    {
+        Map<String,List<WalutomatOffer>> profitableOffers = new HashMap<>();
+        Properties properties = controller.getProperties();
+
+        for(String symbol : controller.getSelectedCurrencies())
+        {
+            List<WalutomatOffer> offers = new LinkedList<>();
+            CurrencyDto currency = frame.get(symbol);
+            double pips = 0.0001 * Integer.parseInt(properties.getProperty(symbol));
+            double tmsAsk = currency.getTmsAsk();
+            double tmsBid = currency.getTmsBid();
+
+            for(WalutomatOffer offer : currency.getTopBids())
+            {
+                if(offer.getRate() > tmsAsk + pips) offers.add(offer);
+                else break;
+            }
+
+            if(offers.isEmpty())
+            {
+                for(WalutomatOffer offer : currency.getTopAsks())
+                {
+                    if(offer.getRate() < tmsBid - pips) offers.add(offer);
+                    else break;
+                }
+            }
+            if(!offers.isEmpty()) profitableOffers.put(symbol,offers);
+        }
+        return profitableOffers;
     }
 
     private BigDecimal getProfitInPLN(WalutomatOffer offer, double commission, double pips, TmsCurrency tms, String symbol,Map<String,CurrencyDto> allData)
@@ -128,7 +115,7 @@ public class ProfitSearcher {
             String plnCurrency;
             if(offer.isBid()) plnCurrency = isPlnCurrency ? symbol : symbol.substring(0,3) + "PLN";
             else plnCurrency = symbol.substring(3,6) + "PLN";
-            double plnPips = 0.0001 * Double.parseDouble(propertiesController.getProperties().getProperty(plnCurrency));
+            double plnPips = 0.0001 * Double.parseDouble(controller.getProperties().getProperty(plnCurrency));
             BigDecimal tmsBidForPln = new BigDecimal(allData.get(plnCurrency).getTmsBid() - plnPips);
             profit = profit.multiply(tmsBidForPln);
         }

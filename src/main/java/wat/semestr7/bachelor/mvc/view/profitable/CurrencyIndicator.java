@@ -11,22 +11,22 @@ import javafx.scene.shape.StrokeType;
 import javafx.scene.text.Font;
 
 
-public class CurrencyIndicator extends HBox {
+class CurrencyIndicator extends HBox {
     private Label currencySymbol = new Label();
     private Circle circleIndicator = new Circle();
 
-    public CurrencyIndicator(String currencySymbol)
+    CurrencyIndicator(String currencySymbol)
     {
         this.currencySymbol.setText(currencySymbol.substring(0,3) + " / " + currencySymbol.substring(3,6));
         init();
     }
 
-    public void turnOff()
+    void turnOff()
     {
         circleIndicator.setFill(Paint.valueOf("#ff2121"));
     }
 
-    public void turnOn()
+    void turnOn()
     {
         circleIndicator.setFill(Paint.valueOf("#1fff3f"));
     }
@@ -45,9 +45,5 @@ public class CurrencyIndicator extends HBox {
         setSpacing(30);
 
         getChildren().addAll(currencySymbol,circleIndicator);
-    }
-    public void setColor(RadialGradient gradient)
-    {
-        circleIndicator.setFill(gradient);
     }
 }

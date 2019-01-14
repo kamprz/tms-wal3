@@ -10,7 +10,7 @@ class WalutomatOffers
     private ArrayList<WalutomatOffer> bid;
     private ArrayList<WalutomatOffer> ask;
 
-    public WalutomatOffers(ArrayList<WalutomatOffer> bid, ArrayList<WalutomatOffer> ask)
+    WalutomatOffers(ArrayList<WalutomatOffer> bid, ArrayList<WalutomatOffer> ask)
     {
         this.bid = bid;
         this.ask = ask;

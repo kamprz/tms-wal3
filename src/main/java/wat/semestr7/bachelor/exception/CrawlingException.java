@@ -6,8 +6,4 @@ public class CrawlingException extends Exception
     {
         super(e);
     }
-    public CrawlingException(String s)
-    {
-        super(s);
-    }
 }

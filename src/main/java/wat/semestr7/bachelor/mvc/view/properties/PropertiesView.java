@@ -10,13 +10,13 @@ import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
 import javafx.scene.input.KeyCode;
-import javafx.scene.layout.AnchorPane;
-import javafx.scene.layout.GridPane;
-import javafx.scene.layout.VBox;
+import javafx.scene.layout.*;
+import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import wat.semestr7.bachelor.mvc.controller.PropertiesController;
+import wat.semestr7.bachelor.mvc.view.BackgroundUtils;
 
 import java.util.*;
 
@@ -101,13 +101,14 @@ public class PropertiesView extends VBox
             pane.add(tf,1,i++);
         }
 
-        Button set = new Button("Ustaw");
-        set.setOnAction(event -> setProperties());
+        Button setButton = new Button("Ustaw");
+        setButton.setOnAction(event -> setProperties());
         this.setAlignment(Pos.CENTER);
         this.setPadding(new Insets(30));
         this.setSpacing(20);
         this.setPrefWidth(340);
-        getChildren().addAll(pane,set);
+        this.setBackground(BackgroundUtils.getBackground());
+        getChildren().addAll(pane,setButton);
     }
 
     public void close()
@@ -197,5 +198,10 @@ public class PropertiesView extends VBox
             }
         }
         return properties;
+    }
+
+    public void dataAccessError(String message)
+    {
+
     }
 }

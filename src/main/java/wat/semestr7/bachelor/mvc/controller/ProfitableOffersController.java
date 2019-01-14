@@ -1,5 +1,6 @@
 package wat.semestr7.bachelor.mvc.controller;
 
+import javafx.scene.Scene;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import wat.semestr7.bachelor.listener.NewDataListener;
@@ -9,10 +10,7 @@ import wat.semestr7.bachelor.mvc.model.profitable.ProfitableOfferDto;
 import wat.semestr7.bachelor.mvc.view.profitable.ProfitableOffersView;
 
 import javax.annotation.PostConstruct;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 @Controller
 public class ProfitableOffersController implements NewDataListener
@@ -26,10 +24,9 @@ public class ProfitableOffersController implements NewDataListener
     @Autowired
     private PropertiesController propertiesController;
     @Autowired
+    private FxMainStageController fxMainStageController;
+    @Autowired
     private AllOffersController allOffersController;
-
-    public ProfitableOffersController() {
-    }
 
     @PostConstruct
     private void subscribe()
@@ -53,7 +50,42 @@ public class ProfitableOffersController implements NewDataListener
         return propertiesController.getSelectedCurrencies();
     }
 
-    public Set<String> getProfitableCurrencies(List<ProfitableOfferDto> offers)
+    public void getAllOffers()
+    {
+        allOffersController.openView();
+    }
+
+    public void changeSelectedCurrencies()
+    {
+        fxMainStageController.switchToSelectingScene();
+    }
+
+    public void openOptions()
+    {
+        propertiesController.openPropertiesView();
+    }
+
+    public void setProfitableScene(Scene scene)
+    {
+        fxMainStageController.setProfitableScene(scene);
+    }
+
+    public Properties getProperties()
+    {
+        return propertiesController.getProperties();
+    }
+
+    void setViewOpened(boolean bool)
+    {
+        profitableOffersView.setOpened(bool);
+    }
+
+    void resetView()
+    {
+        profitableOffersView.resetView();
+    }
+
+    private Set<String> getProfitableCurrencies(List<ProfitableOfferDto> offers)
     {
         Set<String> set = new HashSet<>();
         for(ProfitableOfferDto offer : offers)

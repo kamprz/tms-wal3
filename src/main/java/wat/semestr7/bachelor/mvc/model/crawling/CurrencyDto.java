@@ -19,34 +19,18 @@ public class CurrencyDto
 
     public CurrencyDto(String symbol,
                        TmsDataFrame tmsFrame,
-                       WalutomatDataFrame offersFrame)
-    {
+                       WalutomatDataFrame offersFrame){
         this.symbol = symbol;
         topAsks = offersFrame.getTopAsks(symbol);
         topBids = offersFrame.getTopBids(symbol);
         tmsRates = tmsFrame.getCurrency(symbol);
     }
 
-    public TmsCurrency getTmsRates() {
-        return tmsRates;
-    }
-
-    public List<WalutomatOffer> getTopBids() {
-        return topBids;
-    }
-
-    public List<WalutomatOffer> getTopAsks() {
-        return topAsks;
-    }
-
     public Double getTmsAsk()
     {
         return tmsRates.getAsk();
     }
-    public Double getTmsBid()
-    {
-        return tmsRates.getBid();
-    }
+    public Double getTmsBid() { return tmsRates.getBid(); }
 
     @Override
     public String toString() {

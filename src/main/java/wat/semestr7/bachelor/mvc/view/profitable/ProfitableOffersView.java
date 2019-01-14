@@ -9,14 +9,13 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.layout.*;
-import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
-import wat.semestr7.bachelor.mvc.controller.PropertiesController;
-import wat.semestr7.bachelor.mvc.controller.fx.FxMainStageController;
-import wat.semestr7.bachelor.mvc.controller.fx.ProfitableOffersFxController;
+import wat.semestr7.bachelor.mvc.controller.ProfitableOffersController;
 import wat.semestr7.bachelor.mvc.model.profitable.ProfitableOfferDto;
+import wat.semestr7.bachelor.mvc.view.BackgroundUtils;
 
 import javax.annotation.PostConstruct;
 import java.math.BigDecimal;
@@ -29,11 +28,7 @@ import java.util.stream.Collectors;
 public class ProfitableOffersView extends VBox
 {
     @Autowired
-    private PropertiesController propertiesController;
-    @Autowired
-    private ProfitableOffersFxController fxController;
-    @Autowired
-    private FxMainStageController sceneController;
+    private ProfitableOffersController controller;
 
     private double width = 1078;
     private NewDataIndicator newDataIndicator;
@@ -49,19 +44,41 @@ public class ProfitableOffersView extends VBox
     private VBox lowerBox;
     private HBox bottomBox;
 
-    @PostConstruct
     private void init(){
-        sceneController.setProfitableScene(new Scene(setView()));
-        background = new Background(
-                new BackgroundFill(Color.valueOf("#fdfff3"),
-                        new CornerRadii(2),
-                        new Insets(2)));
+        controller.setProfitableScene(new Scene(setView()));
+        background = BackgroundUtils.getBackground();
     }
 
     public void resetView()
     {
+        if(background==null) init();
         currencyIndicatorsPane.getChildren().clear();
         setCurrencyIndicatorsPane();
+    }
+
+    public void updateProfitableOffers(List<ProfitableOfferDto> offers)
+    {
+        Platform.runLater(() ->
+        {
+            observable.clear();
+            observable.addAll(offers.stream().map(this::formatOfferToString).collect(Collectors.toList()));
+        });
+    }
+
+    public void updateProfitableCurrencies(Set<String> currencies)
+    {
+        Platform.runLater(() ->
+        {
+            for(String currency : currencies)
+                currencyIndicators.get(currency).turnOn();
+            for(String absentCurrency : controller.getSelectedCurrencies())
+                if(!currencies.contains(absentCurrency)) currencyIndicators.get(absentCurrency).turnOff();
+        });
+    }
+
+    public void newDataReceivedSignal()
+    {
+        newDataIndicator.newData();
     }
 
     private Parent setView()
@@ -72,34 +89,6 @@ public class ProfitableOffersView extends VBox
         setLowerBox();
         setBottomBox();
         return this;
-    }
-
-    public void updateProfitableOffers(List<ProfitableOfferDto> offers)
-    {
-        Platform.runLater(() -> {
-            observable.clear();
-            observable.addAll(offers.stream().map(o -> formatOfferToString(o)).collect(Collectors.toList()));
-        });
-    }
-
-    public void updateProfitableCurrencies(Set<String> currencies)
-    {
-        Platform.runLater(() -> {
-            for(String currency : currencies)
-            {
-                currencyIndicators.get(currency).turnOn();
-            }
-            for(String absentCurrency : propertiesController.getSelectedCurrencies())
-            {
-                if(!currencies.contains(absentCurrency)) currencyIndicators.get(absentCurrency).turnOff();
-            }
-        });
-
-    }
-
-    public void newDataReceivedSignal()
-    {
-        if(isOpened()) newDataIndicator.newData();
     }
 
     private void setUpperBox()
@@ -116,10 +105,7 @@ public class ProfitableOffersView extends VBox
         AnchorPane.setRightAnchor(newDataIndicator,30.);
         AnchorPane.setTopAnchor(newDataIndicator,20.);
         upperPane.getChildren().addAll(label,newDataIndicator);
-        upperPane.setBackground(new Background(
-                new BackgroundFill(Color.valueOf("#e1f2ff"),
-                        new CornerRadii(2),
-                        new Insets(2))));
+        upperPane.setBackground(BackgroundUtils.getUpperPaneBackground());
         this.getChildren().add(upperPane);
     }
 
@@ -136,7 +122,7 @@ public class ProfitableOffersView extends VBox
 
         List<String> pln = new LinkedList<>();
         List<String> foreign = new LinkedList<>();
-        for(String str : propertiesController.getSelectedCurrencies())
+        for(String str : controller.getSelectedCurrencies())
         {
             if(str.toLowerCase().contains("pln")) pln.add(str);
             else foreign.add(str);
@@ -158,13 +144,13 @@ public class ProfitableOffersView extends VBox
             currencyIndicators.put(symbol,indicator);
             i++;
         }
+        currencyIndicatorsPane.setBackground(BackgroundUtils.getBackground());
         return currencyIndicatorsPane;
     }
 
     private void setLowerBox()
     {
         lowerBox = new VBox();
-        int selectedCurrenciesAmount = propertiesController.getSelectedCurrencies().size();
         lowerBox.setPrefSize(width,230);
         lowerBox.setBackground(background);
         lowerBox.setAlignment(Pos.CENTER);
@@ -176,6 +162,7 @@ public class ProfitableOffersView extends VBox
         observable = FXCollections.observableArrayList();
         profitableOffers.setItems(observable);
         lowerBox.getChildren().addAll(label,profitableOffers);
+        lowerBox.setBackground(BackgroundUtils.getBackground());
         getChildren().add(lowerBox);
     }
 
@@ -188,14 +175,15 @@ public class ProfitableOffersView extends VBox
         bottomBox.setMaxHeight(80);
         bottomBox.setPadding(new Insets(30));
         bottomBox.setAlignment(Pos.CENTER);
+        bottomBox.setBackground(BackgroundUtils.getBackground());
 
         Button allOffersMenu = new Button("Szczegóły zleceń");
         Button changeSelected = new Button("Zmiana par walutowych");
         Button options = new Button("Opcje");
 
-        allOffersMenu.setOnAction(event -> fxController.getAllOffers());
-        changeSelected.setOnAction(event -> fxController.changeSelectedCurrencies(profitableOffers));
-        options.setOnAction(event -> fxController.openOptions());
+        allOffersMenu.setOnAction(event -> controller.getAllOffers());
+        changeSelected.setOnAction(event -> controller.changeSelectedCurrencies());
+        options.setOnAction(event -> controller.openOptions());
 
         bottomBox.getChildren().addAll(changeSelected,options,allOffersMenu);
         getChildren().add(bottomBox);
@@ -239,14 +227,13 @@ public class ProfitableOffersView extends VBox
             tms = ". Ask = ";
             tmsRate = offer.getTmsRates().getAsk();
         }
-
         stringBuilder.append(firstCurr)
                 .append("/")
                 .append(secCurr)
                 .append("   :   ")
                 .append(operation)
                 .append(" po kursie ")
-                .append(String.format("%.4f",offer.getRate()).replace(",","."))
+                .append(String.format("%.5f",offer.getRate()).replace(",","."))
                 .append(tms)
                 .append(String.format("%.5f",tmsRate).replace(",","."))
                 .append(". Przewidywany zysk = " + amountToString(offer.getEstimatedProfit()) +" PLN");
@@ -259,13 +246,10 @@ public class ProfitableOffersView extends VBox
         return formatter.format(amount);
     }
 
-    public void handleException(Exception ex) {
-        Alert alert = new Alert(Alert.AlertType.ERROR);
-        alert.setTitle("Błąd!");
-        alert.setHeaderText("Błąd pobierania danych.");
-        alert.setContentText("Nastąpi zamknięcie programu.");
-        alert.showAndWait();
-        Platform.exit();
-        System.exit(1);
+    //Don't know why, but sometimes this indicator stops moving, despite normal program flow through its while loops; looks like some JavaFX problem
+    @Scheduled(cron = "*/30 * * * * *")
+    private void restartNewDataIndicator()
+    {
+        newDataIndicator = new NewDataIndicator();
     }
 }

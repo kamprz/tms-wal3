@@ -13,6 +13,7 @@ import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import wat.semestr7.bachelor.mvc.model.crawling.CurrencyDto;
 import wat.semestr7.bachelor.mvc.model.crawling.formatter.walutomat.WalutomatOffer;
+import wat.semestr7.bachelor.mvc.view.BackgroundUtils;
 import wat.semestr7.bachelor.utils.DateUtils;
 
 import java.util.List;
@@ -69,6 +70,7 @@ public class SingleCurrencyView extends HBox {
         currencyInfo.getChildren().addAll(symbol,tmsBid,tmsAsk);
         this.getChildren().addAll(leftSellOffers,currencyInfo,rightBuyOffers);
         setAlignment(Pos.CENTER);
+        setBackground(BackgroundUtils.getBackground());
     }
 
     public void setData(CurrencyDto dto)
@@ -86,12 +88,11 @@ public class SingleCurrencyView extends HBox {
 
     private void setTable(String rateString , int columnMinWidth, TableView tableView, ObservableList<OfferViewRow> data)
     {
-        String rateColStr = rateString;
         String amountColStr = "Łączna kwota";
         String awaitsColStr = "Oczekuje od";
 
 
-        TableColumn rate = new TableColumn(rateColStr);
+        TableColumn rate = new TableColumn(rateString);
         rate.setCellFactory(param -> new TableCellFormat());
         rate.setMinWidth(columnMinWidth);
         rate.setCellValueFactory(new PropertyValueFactory<OfferViewRow,String>("rate"));
@@ -119,6 +120,7 @@ public class SingleCurrencyView extends HBox {
                 .map(o -> walutomatOfferToViewOffer(o, symbol))
                 .collect(Collectors.toList());
         newViewList.setAll(newOffers);
+        //Commented code is related to situation without crawling controller sleeping
         /*if(!newViewList.equals(viewList))
         {
             if(offers.get(0).isBid())
@@ -139,7 +141,6 @@ public class SingleCurrencyView extends HBox {
                     triedToChangeSellOffersXTimesInARow = 0;
                 }
             }
-
         }
         else {
             if(offers.get(0).isBid()) triedToChangeBuyOffersXTimesInARow = 0;
@@ -160,6 +161,7 @@ public class SingleCurrencyView extends HBox {
 
     private void setAsk(Double newAsk)
     {
+        //Commented code is related to situation without crawling controller sleeping
         /*if(!(newAsk+"").equals(tmsAsk.getText()))
         {
             triedToChangeAskXTimesInARow++;
@@ -174,6 +176,7 @@ public class SingleCurrencyView extends HBox {
 
     private void setBid(Double newBid)
     {
+        //Commented code is related to situation without crawling controller sleeping
         /*if(!(newBid+"").equals(tmsBid.getText()))
         {
             triedToChangeBidXTimesInARow++;
