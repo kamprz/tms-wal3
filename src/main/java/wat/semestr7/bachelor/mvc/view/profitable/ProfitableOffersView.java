@@ -256,7 +256,7 @@ public class ProfitableOffersView extends VBox
                 .append(" po kursie ")
                 .append(String.format("%.4f",offer.getRate()).replace(",","."))
                 .append(tms)
-                .append(String.format("%.4f",tmsRate).replace(",","."))
+                .append(String.format("%.5f",tmsRate).replace(",","."))
                 .append(". Przewidywany zysk = " + amountToString(offer.getEstimatedProfit()) +" PLN");
         return stringBuilder.toString();
     }

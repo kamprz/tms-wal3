@@ -1,6 +1,5 @@
 package wat.semestr7.bachelor.mvc.view;
 
-import javafx.event.EventType;
 import javafx.geometry.HPos;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
@@ -19,9 +18,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import wat.semestr7.bachelor.mvc.controller.PropertiesController;
 
-import javax.annotation.PostConstruct;
-import java.awt.event.ActionEvent;
-import java.awt.event.KeyEvent;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Properties;
@@ -83,7 +79,7 @@ public class PropertiesView extends VBox
         }
 
         Button set = new Button("Ustaw");
-        set.setOnAction(event -> setAndClose());
+        set.setOnAction(event -> setProperties());
         this.setAlignment(Pos.CENTER);
         this.setPadding(new Insets(30));
         this.setSpacing(20);
@@ -104,11 +100,10 @@ public class PropertiesView extends VBox
         setStage();
     }
 
-    private void setAndClose()
+    private void setProperties()
     {
         try {
-            setProperties();
-            close();
+            controller.setProperties(getEnteredProperties());
         }
         catch (NumberFormatException e)
         {
@@ -134,7 +129,7 @@ public class PropertiesView extends VBox
         stage.setScene(new Scene(pane));
         this.getScene().setOnKeyPressed(event ->
         {
-            if(event.getCode().equals(KeyCode.ENTER)) setAndClose();
+            if(event.getCode().equals(KeyCode.ENTER)) setProperties();
             else if(event.getCode().equals(KeyCode.ESCAPE)) close();
         });
         stage.show();
@@ -146,7 +141,7 @@ public class PropertiesView extends VBox
         return controller.getProperties();
     }
 
-    private Properties getEnteredProperties()
+    private Properties getEnteredProperties() throws NumberFormatException
     {
         for (Map.Entry<String, TextField> entry : textFieldMap.entrySet()) {
             try {
@@ -161,10 +156,5 @@ public class PropertiesView extends VBox
             }
         }
         return properties;
-    }
-
-    private void setProperties()
-    {
-        controller.setProperties(getEnteredProperties());
     }
 }

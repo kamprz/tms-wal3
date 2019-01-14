@@ -56,7 +56,7 @@ public class SingleCurrencyView extends HBox {
 
         //setTables
         int columnMinWidth = 130;
-        setTable("Kurs sprzedazy",columnMinWidth,leftSellOffers,sellOffers);
+        setTable("Kurs sprzedaży",columnMinWidth,leftSellOffers,sellOffers);
         setTable("Kurs kupna",columnMinWidth,rightBuyOffers,buyOffers);
 
         currencyInfo.getChildren().addAll(symbol,tmsBid,tmsAsk);
@@ -68,8 +68,8 @@ public class SingleCurrencyView extends HBox {
     {
         Platform.runLater(() -> {
             try {
-                tmsBid.setText(String.format("%.4f", dto.getTmsBid()).replace(",", "."));
-                tmsAsk.setText(String.format("%.4f", dto.getTmsAsk()).replace(",", "."));
+                tmsBid.setText(String.format("%.5f", dto.getTmsBid()).replace(",", "."));
+                tmsAsk.setText(String.format("%.5f", dto.getTmsAsk()).replace(",", "."));
                 setOffers(dto.getTopAsks(), sellOffers);
                 setOffers(dto.getTopBids(), buyOffers);
                 leftSellOffers.refresh();

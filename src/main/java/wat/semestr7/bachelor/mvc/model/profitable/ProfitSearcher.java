@@ -66,17 +66,18 @@ public class ProfitSearcher {
 
         Map<String,List<WalutomatOffer>> walutomatOffersPerCurrency = getPotentiallyProfitableOffers(allData);
 
-        double commission = Double.parseDouble(propertiesController.getProperties().getProperty("commission"));
-        BigDecimal profit = BigDecimal.ZERO;
-        BigDecimal minimalProfit = new BigDecimal(properties.getProperty("minProfit"));
+        double commission = Double.parseDouble(propertiesController.getProperties().getProperty("Prowizja"));
+
+        BigDecimal minimalProfit = new BigDecimal(properties.getProperty("Zysk"));
 
         for(Map.Entry<String, List<WalutomatOffer>> entry : walutomatOffersPerCurrency.entrySet())
         {
+            BigDecimal profit = BigDecimal.ZERO;
+            ProfitableOfferDto profitableOffer = new ProfitableOfferDto();
             String symbol = entry.getKey();
             List<WalutomatOffer> offers = entry.getValue();
             double pips = 0.0001 * Integer.parseInt(properties.getProperty(symbol));
             TmsCurrency tms = allData.get(entry.getKey()).getTmsRates();
-            ProfitableOfferDto profitableOffer = new ProfitableOfferDto();
 
             if(offers.get(0).isBid()) profitableOffer.setAction(ProfitableOfferDto.Action.SELL);
             else profitableOffer.setAction(ProfitableOfferDto.Action.BUY);
@@ -100,32 +101,36 @@ public class ProfitSearcher {
     private BigDecimal getProfitInPLN(WalutomatOffer offer, double commission, double pips, TmsCurrency tms, String symbol,Map<String,CurrencyDto> allData)
     {
         BigDecimal walAmount;
-        BigDecimal walRate = new BigDecimal(offer.getRate());
         BigDecimal bankRate;
         BigDecimal iPayToWal;
         BigDecimal getFromBank;
         BigDecimal profit;
 
-        if(offer.isBid())
+        if(offer.isBid())   //for currency XY i want to transact with walutomat : sell X and get Y  (walutomat left table)
         {
-            walAmount = new BigDecimal(offer.getCounter_amount() * offer.getCount());
-            iPayToWal = walAmount.divide(walRate,2,BigDecimal.ROUND_DOWN).multiply(new BigDecimal(1+commission));
+            walAmount = new BigDecimal(offer.getCounter_amount() * offer.getCount());   //in currency  Y
+            iPayToWal = new BigDecimal(offer.getAmount() * offer.getCount()).multiply(new BigDecimal(1+commission));    // in currency X
             bankRate = new BigDecimal(tms.getAsk() + pips);
-            getFromBank = walAmount.divide(bankRate,2,BigDecimal.ROUND_DOWN);
-            profit = getFromBank.subtract(iPayToWal).multiply(bankRate);
+            getFromBank = walAmount.divide(bankRate,2,BigDecimal.ROUND_DOWN);   //in currency  X
+            profit = getFromBank.subtract(iPayToWal); //in currency X
         }
-        else
+        else                //for currency XY i want a transaction with walutomat : buy X for Y
         {
-            walAmount = new BigDecimal(offer.getAmount() * offer.getCount());
-            iPayToWal = walAmount.multiply(walRate).multiply(new BigDecimal(1+commission));
-            getFromBank = walAmount.multiply(new BigDecimal(tms.getBid()-pips));
-            profit = getFromBank.subtract(iPayToWal);
+            walAmount = new BigDecimal(offer.getAmount() * offer.getCount());   //in currency  X   -> this is what I get from walutomat
+            iPayToWal = new BigDecimal(offer.getCounter_amount() * offer.getCount()).multiply(new BigDecimal(1+commission));    //in currency Y
+            bankRate = new BigDecimal(tms.getBid()-pips);
+            getFromBank = walAmount.multiply(bankRate);     // in currency Y
+            profit = getFromBank.subtract(iPayToWal);       //in currency  Y
         }
-        if(!symbol.toLowerCase().contains("pln"))
+        boolean isPlnCurrency = symbol.toLowerCase().contains("pln");
+        if(!(!offer.isBid() && isPlnCurrency))  //if not buying for PLN then need to count profit in PLN
         {
-            String currentProfitCurrency = symbol.substring(3,6);
-            BigDecimal tmsBid = new BigDecimal(allData.get(currentProfitCurrency + "PLN").getTmsBid());
-            profit = profit.multiply(tmsBid);
+            String plnCurrency;
+            if(offer.isBid()) plnCurrency = isPlnCurrency ? symbol : symbol.substring(0,3) + "PLN";
+            else plnCurrency = symbol.substring(3,6) + "PLN";
+            double plnPips = 0.0001 * Double.parseDouble(propertiesController.getProperties().getProperty(plnCurrency));
+            BigDecimal tmsBidForPln = new BigDecimal(allData.get(plnCurrency).getTmsBid() - plnPips);
+            profit = profit.multiply(tmsBidForPln);
         }
         return profit.setScale(2,BigDecimal.ROUND_DOWN);
     }
