@@ -48,11 +48,6 @@ public class CrawlingController
     private int counter=1;
     public void newDataSubmitted(Map<String, CurrencyDto> newData)
     {
-        try {
-            Thread.sleep(1000);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
         if(++counter%100==0) System.out.println(".");
         else System.out.print(".");
         setLastCrawlingTime(System.currentTimeMillis());
@@ -60,6 +55,8 @@ public class CrawlingController
         {
             listener.newDataReceived(newData);
         }
+        try { Thread.sleep(1000); }
+        catch (InterruptedException e) { e.printStackTrace(); }
     }
 
     public void getCrawlingException(Exception ex)
@@ -77,8 +74,6 @@ public class CrawlingController
 
     public void startCrawling()
     {
-        //Platform.runLater(crawler);
-
         crawlingThread = new Thread(crawler);
         crawlingThread.start();
     }

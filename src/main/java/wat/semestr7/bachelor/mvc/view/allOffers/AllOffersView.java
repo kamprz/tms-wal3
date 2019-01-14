@@ -8,6 +8,7 @@ import javafx.scene.image.Image;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.GridPane;
 import javafx.stage.Stage;
+import javafx.stage.Window;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import wat.semestr7.bachelor.mvc.controller.AllOffersController;
@@ -28,7 +29,6 @@ public class AllOffersView extends GridPane {
 
     private int counter = 1;
     private long lastTimeMilis = 0;
-    private boolean isOpened = false;
 
     public void printData(Map<String, CurrencyDto> newData)
     {
@@ -40,8 +40,8 @@ public class AllOffersView extends GridPane {
 
     public void close()
     {
+        allOffersController.viewWasClosed();
         stage.close();
-        isOpened=false;
     }
 
 
@@ -99,7 +99,8 @@ public class AllOffersView extends GridPane {
         else columns = 1;
         rows = pln.size()>foreign.size() ? pln.size() : foreign.size();
         setStage(columns,rows);
-        isOpened=true;
+        Stage stage = (Stage)this.getScene().getWindow();
+        stage.setOnCloseRequest((e) -> close());
     }
 
     private void setStage(int columns, int rows)
@@ -118,10 +119,6 @@ public class AllOffersView extends GridPane {
         stage.setScene(new Scene(pane));
         // primaryStage.setFullScreen(true);
         stage.show();
-        stage.setOnCloseRequest(event -> isOpened=false);
-    }
-
-    public boolean isOpened() {
-        return isOpened;
+        stage.setOnCloseRequest(event -> close());
     }
 }

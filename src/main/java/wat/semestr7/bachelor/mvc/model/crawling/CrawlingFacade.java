@@ -46,6 +46,7 @@ public class CrawlingFacade implements Runnable
                 Map<String, CurrencyDto> newData = crawl();
                 submitNewData(newData);
             } catch (Exception e) {
+                e.printStackTrace();
                 crawlingController.getCrawlingException(e);
             }
         }

@@ -14,13 +14,11 @@ import java.util.concurrent.Semaphore;
 @Controller
 public class AllOffersController implements NewDataListener
 {
-
     private AllOffersView view;
     @Autowired
     private CrawlingController crawlingController;
     @Autowired
     private PropertiesController propertiesController;
-
 
     @PostConstruct
     private void subscribe()
@@ -31,7 +29,7 @@ public class AllOffersController implements NewDataListener
     @Override
     public void newDataReceived(Map<String, CurrencyDto> newData) {
         synchronized(this) {
-            if (view.isOpened()) view.printData(newData);
+            if (view != null) view.printData(newData);
         }
     }
 
@@ -48,20 +46,28 @@ public class AllOffersController implements NewDataListener
     public void closeView()
     {
         view.close();
+        view = null;
     }
 
     public void openView()
     {
-        view = new AllOffersView(this);
-        view.open();
+        if(view==null)
+        {
+            view = new AllOffersView(this);
+            view.open();
+        }
     }
 
     public boolean isOpened(){
-        return view.isOpened();
+        return view!=null;
     }
 
     public Set<String> getSelectedCurrencies()
     {
         return propertiesController.getSelectedCurrencies();
+    }
+
+    public void viewWasClosed() {
+        view = null;
     }
 }

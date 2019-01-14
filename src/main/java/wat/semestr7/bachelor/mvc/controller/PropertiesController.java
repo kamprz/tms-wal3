@@ -4,7 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import wat.semestr7.bachelor.mvc.model.dao.AllPropertiesDao;
 import wat.semestr7.bachelor.mvc.model.dao.SelectedCurrenciesDao;
-import wat.semestr7.bachelor.mvc.view.PropertiesView;
+import wat.semestr7.bachelor.mvc.view.properties.PropertiesView;
 
 import java.util.List;
 import java.util.Properties;
@@ -17,7 +17,7 @@ public class PropertiesController
     private AllPropertiesDao currenciesPropertiesDao;
     @Autowired
     private SelectedCurrenciesDao selectedCurrenciesDao;
-    @Autowired
+
     private PropertiesView propertiesView;
 
 
@@ -47,16 +47,25 @@ public class PropertiesController
 
     public void openPropertiesView()
     {
-        propertiesView.open();
+        if(propertiesView==null)
+        {
+            propertiesView = new PropertiesView(this);
+            propertiesView.open();
+        }
     }
 
     public void closePropertiesView()
     {
         propertiesView.close();
+        propertiesView = null;
     }
 
     public boolean isViewOpened()
     {
-        return propertiesView.isOpened();
+        return propertiesView != null;
+    }
+
+    public void viewWasClosed() {
+        propertiesView = null;
     }
 }

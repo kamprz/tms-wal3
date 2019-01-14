@@ -1,4 +1,4 @@
-package wat.semestr7.bachelor.mvc.view;
+package wat.semestr7.bachelor.mvc.view.properties;
 
 import javafx.geometry.HPos;
 import javafx.geometry.Insets;
@@ -20,19 +20,20 @@ import wat.semestr7.bachelor.mvc.controller.PropertiesController;
 
 import java.util.*;
 
-@Component
 public class PropertiesView extends VBox
 {
-    @Autowired
     private PropertiesController controller;
     private Stage stage;
-
-    private boolean isOpened = false;
     private Map<String, TextField> textFieldMap;
     private Properties properties;
     private final String commissionString = "Prowizja";
     private final String profitString = "Zysk";
     private final String offertsString = "Ofert";
+
+    public PropertiesView(PropertiesController controller)
+    {
+        this.controller = controller;
+    }
 
     private void init()
     {
@@ -105,20 +106,19 @@ public class PropertiesView extends VBox
         this.setAlignment(Pos.CENTER);
         this.setPadding(new Insets(30));
         this.setSpacing(20);
-        this.setPrefWidth(320);
+        this.setPrefWidth(340);
         getChildren().addAll(pane,set);
     }
 
     public void close()
     {
+        controller.viewWasClosed();
         stage.close();
-        isOpened=false;
     }
 
     public void open()
     {
         init();
-        isOpened=true;
         setStage();
     }
 
@@ -163,7 +163,7 @@ public class PropertiesView extends VBox
             else if(event.getCode().equals(KeyCode.ESCAPE)) close();
         });
         stage.show();
-        stage.setOnCloseRequest(event -> isOpened=false);
+        stage.setOnCloseRequest(event -> close());
     }
 
     private Properties loadPreviousProperties()
@@ -197,9 +197,5 @@ public class PropertiesView extends VBox
             }
         }
         return properties;
-    }
-
-    public boolean isOpened() {
-        return isOpened;
     }
 }

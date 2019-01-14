@@ -154,7 +154,8 @@ public class SingleCurrencyView extends HBox {
         double amount = walOffer.isBid() ? walOffer.getCounter_amount() : walOffer.getAmount();
         String currency = walOffer.isBid() ? symbol.substring(3,6) : symbol.substring(0,3);
         String since = DateUtils.transformOffersDate(walOffer);
-        return new OfferViewRow(walOffer.getRate(),amount+" "+currency,since);
+        String rate = String.format("%.4f", walOffer.getRate()).replace(",", ".");
+        return new OfferViewRow(rate,amount+" "+currency,since);
     }
 
     private void setAsk(Double newAsk)

@@ -102,11 +102,6 @@ public class ProfitableOffersView extends VBox
         if(isOpened()) newDataIndicator.newData();
     }
 
-    public void handleException(Exception e)
-    {
-
-    }
-
     private void setUpperBox()
     {
         upperPane = new AnchorPane();
@@ -262,5 +257,15 @@ public class ProfitableOffersView extends VBox
     {
         DecimalFormat formatter = new DecimalFormat("#,##0.00");
         return formatter.format(amount);
+    }
+
+    public void handleException(Exception ex) {
+        Alert alert = new Alert(Alert.AlertType.ERROR);
+        alert.setTitle("Błąd!");
+        alert.setHeaderText("Błąd pobierania danych.");
+        alert.setContentText("Nastąpi zamknięcie programu.");
+        alert.showAndWait();
+        Platform.exit();
+        System.exit(1);
     }
 }

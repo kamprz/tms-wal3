@@ -94,7 +94,7 @@ public class ProfitSearcher {
             profitableOffer.setEstimatedProfit(profit);
             if(profit.compareTo(minimalProfit) > 0) result.add(profitableOffer);
         }
-        Comparator<ProfitableOfferDto> c = (o1, o2) -> (int)(o1.getAmount().doubleValue() - o2.getAmount().doubleValue());
+        Comparator<ProfitableOfferDto> c = (o1, o2) -> (int)(o1.getEstimatedProfit().doubleValue() - o2.getEstimatedProfit().doubleValue());
         return result.stream().sorted(c).collect(Collectors.toList());
     }
 

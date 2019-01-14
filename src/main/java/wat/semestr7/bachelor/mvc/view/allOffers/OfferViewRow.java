@@ -10,8 +10,8 @@ public class OfferViewRow {
     private SimpleStringProperty amount;
     private SimpleStringProperty since;
 
-    public OfferViewRow(double rate, String amount, String since) {
-        this.rate = new SimpleStringProperty(rate+"");
+    public OfferViewRow(String rate, String amount, String since) {
+        this.rate = new SimpleStringProperty(rate);
         this.amount = new SimpleStringProperty(amount);
         this.since = new SimpleStringProperty(since);
     }
@@ -28,13 +28,9 @@ public class OfferViewRow {
         this.since.set(since);
     }
 
-    public String getRate() {
-        return rate.get();
-    }
+    public String getRate() { return rate.get(); }
 
-    public SimpleStringProperty rateProperty() {
-        return rate;
-    }
+    public SimpleStringProperty rateProperty() { return rate; }
 
     public String getAmount() {
         return amount.get();

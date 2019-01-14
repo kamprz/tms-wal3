@@ -5,7 +5,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import wat.semestr7.bachelor.mvc.controller.AllOffersController;
 import wat.semestr7.bachelor.mvc.controller.ProfitableOffersController;
-import wat.semestr7.bachelor.mvc.view.PropertiesView;
+import wat.semestr7.bachelor.mvc.controller.PropertiesController;
 
 @Controller
 public class ProfitableOffersFxController {
@@ -18,7 +18,7 @@ public class ProfitableOffersFxController {
     @Autowired
     private ProfitableOffersController profitableOffersController;
     @Autowired
-    private PropertiesView propertiesView;
+    private PropertiesController propertiesController;
 
     public void getAllOffers()
     {
@@ -32,6 +32,6 @@ public class ProfitableOffersFxController {
 
     public void openOptions()
     {
-        propertiesView.open();
+        propertiesController.openPropertiesView();
     }
 }
