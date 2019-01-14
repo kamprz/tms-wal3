@@ -34,6 +34,7 @@ public class PropertiesView extends VBox
     private Properties properties;
     private final String commissionString = "Prowizja";
     private final String profitString = "Zysk";
+    private final String offertsString = "Ofert";
 
     private void init()
     {
@@ -44,6 +45,15 @@ public class PropertiesView extends VBox
         pane.setHgap(10);
         pane.setVgap(10);
         int i=0;
+
+        Label offerts = new Label("Liczba ofert");
+        GridPane.setHalignment(offerts, HPos.CENTER);
+        TextField offertsTf = new TextField(properties.getProperty(offertsString));
+        offertsTf.setAlignment(Pos.CENTER);
+        pane.add(offerts,0,i);
+        pane.add(offertsTf,1,i++);
+        textFieldMap.put(offertsString,offertsTf);
+
         Label commision = new Label(commissionString);
         GridPane.setHalignment(commision, HPos.CENTER);
         TextField commissionTf = new TextField(properties.getProperty(commissionString));
@@ -83,7 +93,7 @@ public class PropertiesView extends VBox
         this.setAlignment(Pos.CENTER);
         this.setPadding(new Insets(30));
         this.setSpacing(20);
-        this.setPrefWidth(370);
+        this.setPrefWidth(320);
         getChildren().addAll(pane,set);
     }
 
@@ -108,7 +118,15 @@ public class PropertiesView extends VBox
         catch (NumberFormatException e)
         {
             String message = "Zły format danych dla pola " + e.getMessage();
-            System.out.println(message);
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setTitle("Błąd!");
+            alert.setHeaderText("Błąd formatu danych.");
+            alert.setContentText(message);
+            alert.showAndWait();
+        }
+        catch (IllegalArgumentException e)
+        {
+            String message = "Wprowadzono ujemna wartosc dla pola " + e.getMessage();
             Alert alert = new Alert(Alert.AlertType.ERROR);
             alert.setTitle("Błąd!");
             alert.setHeaderText("Błąd formatu danych.");
@@ -141,20 +159,33 @@ public class PropertiesView extends VBox
         return controller.getProperties();
     }
 
-    private Properties getEnteredProperties() throws NumberFormatException
+    private Properties getEnteredProperties() throws NumberFormatException, IllegalArgumentException
     {
         for (Map.Entry<String, TextField> entry : textFieldMap.entrySet()) {
             try {
                 if (entry.getKey().length() == 6) Integer.parseInt(entry.getValue().getText());
                 else if (entry.getKey().equals(commissionString)) Double.parseDouble(entry.getValue().getText());
                 else if (entry.getKey().equals(profitString)) Double.parseDouble(entry.getValue().getText());
+                if(entry.getValue().getText().charAt(0) == '-')
+                {
+                    throw new IllegalArgumentException();
+                }
                 properties.put(entry.getKey(), entry.getValue().getText());
+
             }
             catch(NumberFormatException e)
             {
-                   throw new NumberFormatException(entry.getKey() + " : " + entry.getValue().getText());
+                throw new NumberFormatException(entry.getKey() + " : " + entry.getValue().getText());
+            }
+            catch(IllegalArgumentException e)
+            {
+                throw new IllegalArgumentException(entry.getKey());
             }
         }
         return properties;
+    }
+
+    public boolean isOpened() {
+        return isOpened;
     }
 }

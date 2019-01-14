@@ -12,7 +12,7 @@ public class ProfitableOffersFxController {
     @Autowired
     private SelectedCurrenciesFxmlController selectedCurrenciesFxmlController;
     @Autowired
-    private FxSceneController fxSceneController;
+    private FxMainStageController fxMainStageController;
     @Autowired
     private AllOffersController allOffersController;
     @Autowired
@@ -27,7 +27,7 @@ public class ProfitableOffersFxController {
 
     public void changeSelectedCurrencies(Parent sceneElement)
     {
-        fxSceneController.switchToSelectingScene();
+        fxMainStageController.switchToSelectingScene();
     }
 
     public void openOptions()

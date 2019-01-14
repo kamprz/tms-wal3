@@ -3,11 +3,9 @@ package wat.semestr7.bachelor.mvc.controller.fx;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.Parent;
-import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.CheckBox;
-import javafx.stage.Stage;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import wat.semestr7.bachelor.mvc.controller.AllOffersController;
@@ -15,6 +13,7 @@ import wat.semestr7.bachelor.mvc.controller.ProfitableOffersController;
 import wat.semestr7.bachelor.mvc.controller.PropertiesController;
 
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 @Controller
@@ -24,7 +23,7 @@ public class SelectedCurrenciesFxmlController {
     @Autowired
     private ProfitableOffersController profitableOffersController;
     @Autowired
-    private FxSceneController fxSceneController;
+    private FxMainStageController fxMainStageController;
     @Autowired
     private AllOffersController allOffersController;
     @FXML
@@ -67,18 +66,27 @@ public class SelectedCurrenciesFxmlController {
             if(selected.size() > 0)
             {
                 propertiesController.setSelectedCurrencies(selected);
-                fxSceneController.switchToProfitableScene();
-                if(allOffersController.isOpened() && !selected.equals(previous))
+                fxMainStageController.switchToProfitableScene();
+                if(!selected.equals(previous))
                 {
-                    allOffersController.closeView();
-                    allOffersController.openView();
+                    if(allOffersController.isOpened())
+                    {
+                        allOffersController.closeView();
+                        allOffersController.openView();
+                    }
+                    if(propertiesController.isViewOpened())
+                    {
+                        propertiesController.closePropertiesView();
+                        propertiesController.openPropertiesView();
+                    }
                 }
             }
             else popupDialog();
         });
 
         selectAll.addEventHandler(ActionEvent.ANY, event -> {
-            for(String symbol : propertiesController.getAllExistingCurrencies())
+            List<String> allCurrencies = propertiesController.getAllExistingCurrencies();
+            for(String symbol : allCurrencies)
             {
                 mapSymbolToCheckBox(symbol).setSelected(true);
             }

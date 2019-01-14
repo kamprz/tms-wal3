@@ -2,6 +2,7 @@ package wat.semestr7.bachelor.mvc.view.allOffers;
 
 import javafx.beans.property.SimpleStringProperty;
 import lombok.Data;
+import wat.semestr7.bachelor.utils.DateUtils;
 
 @Data
 public class OfferView {

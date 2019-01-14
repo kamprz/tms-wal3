@@ -20,6 +20,7 @@ public class PropertiesController
     @Autowired
     private PropertiesView propertiesView;
 
+
     public void setSelectedCurrencies(Set<String> selectedCurrencies)
     {
         selectedCurrenciesDao.setChosenCurrencies(selectedCurrencies);
@@ -46,11 +47,16 @@ public class PropertiesController
 
     public void openPropertiesView()
     {
-
+        propertiesView.open();
     }
 
     public void closePropertiesView()
     {
+        propertiesView.close();
+    }
 
+    public boolean isViewOpened()
+    {
+        return propertiesView.isOpened();
     }
 }

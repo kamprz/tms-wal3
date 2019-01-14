@@ -10,25 +10,25 @@
 <?import javafx.scene.shape.Line?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane prefHeight="400.0" prefWidth="594.0" style="-fx-background-color: fdfff3;" xmlns="http://javafx.com/javafx/8.0.121" xmlns:fx="http://javafx.com/fxml/1" fx:controller="wat.semestr7.bachelor.mvc.controller.fx.SelectedCurrenciesFxmlController">
+<AnchorPane prefHeight="400.0" prefWidth="594.0" style="-fx-background-color: fdfff3;" xmlns="http://javafx.com/javafx/8.0.172-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="wat.semestr7.bachelor.mvc.controller.fx.SelectedCurrenciesFxmlController">
    <children>
       <CheckBox fx:id="chEURPLN" layoutX="41.0" layoutY="212.0" mnemonicParsing="false" text="EUR / PLN">
          <effect>
             <SepiaTone />
          </effect></CheckBox>
-      <CheckBox fx:id="chUSDPLN" layoutX="41.0" layoutY="250.0" mnemonicParsing="false" text="USD / PLN">
+      <CheckBox fx:id="chCHFPLN" layoutX="41.0" layoutY="250.0" mnemonicParsing="false" text="CHF / PLN">
          <effect>
             <SepiaTone />
          </effect></CheckBox>
-      <CheckBox fx:id="chCHFPLN" layoutX="164.0" layoutY="212.0" mnemonicParsing="false" text="CHF / PLN">
+      <CheckBox fx:id="chGBPPLN" layoutX="164.0" layoutY="212.0" mnemonicParsing="false" text="GBP / PLN">
          <effect>
             <SepiaTone />
          </effect></CheckBox>
-      <CheckBox fx:id="chGBPPLN" layoutX="164.0" layoutY="250.0" mnemonicParsing="false" text="GBP / PLN">
+      <CheckBox fx:id="chUSDPLN" layoutX="164.0" layoutY="250.0" mnemonicParsing="false" text="USD / PLN">
          <effect>
             <SepiaTone />
          </effect></CheckBox>
-      <CheckBox fx:id="chEURCHF" layoutX="303.0" layoutY="288.0" mnemonicParsing="false" text="EUR / CHF">
+      <CheckBox fx:id="chEURUSD" layoutX="303.0" layoutY="288.0" mnemonicParsing="false" text="EUR / USD">
          <effect>
             <SepiaTone />
          </effect></CheckBox>
@@ -36,19 +36,19 @@
          <effect>
             <SepiaTone />
          </effect></CheckBox>
-      <CheckBox fx:id="chEURUSD" layoutX="303.0" layoutY="213.0" mnemonicParsing="false" text="EUR / USD">
+      <CheckBox fx:id="chEURCHF" layoutX="303.0" layoutY="213.0" mnemonicParsing="false" text="EUR / CHF">
          <effect>
             <SepiaTone />
          </effect></CheckBox>
-      <CheckBox fx:id="chGBPUSD" layoutX="423.0" layoutY="212.0" mnemonicParsing="false" text="GBP / USD">
+      <CheckBox fx:id="chGBPCHF" layoutX="423.0" layoutY="212.0" mnemonicParsing="false" text="GBP / CHF">
          <effect>
             <SepiaTone />
          </effect></CheckBox>
-      <CheckBox fx:id="chUSDCHF" layoutX="423.0" layoutY="250.0" mnemonicParsing="false" text="USD / CHF">
+      <CheckBox fx:id="chGBPUSD" layoutX="423.0" layoutY="250.0" mnemonicParsing="false" text="GBP / USD">
          <effect>
             <SepiaTone />
          </effect></CheckBox>
-      <CheckBox fx:id="chGBPCHF" layoutX="423.0" layoutY="287.0" mnemonicParsing="false" text="GBP / CHF">
+      <CheckBox fx:id="chUSDCHF" layoutX="423.0" layoutY="287.0" mnemonicParsing="false" text="USD / CHF">
          <effect>
             <SepiaTone />
          </effect></CheckBox>

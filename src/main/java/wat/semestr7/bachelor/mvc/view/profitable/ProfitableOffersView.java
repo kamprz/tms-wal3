@@ -1,24 +1,20 @@
 package wat.semestr7.bachelor.mvc.view.profitable;
 
 import javafx.application.Platform;
-import javafx.beans.property.ObjectProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-import javafx.event.EventHandler;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
-import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
-import javafx.stage.Stage;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import wat.semestr7.bachelor.mvc.controller.PropertiesController;
-import wat.semestr7.bachelor.mvc.controller.fx.FxSceneController;
+import wat.semestr7.bachelor.mvc.controller.fx.FxMainStageController;
 import wat.semestr7.bachelor.mvc.controller.fx.ProfitableOffersFxController;
 import wat.semestr7.bachelor.mvc.model.profitable.ProfitableOfferDto;
 
@@ -37,7 +33,7 @@ public class ProfitableOffersView extends VBox
     @Autowired
     private ProfitableOffersFxController fxController;
     @Autowired
-    private FxSceneController sceneController;
+    private FxMainStageController sceneController;
 
     private double width = 1078;
     private NewDataIndicator newDataIndicator;
@@ -173,7 +169,8 @@ public class ProfitableOffersView extends VBox
     private void setLowerBox()
     {
         lowerBox = new VBox();
-        lowerBox.setPrefSize(width,300);
+        int selectedCurrenciesAmount = propertiesController.getSelectedCurrencies().size();
+        lowerBox.setPrefSize(width,230);
         lowerBox.setBackground(background);
         lowerBox.setAlignment(Pos.CENTER);
         Label label = new Label("Korzystne zlecenia:");
@@ -237,13 +234,13 @@ public class ProfitableOffersView extends VBox
         double tmsRate;
         if(isBuyingAction.test(offer))
         {
-               operation = "Kup " + amountToString(offer.getAmount()) + " " + firstCurr + " za " + secCurr;
+               operation = "Kup " + firstCurr + " za " + amountToString(offer.getAmount()) + " "   + secCurr;
                tms = ". Bid = ";
                tmsRate = offer.getTmsRates().getBid();
         }
         else
         {
-            operation = "Sprzedaj " + firstCurr + " za " + amountToString(offer.getAmount()) + " " + secCurr;
+            operation = "Sprzedaj " + amountToString(offer.getAmount()) + " " + firstCurr + " za " + secCurr;
             tms = ". Ask = ";
             tmsRate = offer.getTmsRates().getAsk();
         }
@@ -263,7 +260,7 @@ public class ProfitableOffersView extends VBox
 
     private String amountToString(BigDecimal amount)
     {
-        DecimalFormat formatter = new DecimalFormat("#,###.00");
+        DecimalFormat formatter = new DecimalFormat("#,##0.00");
         return formatter.format(amount);
     }
 }

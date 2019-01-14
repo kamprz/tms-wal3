@@ -6,11 +6,13 @@ import javafx.collections.ObservableList;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.control.Label;
+import javafx.scene.control.TableCell;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
+import javafx.util.Callback;
 import wat.semestr7.bachelor.mvc.model.crawling.CurrencyDto;
 import wat.semestr7.bachelor.mvc.model.crawling.formatter.walutomat.WalutomatOffer;
 import wat.semestr7.bachelor.utils.DateUtils;
@@ -55,7 +57,7 @@ public class SingleCurrencyView extends HBox {
         currencyInfo.setAlignment(Pos.CENTER);
 
         //setTables
-        int columnMinWidth = 130;
+        int columnMinWidth = 120;
         setTable("Kurs sprzedaży",columnMinWidth,leftSellOffers,sellOffers);
         setTable("Kurs kupna",columnMinWidth,rightBuyOffers,buyOffers);
 
@@ -90,20 +92,25 @@ public class SingleCurrencyView extends HBox {
         String amountColStr = "Łączna kwota";
         String awaitsColStr = "Oczekuje od";
 
+
         TableColumn rate = new TableColumn(rateColStr);
-        rate.setMinWidth(columnMinWidth-10);
+        rate.setCellFactory(param -> new TableCellFormat());
+        rate.setMinWidth(columnMinWidth);
         rate.setCellValueFactory(new PropertyValueFactory<OfferView,String>("rate"));
 
         TableColumn amount = new TableColumn(amountColStr);
-        amount.setMinWidth(columnMinWidth-10);
+        amount.setMinWidth(columnMinWidth);
         amount.setCellValueFactory(new PropertyValueFactory<OfferView,String>("amount"));
+        amount.setCellFactory(param -> new TableCellFormat());
 
         TableColumn awaits = new TableColumn(awaitsColStr);
-        awaits.setMinWidth(columnMinWidth+20);
+        awaits.setMinWidth(columnMinWidth);
         awaits.setCellValueFactory(new PropertyValueFactory<OfferView,String>("since"));
+        awaits.setCellFactory(param -> new TableCellFormat());
 
         tableView.getColumns().addAll(rate, amount, awaits);
         tableView.setEditable(false);
+        tableView.setPrefWidth(columnMinWidth*3 + 20);
         tableView.setItems(data);
     }
 

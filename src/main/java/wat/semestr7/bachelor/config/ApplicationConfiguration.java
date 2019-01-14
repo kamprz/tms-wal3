@@ -2,34 +2,16 @@ package wat.semestr7.bachelor.config;
 
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
-import javafx.geometry.Rectangle2D;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.control.Label;
 import javafx.scene.image.Image;
-import javafx.scene.layout.AnchorPane;
-import javafx.scene.layout.GridPane;
-import javafx.scene.layout.VBox;
-import javafx.scene.paint.*;
-import javafx.scene.shape.Circle;
-import javafx.stage.Screen;
 import javafx.stage.Stage;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.builder.SpringApplicationBuilder;
 import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.context.annotation.ComponentScan;
 import wat.semestr7.bachelor.mvc.controller.CrawlingController;
-import wat.semestr7.bachelor.mvc.controller.PropertiesController;
-import wat.semestr7.bachelor.mvc.controller.fx.FxSceneController;
-import wat.semestr7.bachelor.mvc.view.PropertiesView;
-import wat.semestr7.bachelor.mvc.view.allOffers.AllOffersView;
-import wat.semestr7.bachelor.mvc.view.profitable.CurrencyIndicator;
-import wat.semestr7.bachelor.mvc.view.profitable.NewDataIndicator;
-import wat.semestr7.bachelor.mvc.view.profitable.ProfitableOffersView;
-
-import java.util.LinkedList;
-import java.util.List;
+import wat.semestr7.bachelor.mvc.controller.fx.FxMainStageController;
 
 @SpringBootApplication
 @ComponentScan(basePackages = "wat.semestr7.bachelor")
@@ -54,9 +36,9 @@ public class ApplicationConfiguration extends Application {
 	public void start(Stage primaryStage) throws Exception {
 		Scene scene = new Scene(rootNode);
 
-		FxSceneController fxSceneController = context.getBean("fxSceneController", FxSceneController.class);
-		fxSceneController.setSelectingCurrenciesScene(scene);
-		fxSceneController.setMainStage(primaryStage);
+		FxMainStageController fxMainStageController = context.getBean("fxMainStageController", FxMainStageController.class);
+		fxMainStageController.setSelectingCurrenciesScene(scene);
+		fxMainStageController.setMainStage(primaryStage);
 
 		primaryStage.setScene(scene);
 		primaryStage.setTitle("Wybór par walutowych");

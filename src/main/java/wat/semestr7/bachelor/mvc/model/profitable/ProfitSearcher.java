@@ -142,11 +142,11 @@ public class ProfitSearcher {
 
     private BigDecimal getProfitableOfferAmount(List<WalutomatOffer> offers)
     {
-        //amount if isBid - counter_amount ; if ask - amount
+        //amount if isBid - amount ; if ask - amount
         BigDecimal value = BigDecimal.ZERO;
         for(WalutomatOffer offer : offers)
         {
-            double amount = offer.isBid() ? offer.getCounter_amount() : offer.getAmount();
+            double amount = offer.isBid() ? offer.getAmount() : offer.getCounter_amount();
             value = value.add(new BigDecimal(amount * offer.getCount())) ;
         }
         value = value.setScale(2,BigDecimal.ROUND_DOWN);
