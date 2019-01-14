@@ -24,6 +24,7 @@ public class NewDataIndicator extends Circle
     private List<Stop> changeStop = new LinkedList<>();
     private double focusAngle =360, focusDistance = 0., centerX=0.5, centerY=0.5, radius=0.6;
     private boolean proportional = true;
+    private final ExecutorService executorService = Executors.newFixedThreadPool(2);
     private final Semaphore semaphore = new Semaphore(1);
 
     public NewDataIndicator()
@@ -89,7 +90,8 @@ public class NewDataIndicator extends Circle
     {
         if(semaphore.tryAcquire())
         {
-            new Thread(getTask()).start();
+            //new Thread(getTask()).start();
+            executorService.execute(getTask());
         }
     }
 }

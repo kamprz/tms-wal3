@@ -7,6 +7,5 @@ public class ToDo
             - properties
             - crawling
     miganie przy zmianach
-    kolejnosc wyswietlania - pln pierwsze - zle tez w allOffers
      */
 }

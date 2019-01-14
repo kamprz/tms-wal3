@@ -55,8 +55,8 @@ public class AllOffersView extends GridPane {
         this.setPadding(new Insets(10));
 
         Set<String> selectedCurrencies = allOffersController.getSelectedCurrencies();
-        List<String> pln = new LinkedList<>();
-        List<String> foreign = new LinkedList<>();
+        LinkedList<String> pln = new LinkedList<>();
+        LinkedList<String> foreign = new LinkedList<>();
         singleCurrencyViews = new HashMap<>();
 
         for(String str : selectedCurrencies)
@@ -71,7 +71,9 @@ public class AllOffersView extends GridPane {
             singleCurrencyViews.put(symbol, singleCurrencyView);
         }
 
-        //stage.setHeight();
+        Collections.sort(pln);
+        Collections.sort(foreign);
+
         while(Math.abs(pln.size() - foreign.size()) > 1)
         {
             if(pln.size() > foreign.size())
@@ -81,12 +83,11 @@ public class AllOffersView extends GridPane {
             }
             else
             {
-                String removed = foreign.remove(foreign.size() - 1);
-                pln.add(removed);
+                String removed = foreign.remove(0);
+                pln.addLast(removed);
             }
         }
-        Collections.sort(pln);
-        Collections.sort(foreign);
+
         for(int i=0;i<pln.size();i++)
         {
             this.add(singleCurrencyViews.get(pln.get(i)),0,i);

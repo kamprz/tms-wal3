@@ -18,9 +18,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import wat.semestr7.bachelor.mvc.controller.PropertiesController;
 
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Properties;
+import java.util.*;
 
 @Component
 public class PropertiesView extends VBox
@@ -77,7 +75,21 @@ public class PropertiesView extends VBox
         pane.add(currencies,0,i);
         pane.add(pips,1,i++);
 
-        for(String selectedCurr : controller.getSelectedCurrencies())
+
+        List<String> pln = new LinkedList<>();
+        List<String> foreign = new LinkedList<>();
+        for(String s : controller.getSelectedCurrencies())
+        {
+            if(s.toLowerCase().contains("pln")) pln.add(s);
+            else foreign.add(s);
+        }
+        Collections.sort(pln);
+        Collections.sort(foreign);
+        List<String> selectedCurrList = new LinkedList<>();
+        selectedCurrList.addAll(pln);
+        selectedCurrList.addAll(foreign);
+
+        for(String selectedCurr : selectedCurrList)
         {
             Label label = new Label(selectedCurr);
             GridPane.setHalignment(label, HPos.CENTER);
