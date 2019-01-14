@@ -15,9 +15,13 @@ import wat.semestr7.bachelor.mvc.model.crawling.CurrencyDto;
 
 import java.util.*;
 
-@Component()
+
 public class AllOffersView extends GridPane {
-    @Autowired
+
+    public AllOffersView(AllOffersController allOffersController) {
+        this.allOffersController = allOffersController;
+    }
+
     private AllOffersController allOffersController;
     private Map<String, SingleCurrencyView> singleCurrencyViews;
     private Stage stage;
@@ -28,13 +32,6 @@ public class AllOffersView extends GridPane {
 
     public void printData(Map<String, CurrencyDto> newData)
     {
-        /*if(counter %1 == 0)
-        {
-            long now = System.currentTimeMillis();
-            System.out.println("AllOffersView : " + counter + ". Data received. Time from last tick : " + (now - lastTimeMilis)/1000 + "s. Current time = " + new Date());
-            lastTimeMilis = now;
-        }
-        counter++;*/
         for(Map.Entry<String, CurrencyDto> entry : newData.entrySet())
         {
             singleCurrencyViews.get(entry.getKey()).setData(entry.getValue());

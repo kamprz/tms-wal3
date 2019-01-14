@@ -30,11 +30,14 @@ public class SingleCurrencyView extends HBox {
     private ObservableList<OfferViewRow> sellOffers = FXCollections.observableArrayList();
     private int height = 200;
     private int width = 910;
+
+    //Commented code is related to situation without crawling controller sleeping
+    /*
     private int triedToChangeBuyOffersXTimesInARow=0;
     private int triedToChangeSellOffersXTimesInARow=0;
     private int triedToChangeBidXTimesInARow = 0;
     private int triedToChangeAskXTimesInARow = 0;
-
+    */
     public SingleCurrencyView(String symbol)
     {
         super();
@@ -70,21 +73,14 @@ public class SingleCurrencyView extends HBox {
 
     public void setData(CurrencyDto dto)
     {
-        Platform.runLater(() -> {
-            try {
-                setBid(dto.getTmsBid());
-                setAsk(dto.getTmsAsk());
-                setOffers(dto.getTopAsks(), sellOffers, dto.getSymbol());
-                setOffers(dto.getTopBids(), buyOffers, dto.getSymbol());
-                leftSellOffers.refresh();
-                rightBuyOffers.refresh();
-            }
-            catch (Exception e)
-            {
-                System.out.println("Setting data to " + dto.getSymbol() + "tables crashed.");
-                leftSellOffers.refresh();
-                rightBuyOffers.refresh();
-            }
+        Platform.runLater(() ->
+        {
+            setBid(dto.getTmsBid());
+            setAsk(dto.getTmsAsk());
+            setOffers(dto.getTopAsks(), sellOffers, dto.getSymbol());
+            setOffers(dto.getTopBids(), buyOffers, dto.getSymbol());
+            leftSellOffers.refresh();
+            rightBuyOffers.refresh();
         });
     }
 
@@ -123,14 +119,14 @@ public class SingleCurrencyView extends HBox {
                 .map(o -> walutomatOfferToViewOffer(o, symbol))
                 .collect(Collectors.toList());
         newViewList.setAll(newOffers);
-        if(!newViewList.equals(viewList))
+        /*if(!newViewList.equals(viewList))
         {
             if(offers.get(0).isBid())
             {
                 triedToChangeBuyOffersXTimesInARow++;
                 if(triedToChangeBuyOffersXTimesInARow == 5)
                 {
-                    viewList.setAll(newOffers);
+                    Platform.runLater(() ->viewList.setAll(newOffers));
                     triedToChangeBuyOffersXTimesInARow = 0;
                 }
             }
@@ -139,7 +135,7 @@ public class SingleCurrencyView extends HBox {
                 triedToChangeSellOffersXTimesInARow++;
                 if(triedToChangeSellOffersXTimesInARow == 5)
                 {
-                    viewList.setAll(newOffers);
+                    Platform.runLater(() ->viewList.setAll(newOffers));
                     triedToChangeSellOffersXTimesInARow = 0;
                 }
             }
@@ -148,7 +144,9 @@ public class SingleCurrencyView extends HBox {
         else {
             if(offers.get(0).isBid()) triedToChangeBuyOffersXTimesInARow = 0;
             else triedToChangeSellOffersXTimesInARow = 0;
-        }
+        }*/
+        viewList.setAll(newOffers);
+        viewList.setAll(newOffers);
     }
 
     private OfferViewRow walutomatOfferToViewOffer(WalutomatOffer walOffer, String symbol)
@@ -161,27 +159,29 @@ public class SingleCurrencyView extends HBox {
 
     private void setAsk(Double newAsk)
     {
-        if(!(newAsk+"").equals(tmsAsk.getText()))
+        /*if(!(newAsk+"").equals(tmsAsk.getText()))
         {
             triedToChangeAskXTimesInARow++;
             if(triedToChangeAskXTimesInARow == 5)
             {
-                tmsAsk.setText(String.format("%.5f", newAsk).replace(",", "."));
+                Platform.runLater(() ->tmsAsk.setText(String.format("%.5f", newAsk).replace(",", ".")));
                 triedToChangeAskXTimesInARow = 0;
             }
-        }
+        }*/
+        tmsAsk.setText(String.format("%.5f", newAsk).replace(",", "."));
     }
 
     private void setBid(Double newBid)
     {
-        if(!(newBid+"").equals(tmsBid.getText()))
+        /*if(!(newBid+"").equals(tmsBid.getText()))
         {
             triedToChangeBidXTimesInARow++;
             if(triedToChangeBidXTimesInARow == 5)
             {
-                tmsBid.setText(String.format("%.5f", newBid).replace(",", "."));
+                Platform.runLater(() -> tmsBid.setText(String.format("%.5f", newBid).replace(",", ".")));
                 triedToChangeBidXTimesInARow = 0;
             }
-        }
+        }*/
+        tmsBid.setText(String.format("%.5f", newBid).replace(",", "."));
     }
 }

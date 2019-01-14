@@ -9,16 +9,18 @@ import wat.semestr7.bachelor.mvc.view.allOffers.AllOffersView;
 import javax.annotation.PostConstruct;
 import java.util.Map;
 import java.util.Set;
+import java.util.concurrent.Semaphore;
 
 @Controller
 public class AllOffersController implements NewDataListener
 {
-    @Autowired
+
     private AllOffersView view;
     @Autowired
     private CrawlingController crawlingController;
     @Autowired
     private PropertiesController propertiesController;
+
 
     @PostConstruct
     private void subscribe()
@@ -28,7 +30,9 @@ public class AllOffersController implements NewDataListener
 
     @Override
     public void newDataReceived(Map<String, CurrencyDto> newData) {
-        if(view.isOpened()) view.printData(newData);
+        synchronized(this) {
+            if (view.isOpened()) view.printData(newData);
+        }
     }
 
     public void allOffersViewOpened()
@@ -48,6 +52,7 @@ public class AllOffersController implements NewDataListener
 
     public void openView()
     {
+        view = new AllOffersView(this);
         view.open();
     }
 

@@ -40,6 +40,10 @@ public class ApplicationConfiguration extends Application {
 		fxMainStageController.setSelectingCurrenciesScene(scene);
 		fxMainStageController.setMainStage(primaryStage);
 
+		//AllOffersView allOffersView = context.getBean("allOffersView",AllOffersView.class);
+		//allOffersView.open();
+
+
 		primaryStage.setScene(scene);
 		primaryStage.setTitle("Wybór par walutowych");
 		primaryStage.getIcons().add(new Image("/stageIcon.png"));
