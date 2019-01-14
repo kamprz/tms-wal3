@@ -6,13 +6,11 @@ import javafx.collections.ObservableList;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.control.Label;
-import javafx.scene.control.TableCell;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
-import javafx.util.Callback;
 import wat.semestr7.bachelor.mvc.model.crawling.CurrencyDto;
 import wat.semestr7.bachelor.mvc.model.crawling.formatter.walutomat.WalutomatOffer;
 import wat.semestr7.bachelor.utils.DateUtils;
@@ -22,16 +20,20 @@ import java.util.stream.Collectors;
 
 public class SingleCurrencyView extends HBox {
 
-    private TableView<OfferView> leftSellOffers; //to buy by me
+    private TableView<OfferViewRow> leftSellOffers; //to buy by me
     private VBox currencyInfo;
     private Label symbol;
     private Label tmsBid;
     private Label tmsAsk;
-    private TableView<OfferView> rightBuyOffers; //to sell by me
-    private ObservableList<OfferView> buyOffers = FXCollections.observableArrayList();
-    private ObservableList<OfferView> sellOffers = FXCollections.observableArrayList();
+    private TableView<OfferViewRow> rightBuyOffers; //to sell by me
+    private ObservableList<OfferViewRow> buyOffers = FXCollections.observableArrayList();
+    private ObservableList<OfferViewRow> sellOffers = FXCollections.observableArrayList();
     private int height = 200;
     private int width = 910;
+    private int triedToChangeBuyOffersXTimesInARow=0;
+    private int triedToChangeSellOffersXTimesInARow=0;
+    private int triedToChangeBidXTimesInARow = 0;
+    private int triedToChangeAskXTimesInARow = 0;
 
     public SingleCurrencyView(String symbol)
     {
@@ -70,10 +72,10 @@ public class SingleCurrencyView extends HBox {
     {
         Platform.runLater(() -> {
             try {
-                tmsBid.setText(String.format("%.5f", dto.getTmsBid()).replace(",", "."));
-                tmsAsk.setText(String.format("%.5f", dto.getTmsAsk()).replace(",", "."));
-                setOffers(dto.getTopAsks(), sellOffers);
-                setOffers(dto.getTopBids(), buyOffers);
+                setBid(dto.getTmsBid());
+                setAsk(dto.getTmsAsk());
+                setOffers(dto.getTopAsks(), sellOffers, dto.getSymbol());
+                setOffers(dto.getTopBids(), buyOffers, dto.getSymbol());
                 leftSellOffers.refresh();
                 rightBuyOffers.refresh();
             }
@@ -86,7 +88,7 @@ public class SingleCurrencyView extends HBox {
         });
     }
 
-    private void setTable(String rateString , int columnMinWidth, TableView tableView, ObservableList<OfferView> data)
+    private void setTable(String rateString , int columnMinWidth, TableView tableView, ObservableList<OfferViewRow> data)
     {
         String rateColStr = rateString;
         String amountColStr = "Łączna kwota";
@@ -96,16 +98,16 @@ public class SingleCurrencyView extends HBox {
         TableColumn rate = new TableColumn(rateColStr);
         rate.setCellFactory(param -> new TableCellFormat());
         rate.setMinWidth(columnMinWidth);
-        rate.setCellValueFactory(new PropertyValueFactory<OfferView,String>("rate"));
+        rate.setCellValueFactory(new PropertyValueFactory<OfferViewRow,String>("rate"));
 
         TableColumn amount = new TableColumn(amountColStr);
         amount.setMinWidth(columnMinWidth);
-        amount.setCellValueFactory(new PropertyValueFactory<OfferView,String>("amount"));
+        amount.setCellValueFactory(new PropertyValueFactory<OfferViewRow,String>("amount"));
         amount.setCellFactory(param -> new TableCellFormat());
 
         TableColumn awaits = new TableColumn(awaitsColStr);
         awaits.setMinWidth(columnMinWidth);
-        awaits.setCellValueFactory(new PropertyValueFactory<OfferView,String>("since"));
+        awaits.setCellValueFactory(new PropertyValueFactory<OfferViewRow,String>("since"));
         awaits.setCellFactory(param -> new TableCellFormat());
 
         tableView.getColumns().addAll(rate, amount, awaits);
@@ -114,17 +116,72 @@ public class SingleCurrencyView extends HBox {
         tableView.setItems(data);
     }
 
-    private void setOffers(List<WalutomatOffer> offers, ObservableList<OfferView> viewList)
+    private void setOffers(List<WalutomatOffer> offers, ObservableList<OfferViewRow> viewList, String symbol)
     {
-        viewList.setAll(offers.stream().map(o -> {
-            OfferView offerView = walutomatOfferToViewOffer(o);
-            offerView.setSince(DateUtils.transformOffersDate(o));
-            return offerView;
-        }).collect(Collectors.toList()));
+        ObservableList<OfferViewRow> newViewList = FXCollections.observableArrayList();
+        List<OfferViewRow> newOffers = offers.stream()
+                .map(o -> walutomatOfferToViewOffer(o, symbol))
+                .collect(Collectors.toList());
+        newViewList.setAll(newOffers);
+        if(!newViewList.equals(viewList))
+        {
+            if(offers.get(0).isBid())
+            {
+                triedToChangeBuyOffersXTimesInARow++;
+                if(triedToChangeBuyOffersXTimesInARow == 5)
+                {
+                    viewList.setAll(newOffers);
+                    triedToChangeBuyOffersXTimesInARow = 0;
+                }
+            }
+            else
+            {
+                triedToChangeSellOffersXTimesInARow++;
+                if(triedToChangeSellOffersXTimesInARow == 5)
+                {
+                    viewList.setAll(newOffers);
+                    triedToChangeSellOffersXTimesInARow = 0;
+                }
+            }
+
+        }
+        else {
+            if(offers.get(0).isBid()) triedToChangeBuyOffersXTimesInARow = 0;
+            else triedToChangeSellOffersXTimesInARow = 0;
+        }
     }
 
-    private OfferView walutomatOfferToViewOffer(WalutomatOffer walOffer)
+    private OfferViewRow walutomatOfferToViewOffer(WalutomatOffer walOffer, String symbol)
     {
-        return new OfferView(walOffer.getRate(),walOffer.getAmount(),walOffer.getSince());
+        double amount = walOffer.isBid() ? walOffer.getCounter_amount() : walOffer.getAmount();
+        String currency = walOffer.isBid() ? symbol.substring(3,6) : symbol.substring(0,3);
+        String since = DateUtils.transformOffersDate(walOffer);
+        return new OfferViewRow(walOffer.getRate(),amount+" "+currency,since);
+    }
+
+    private void setAsk(Double newAsk)
+    {
+        if(!(newAsk+"").equals(tmsAsk.getText()))
+        {
+            triedToChangeAskXTimesInARow++;
+            if(triedToChangeAskXTimesInARow == 5)
+            {
+                tmsAsk.setText(String.format("%.5f", newAsk).replace(",", "."));
+                triedToChangeAskXTimesInARow = 0;
+            }
+        }
+    }
+
+    private void setBid(Double newBid)
+    {
+        if(!(newBid+"").equals(tmsBid.getText()))
+        {
+            triedToChangeBidXTimesInARow++;
+            if(triedToChangeBidXTimesInARow == 5)
+            {
+                tmsBid.setText(String.format("%.5f", newBid).replace(",", "."));
+                triedToChangeBidXTimesInARow = 0;
+            }
+        }
     }
 }

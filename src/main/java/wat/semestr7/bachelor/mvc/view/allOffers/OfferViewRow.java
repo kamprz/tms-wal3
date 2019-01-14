@@ -5,15 +5,15 @@ import lombok.Data;
 import wat.semestr7.bachelor.utils.DateUtils;
 
 @Data
-public class OfferView {
+public class OfferViewRow {
     private SimpleStringProperty rate;
     private SimpleStringProperty amount;
     private SimpleStringProperty since;
 
-    public OfferView(double rate, double amount, String since) {
+    public OfferViewRow(double rate, String amount, String since) {
         this.rate = new SimpleStringProperty(rate+"");
-        this.amount = new SimpleStringProperty(""+amount);
-        this.since = new SimpleStringProperty(""+since);
+        this.amount = new SimpleStringProperty(amount);
+        this.since = new SimpleStringProperty(since);
     }
 
     public void setRate(String rate) {

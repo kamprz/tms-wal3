@@ -3,7 +3,7 @@ package wat.semestr7.bachelor.mvc.view.allOffers;
 import javafx.geometry.Pos;
 import javafx.scene.control.TableCell;
 
-class TableCellFormat extends TableCell<OfferView, String>
+class TableCellFormat extends TableCell<OfferViewRow, String>
 {
     @Override
     protected void updateItem(String item, boolean empty)
