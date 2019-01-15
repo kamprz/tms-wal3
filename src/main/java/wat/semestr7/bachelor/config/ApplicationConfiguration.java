@@ -24,9 +24,7 @@ public class ApplicationConfiguration extends Application
 	public void init() throws Exception {
 		SpringApplicationBuilder builder = new SpringApplicationBuilder(ApplicationConfiguration.class);
 		context = builder.run(getParameters().getRaw().toArray(new String[0]));
-
-
-		FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/choose.fxml"));
+		FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/SelectedCurrenciesView.fxml"));
 		loader.setControllerFactory(context::getBean);
 		rootNode = loader.load();
 	}
@@ -43,6 +41,7 @@ public class ApplicationConfiguration extends Application
 		primaryStage.setTitle("Wybór par walutowych");
 		primaryStage.getIcons().add(new Image("/stageIcon.png"));
 		primaryStage.centerOnScreen();
+		primaryStage.setResizable(false);
 		primaryStage.show();
 
 		CrawlingController controller = context.getBean("crawlingController", CrawlingController.class);

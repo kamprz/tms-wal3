@@ -5,7 +5,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import wat.semestr7.bachelor.exception.ServerJsonFormatChangedException;
 import wat.semestr7.bachelor.mvc.controller.PropertiesController;
-import wat.semestr7.bachelor.mvc.model.crawling.CurrencyDto;
+import wat.semestr7.bachelor.mvc.model.crawling.CurrenciesDataFrameDto;
 import wat.semestr7.bachelor.mvc.model.crawling.formatter.tms.TmsDataFrame;
 import wat.semestr7.bachelor.mvc.model.crawling.formatter.tms.TmsJsonHolder;
 import wat.semestr7.bachelor.mvc.model.crawling.formatter.walutomat.WalutomatDataFrame;
@@ -21,20 +21,26 @@ public class Formatter {
     @Autowired
     private PropertiesController propertiesController;
 
-    public Map<String,CurrencyDto> formatTmsAndWalutomatJsonToCurrencyDto(String tmsJsonString, String walutomatJsonString) throws ServerJsonFormatChangedException {
-        Map<String,CurrencyDto> result = new HashMap<>();
+    public CurrenciesDataFrameDto formatTmsAndWalutomatJsonToCurrencyDto(String tmsJsonString, String walutomatJsonString) throws ServerJsonFormatChangedException {
+        Map<String,CurrencyDto> map = new HashMap<>();
+        TmsDataFrame tmsDataFrame = null;
+        WalutomatDataFrame walutomatDataFrame = null;
+
+        try{
+            tmsDataFrame = getTmsDataFrame(tmsJsonString);
+            walutomatDataFrame = getWalutomatOffersDataFrame(walutomatJsonString);
+        }
+        catch (IOException e){ throw new ServerJsonFormatChangedException(); }
+
         for(String currencySymbol : propertiesController.getSelectedCurrencies())
         {
-            TmsDataFrame tmsDataFrame;
-            WalutomatDataFrame walutomatDataFrame;
-            try {
-                tmsDataFrame = getTmsDataFrame(tmsJsonString);
-                walutomatDataFrame = getWalutomatOffersDataFrame(walutomatJsonString);
-            } catch (IOException e) { throw new ServerJsonFormatChangedException(); }
-
-            result.put(currencySymbol,new CurrencyDto(currencySymbol,tmsDataFrame, walutomatDataFrame));
+            CurrencyDto dto = new CurrencyDto(currencySymbol,
+                    tmsDataFrame.getCurrency(currencySymbol),
+                    walutomatDataFrame.getTopBids(currencySymbol),
+                    walutomatDataFrame.getTopAsks(currencySymbol));
+            map.put(currencySymbol, dto);
         }
-        return result;
+        return new CurrenciesDataFrameDto(map,tmsDataFrame.getCurrencies());
     }
 
     private TmsDataFrame getTmsDataFrame(String tmsJsonString) throws IOException {

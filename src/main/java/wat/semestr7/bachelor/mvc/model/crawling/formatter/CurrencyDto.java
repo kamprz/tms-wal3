@@ -1,4 +1,4 @@
-package wat.semestr7.bachelor.mvc.model.crawling;
+package wat.semestr7.bachelor.mvc.model.crawling.formatter;
 
 import lombok.Data;
 import wat.semestr7.bachelor.mvc.model.crawling.formatter.tms.TmsCurrency;
@@ -17,13 +17,15 @@ public class CurrencyDto
     private List<WalutomatOffer> topAsks = new LinkedList<>();
     private TmsCurrency tmsRates;
 
-    public CurrencyDto(String symbol,
-                       TmsDataFrame tmsFrame,
-                       WalutomatDataFrame offersFrame){
+    CurrencyDto(String symbol,
+                       TmsCurrency tmsCurrency,
+                       List<WalutomatOffer> topBids,
+                       List<WalutomatOffer> topAsks)
+    {
         this.symbol = symbol;
-        topAsks = offersFrame.getTopAsks(symbol);
-        topBids = offersFrame.getTopBids(symbol);
-        tmsRates = tmsFrame.getCurrency(symbol);
+        this.topAsks = topAsks;
+        this.topBids = topBids;
+        tmsRates = tmsCurrency;
     }
 
     public Double getTmsAsk()

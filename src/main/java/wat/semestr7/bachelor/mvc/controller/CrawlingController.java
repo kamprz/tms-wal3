@@ -5,10 +5,9 @@ import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Controller;
 import wat.semestr7.bachelor.listener.NewDataListener;
 import wat.semestr7.bachelor.mvc.model.crawling.CrawlingFacade;
-import wat.semestr7.bachelor.mvc.model.crawling.CurrencyDto;
+import wat.semestr7.bachelor.mvc.model.crawling.CurrenciesDataFrameDto;
 
 import java.util.HashSet;
-import java.util.Map;
 import java.util.Set;
 
 @Controller
@@ -21,7 +20,7 @@ public class CrawlingController
     @Autowired
     private FxMainStageController fxMainStageController;
 
-    private Set<NewDataListener> listeners = new HashSet<>();
+    private final Set<NewDataListener> listeners = new HashSet<>();
     private Thread crawlingThread;
     private long lastCrawlingTime =  System.currentTimeMillis();
     private final Object lastCrawlingTimeLock = new Object();
@@ -44,27 +43,40 @@ public class CrawlingController
         crawlingThread.start();
     }
 
-    public void newDataSubmitted(Map<String, CurrencyDto> newData)
+    public void newDataSubmitted(CurrenciesDataFrameDto newData)
     {
         setLastCrawlingTime(System.currentTimeMillis());
-        for(NewDataListener listener : listeners)
+        synchronized (listeners)
         {
-            listener.newDataReceived(newData);
+            for(NewDataListener listener : listeners)
+            {
+                listener.newDataReceived(newData);
+            }
         }
         holdOn();
     }
 
-    public void throwCrawlingException(Exception ex)
+    public void throwCrawlingException(Exception exception)
     {
-        fxMainStageController.throwCriticalDataCrawlingError(ex);
+        fxMainStageController.throwCriticalCrawlingError(exception);
     }
 
     void addListener(NewDataListener listener) {
-        listeners.add(listener);
+        synchronized (listeners){
+            listeners.add(listener);
+        }
     }
 
     void removeListener(NewDataListener listener) {
-        listeners.remove(listener);
+        synchronized (listeners)
+        {
+            listeners.remove(listener);
+        }
+    }
+
+    private void init()
+    {
+        maxTimeWithoutData = Integer.parseInt(propertiesController.getProperties().getProperty("maxTimeWithoutDataInMilis"));
     }
 
     private void resetCrawler()
@@ -85,11 +97,6 @@ public class CrawlingController
         {
             this.lastCrawlingTime = lastCrawlingTime;
         }
-    }
-
-    private void init()
-    {
-        maxTimeWithoutData = Integer.parseInt(propertiesController.getProperties().getProperty("maxTimeWithoutDataInMilis"));
     }
 
     private void holdOn()

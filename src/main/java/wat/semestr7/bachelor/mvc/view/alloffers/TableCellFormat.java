@@ -1,4 +1,4 @@
-package wat.semestr7.bachelor.mvc.view.allOffers;
+package wat.semestr7.bachelor.mvc.view.alloffers;
 
 import javafx.geometry.Pos;
 import javafx.scene.control.TableCell;

@@ -15,11 +15,9 @@ import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 import wat.semestr7.bachelor.mvc.controller.ProfitableOffersController;
 import wat.semestr7.bachelor.mvc.model.profitable.ProfitableOfferDto;
-import wat.semestr7.bachelor.mvc.view.BackgroundUtils;
+import wat.semestr7.bachelor.utils.BackgroundUtils;
+import wat.semestr7.bachelor.utils.StringUtils;
 
-import javax.annotation.PostConstruct;
-import java.math.BigDecimal;
-import java.text.DecimalFormat;
 import java.util.*;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
@@ -35,19 +33,13 @@ public class ProfitableOffersView extends VBox
     private ListView profitableOffers;
     private ObservableList<String> observable;
     private Background background;
-    private Map<String, CurrencyIndicator> currencyIndicators;
+    private Map<String, CurrencyIndicator> currencyIndicatorsMap;
     private boolean isOpened = false;
-    private final Object lock = new Object();
 
     private AnchorPane upperPane;
     private GridPane currencyIndicatorsPane;
     private VBox lowerBox;
     private HBox bottomBox;
-
-    private void init(){
-        controller.setProfitableScene(new Scene(setView()));
-        background = BackgroundUtils.getBackground();
-    }
 
     public void resetView()
     {
@@ -70,9 +62,9 @@ public class ProfitableOffersView extends VBox
         Platform.runLater(() ->
         {
             for(String currency : currencies)
-                currencyIndicators.get(currency).turnOn();
+                currencyIndicatorsMap.get(currency).turnOn();
             for(String absentCurrency : controller.getSelectedCurrencies())
-                if(!currencies.contains(absentCurrency)) currencyIndicators.get(absentCurrency).turnOff();
+                if(!currencies.contains(absentCurrency)) currencyIndicatorsMap.get(absentCurrency).turnOff();
         });
     }
 
@@ -133,7 +125,7 @@ public class ProfitableOffersView extends VBox
         List<String> all = new LinkedList<>();
         all.addAll(pln); all.addAll(foreign);
 
-        currencyIndicators = new HashMap<>();
+        currencyIndicatorsMap = new HashMap<>();
         for(String symbol : all) {
             CurrencyIndicator indicator = new CurrencyIndicator(symbol);
             if(all.size() >= 5)
@@ -141,10 +133,10 @@ public class ProfitableOffersView extends VBox
                 currencyIndicatorsPane.add(indicator, i / 2, i % 2);
             }
             else currencyIndicatorsPane.add(indicator,i,0);
-            currencyIndicators.put(symbol,indicator);
+            currencyIndicatorsMap.put(symbol,indicator);
             i++;
         }
-        currencyIndicatorsPane.setBackground(BackgroundUtils.getBackground());
+        currencyIndicatorsPane.setBackground(BackgroundUtils.getMainBackground());
         return currencyIndicatorsPane;
     }
 
@@ -162,7 +154,7 @@ public class ProfitableOffersView extends VBox
         observable = FXCollections.observableArrayList();
         profitableOffers.setItems(observable);
         lowerBox.getChildren().addAll(label,profitableOffers);
-        lowerBox.setBackground(BackgroundUtils.getBackground());
+        lowerBox.setBackground(BackgroundUtils.getMainBackground());
         getChildren().add(lowerBox);
     }
 
@@ -175,15 +167,15 @@ public class ProfitableOffersView extends VBox
         bottomBox.setMaxHeight(80);
         bottomBox.setPadding(new Insets(30));
         bottomBox.setAlignment(Pos.CENTER);
-        bottomBox.setBackground(BackgroundUtils.getBackground());
+        bottomBox.setBackground(BackgroundUtils.getMainBackground());
 
         Button allOffersMenu = new Button("Szczegóły zleceń");
         Button changeSelected = new Button("Zmiana par walutowych");
         Button options = new Button("Opcje");
 
-        allOffersMenu.setOnAction(event -> controller.getAllOffers());
-        changeSelected.setOnAction(event -> controller.changeSelectedCurrencies());
-        options.setOnAction(event -> controller.openOptions());
+        allOffersMenu.setOnAction(event -> controller.openAllOffersView());
+        changeSelected.setOnAction(event -> controller.switchToSelectedCurrencies());
+        options.setOnAction(event -> controller.openPropertiesView());
 
         bottomBox.getChildren().addAll(changeSelected,options,allOffersMenu);
         getChildren().add(bottomBox);
@@ -191,18 +183,12 @@ public class ProfitableOffersView extends VBox
 
     public boolean isOpened()
     {
-        synchronized (lock)
-        {
-            return isOpened;
-        }
+        return isOpened;
     }
 
     public void setOpened(boolean b)
     {
-        synchronized (lock)
-        {
-            isOpened = b;
-        }
+        isOpened = b;
     }
 
     private String formatOfferToString(ProfitableOfferDto offer)
@@ -217,13 +203,13 @@ public class ProfitableOffersView extends VBox
         double tmsRate;
         if(isBuyingAction.test(offer))
         {
-               operation = "Kup " + firstCurr + " za " + amountToString(offer.getAmount()) + " "   + secCurr;
+               operation = "Kup " + firstCurr + " za " + StringUtils.amountFormat(offer.getAmount()) + " "   + secCurr;
                tms = ". Bid = ";
                tmsRate = offer.getTmsRates().getBid();
         }
         else
         {
-            operation = "Sprzedaj " + amountToString(offer.getAmount()) + " " + firstCurr + " za " + secCurr;
+            operation = "Sprzedaj " + StringUtils.amountFormat(offer.getAmount()) + " " + firstCurr + " za " + secCurr;
             tms = ". Ask = ";
             tmsRate = offer.getTmsRates().getAsk();
         }
@@ -233,17 +219,11 @@ public class ProfitableOffersView extends VBox
                 .append("   :   ")
                 .append(operation)
                 .append(" po kursie ")
-                .append(String.format("%.5f",offer.getRate()).replace(",","."))
+                .append(StringUtils.rateFormat(offer.getRate(),5))
                 .append(tms)
-                .append(String.format("%.5f",tmsRate).replace(",","."))
-                .append(". Przewidywany zysk = " + amountToString(offer.getEstimatedProfit()) +" PLN");
+                .append(StringUtils.rateFormat(tmsRate,5))
+                .append(". Przewidywany zysk = " + StringUtils.amountFormat(offer.getEstimatedProfit()) +" PLN");
         return stringBuilder.toString();
-    }
-
-    private String amountToString(BigDecimal amount)
-    {
-        DecimalFormat formatter = new DecimalFormat("#,##0.00");
-        return formatter.format(amount);
     }
 
     //Don't know why, but sometimes this indicator stops moving, despite normal program flow through its while loops; looks like some JavaFX problem
@@ -251,5 +231,11 @@ public class ProfitableOffersView extends VBox
     private void restartNewDataIndicator()
     {
         newDataIndicator = new NewDataIndicator();
+    }
+
+    private void init()
+    {
+        controller.setProfitableScene(new Scene(setView()));
+        background = BackgroundUtils.getMainBackground();
     }
 }

@@ -16,7 +16,7 @@ import java.util.Set;
 public class PropertiesController
 {
     @Autowired
-    private ConfigPropertiesDao currenciesPropertiesDao;
+    private ConfigPropertiesDao configPropertiesDao;
     @Autowired
     private SelectedCurrenciesDao selectedCurrenciesDao;
     @Autowired
@@ -25,7 +25,7 @@ public class PropertiesController
 
 
     public void setProperties(Properties properties){
-        currenciesPropertiesDao.setProperties(properties);
+        configPropertiesDao.setProperties(properties);
     }
 
     public Set<String> getSelectedCurrencies()
@@ -35,17 +35,17 @@ public class PropertiesController
 
     public Properties getProperties()
     {
-        return currenciesPropertiesDao.getProperties();
+        return configPropertiesDao.getProperties();
     }
 
     public void viewWasClosed() {
         propertiesView = null;
     }
 
-    public void throwDataCriticalError(String file, boolean isRead, IOException e)
+    public void throwDataCriticalError(String file, boolean isRead, IOException exception)
     {
         try{
-            fxMainStageController.throwDataCriticalError(file,isRead,e);
+            fxMainStageController.throwDataCriticalError(file,isRead,exception);
         }
         catch(NullPointerException exc)
         {

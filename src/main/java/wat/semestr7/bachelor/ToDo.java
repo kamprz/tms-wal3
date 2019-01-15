@@ -3,9 +3,7 @@ package wat.semestr7.bachelor;
 public class ToDo
 {
     /*
-        - Exception handling
-            - properties
-            - crawling
-    miganie przy zmianach
+        -remove listener ALL off?
+        - zmieniłem listenery, czy działa?
      */
 }

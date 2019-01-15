@@ -26,9 +26,8 @@ public class FxMainStageController
         mainStage = stage;
         stage.setOnCloseRequest(event -> {
             Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
-            alert.setTitle("Wyjscie");
-            alert.setHeaderText("Czy chcesz wyjsc z aplikacji?");
-            //alert.setContentText(message);
+            alert.setTitle("Wyjście");
+            alert.setHeaderText("Czy chcesz wyjść z aplikacji?");
             Optional<ButtonType> result = alert.showAndWait();
             if (result.get() == ButtonType.OK){
                 exitApplication();
@@ -37,8 +36,13 @@ public class FxMainStageController
         });
     }
 
-    public void setSelectingCurrenciesScene(Scene selectingCurrenciesScene) {
-        this.selectingCurrenciesScene = selectingCurrenciesScene;
+    public void setSelectingCurrenciesScene(Scene scene) {
+        this.selectingCurrenciesScene = scene;
+    }
+
+    void setProfitableScene(Scene scene)
+    {
+        profitableScene = scene;
     }
 
     void switchToSelectingScene()
@@ -54,15 +58,9 @@ public class FxMainStageController
         mainStage.setScene(profitableScene);
         profitableOffersController.setViewOpened(true);
         mainStage.setTitle("Korzystne zlecenia");
-
     }
 
-    void setProfitableScene(Scene scene)
-    {
-        profitableScene = scene;
-    }
-
-    void throwDataCriticalError(String file, boolean isRead, IOException e)
+    void throwDataCriticalError(String file, boolean isRead, IOException exception)
     {
         Platform.runLater(() ->
                 {
@@ -77,7 +75,7 @@ public class FxMainStageController
         );
     }
 
-    void throwCriticalDataCrawlingError(Exception ex) {
+    void throwCriticalCrawlingError(Exception exception) {
         Alert alert = new Alert(Alert.AlertType.ERROR);
         alert.setTitle("Błąd!");
         alert.setHeaderText("Błąd pobierania danych.");

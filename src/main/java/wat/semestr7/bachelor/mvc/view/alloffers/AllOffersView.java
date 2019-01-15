@@ -1,4 +1,4 @@
-package wat.semestr7.bachelor.mvc.view.allOffers;
+package wat.semestr7.bachelor.mvc.view.alloffers;
 
 
 import javafx.geometry.Insets;
@@ -6,35 +6,30 @@ import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.image.Image;
 import javafx.scene.layout.*;
-import javafx.scene.paint.Color;
 import javafx.stage.Stage;
-import javafx.stage.Window;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
 import wat.semestr7.bachelor.mvc.controller.AllOffersController;
-import wat.semestr7.bachelor.mvc.model.crawling.CurrencyDto;
+import wat.semestr7.bachelor.mvc.model.crawling.CurrenciesDataFrameDto;
+import wat.semestr7.bachelor.mvc.model.crawling.formatter.CurrencyDto;
 
 import java.util.*;
 
 
-public class AllOffersView extends GridPane {
+public class AllOffersView extends GridPane
+{
+    private AllOffersController allOffersController;
+    private Map<String, SingleCurrencyView> singleCurrencyViewsMap;
+    private Stage stage;
 
     public AllOffersView(AllOffersController allOffersController) {
         this.allOffersController = allOffersController;
     }
 
-    private AllOffersController allOffersController;
-    private Map<String, SingleCurrencyView> singleCurrencyViews;
-    private Stage stage;
 
-    private int counter = 1;
-    private long lastTimeMilis = 0;
-
-    public void printData(Map<String, CurrencyDto> newData)
+    public void printData(CurrenciesDataFrameDto newData)
     {
-        for(Map.Entry<String, CurrencyDto> entry : newData.entrySet())
+        for(Map.Entry<String, CurrencyDto> entry : newData.getSelectedCurrenciesDto().entrySet())
         {
-            singleCurrencyViews.get(entry.getKey()).setData(entry.getValue());
+            singleCurrencyViewsMap.get(entry.getKey()).setData(entry.getValue());
         }
     }
 
@@ -43,7 +38,6 @@ public class AllOffersView extends GridPane {
         allOffersController.viewWasClosed();
         stage.close();
     }
-
 
     public void open()
     {
@@ -54,7 +48,7 @@ public class AllOffersView extends GridPane {
         Set<String> selectedCurrencies = allOffersController.getSelectedCurrencies();
         LinkedList<String> pln = new LinkedList<>();
         LinkedList<String> foreign = new LinkedList<>();
-        singleCurrencyViews = new HashMap<>();
+        singleCurrencyViewsMap = new HashMap<>();
 
         for(String str : selectedCurrencies)
         {
@@ -65,7 +59,7 @@ public class AllOffersView extends GridPane {
         for(String symbol : selectedCurrencies)
         {
             SingleCurrencyView singleCurrencyView = new SingleCurrencyView(symbol);
-            singleCurrencyViews.put(symbol, singleCurrencyView);
+            singleCurrencyViewsMap.put(symbol, singleCurrencyView);
         }
 
         Collections.sort(pln);
@@ -87,12 +81,12 @@ public class AllOffersView extends GridPane {
 
         for(int i=0;i<pln.size();i++)
         {
-            this.add(singleCurrencyViews.get(pln.get(i)),0,i);
+            this.add(singleCurrencyViewsMap.get(pln.get(i)),0,i);
         }
 
         for(int i=0;i<foreign.size();i++)
         {
-            this.add(singleCurrencyViews.get(foreign.get(i)),1,i);
+            this.add(singleCurrencyViewsMap.get(foreign.get(i)),1,i);
         }
         int rows, columns;
         if(pln.size() + foreign.size() > 1) columns = 2;
@@ -111,13 +105,10 @@ public class AllOffersView extends GridPane {
         stage.getIcons().add(new Image("/stageIcon.png"));
         AnchorPane pane = new AnchorPane();
         pane.getChildren().add(this);
-        //pane.setMinWidth(940);
-        //pane.setMinHeight(230);
         stage.setMinWidth(475 * columns);
         int bonusHeight = 55;
         stage.setHeight(205 * rows + bonusHeight);
         stage.setScene(new Scene(pane));
-        // primaryStage.setFullScreen(true);
         stage.show();
         stage.setOnCloseRequest(event -> close());
     }

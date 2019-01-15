@@ -4,7 +4,7 @@ import javafx.scene.Scene;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import wat.semestr7.bachelor.listener.NewDataListener;
-import wat.semestr7.bachelor.mvc.model.crawling.CurrencyDto;
+import wat.semestr7.bachelor.mvc.model.crawling.CurrenciesDataFrameDto;
 import wat.semestr7.bachelor.mvc.model.profitable.ProfitSearcher;
 import wat.semestr7.bachelor.mvc.model.profitable.ProfitableOfferDto;
 import wat.semestr7.bachelor.mvc.view.profitable.ProfitableOffersView;
@@ -28,6 +28,7 @@ public class ProfitableOffersController implements NewDataListener
     @Autowired
     private AllOffersController allOffersController;
 
+
     @PostConstruct
     private void subscribe()
     {
@@ -35,11 +36,15 @@ public class ProfitableOffersController implements NewDataListener
     }
 
     @Override
-    public void newDataReceived(Map<String, CurrencyDto> newData) {
+    public void newDataReceived(CurrenciesDataFrameDto newData) {
         if(profitableOffersView.isOpened())
         {
             profitableOffersView.newDataReceivedSignal();
-            List<ProfitableOfferDto> profitableOffers = profitSearcher.getProfitableOffers(newData);
+
+            Properties currentProperties = propertiesController.getProperties();
+            Set<String> selectedCurrencies = propertiesController.getSelectedCurrencies();
+            List<ProfitableOfferDto> profitableOffers = profitSearcher.getProfitableOffers(newData,currentProperties,selectedCurrencies);
+
             profitableOffersView.updateProfitableCurrencies(getProfitableCurrencies(profitableOffers));
             profitableOffersView.updateProfitableOffers(profitableOffers);
         }
@@ -50,17 +55,17 @@ public class ProfitableOffersController implements NewDataListener
         return propertiesController.getSelectedCurrencies();
     }
 
-    public void getAllOffers()
+    public void openAllOffersView()
     {
         allOffersController.openView();
     }
 
-    public void changeSelectedCurrencies()
+    public void switchToSelectedCurrencies()
     {
         fxMainStageController.switchToSelectingScene();
     }
 
-    public void openOptions()
+    public void openPropertiesView()
     {
         propertiesController.openPropertiesView();
     }
@@ -70,14 +75,9 @@ public class ProfitableOffersController implements NewDataListener
         fxMainStageController.setProfitableScene(scene);
     }
 
-    public Properties getProperties()
+    void setViewOpened(boolean isOpen)
     {
-        return propertiesController.getProperties();
-    }
-
-    void setViewOpened(boolean bool)
-    {
-        profitableOffersView.setOpened(bool);
+        profitableOffersView.setOpened(isOpen);
     }
 
     void resetView()
@@ -94,4 +94,5 @@ public class ProfitableOffersController implements NewDataListener
         }
         return set;
     }
+
 }

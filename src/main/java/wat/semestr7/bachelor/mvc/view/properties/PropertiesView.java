@@ -11,12 +11,9 @@ import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
 import javafx.scene.input.KeyCode;
 import javafx.scene.layout.*;
-import javafx.scene.paint.Color;
 import javafx.stage.Stage;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
 import wat.semestr7.bachelor.mvc.controller.PropertiesController;
-import wat.semestr7.bachelor.mvc.view.BackgroundUtils;
+import wat.semestr7.bachelor.utils.BackgroundUtils;
 
 import java.util.*;
 
@@ -33,6 +30,18 @@ public class PropertiesView extends VBox
     public PropertiesView(PropertiesController controller)
     {
         this.controller = controller;
+    }
+
+    public void close()
+    {
+        controller.viewWasClosed();
+        stage.close();
+    }
+
+    public void open()
+    {
+        init();
+        setStage();
     }
 
     private void init()
@@ -107,20 +116,8 @@ public class PropertiesView extends VBox
         this.setPadding(new Insets(30));
         this.setSpacing(20);
         this.setPrefWidth(340);
-        this.setBackground(BackgroundUtils.getBackground());
+        this.setBackground(BackgroundUtils.getMainBackground());
         getChildren().addAll(pane,setButton);
-    }
-
-    public void close()
-    {
-        controller.viewWasClosed();
-        stage.close();
-    }
-
-    public void open()
-    {
-        init();
-        setStage();
     }
 
     private void setProperties()
@@ -130,7 +127,7 @@ public class PropertiesView extends VBox
         }
         catch (NumberFormatException e)
         {
-            String message = "Zły format danych dla pola " + e.getMessage();
+            String message = "Zły rateFormat danych dla pola " + e.getMessage();
             Alert alert = new Alert(Alert.AlertType.ERROR);
             alert.setTitle("Błąd!");
             alert.setHeaderText("Błąd formatu danych.");
@@ -198,10 +195,5 @@ public class PropertiesView extends VBox
             }
         }
         return properties;
-    }
-
-    public void dataAccessError(String message)
-    {
-
     }
 }

@@ -18,7 +18,6 @@ class NewDataIndicator extends Circle
     private Stop s1 = new Stop(0, Color.valueOf("#2a1382"));
     private Stop s2 = new Stop(1.0,Color.WHITE);
     private Stop s3 = new Stop(0.5,Color.valueOf("#68cfd9"));
-    private Stop s4;
     private List<Stop> stop = new LinkedList<>();
     private Color s4Color = Color.valueOf("#69d0db");
     private List<Stop> changeStop = new LinkedList<>();
@@ -43,7 +42,7 @@ class NewDataIndicator extends Circle
 
     private Task<Void> getTask()
     {
-        Task<Void> task = new Task<Void>()
+        return new Task<Void>()
         {
             @Override
             protected Void call() throws Exception {
@@ -75,20 +74,17 @@ class NewDataIndicator extends Circle
                 return null;
             }
         };
-        return task;
     }
 
     private void init() {
         stop.add(s1);
         stop.add(s2);
         stop.add(s3);
-
-        s4 = new Stop(0.0, s4Color);
+        Stop s4 = new Stop(0.0, s4Color);
         changeStop.addAll(stop);
         changeStop.add(s4);
         RadialGradient gradient = new RadialGradient(focusAngle, focusDistance, centerX, centerY, radius, proportional, CycleMethod.NO_CYCLE, stop);
         setFill(gradient);
         setRadius(20.);
-
     }
 }

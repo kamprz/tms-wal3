@@ -7,8 +7,6 @@ import wat.semestr7.bachelor.exception.ServerJsonFormatChangedException;
 import wat.semestr7.bachelor.mvc.controller.CrawlingController;
 import wat.semestr7.bachelor.mvc.model.crawling.formatter.Formatter;
 
-import java.util.Map;
-
 import static java.lang.Thread.interrupted;
 
 @Service
@@ -25,14 +23,16 @@ public class CrawlingFacade implements Runnable
     @Autowired
     private CrawlingController crawlingController;
 
-    private Map<String, CurrencyDto> crawl() throws CrawlingException, ServerJsonFormatChangedException {
+    private CurrenciesDataFrameDto crawl() throws CrawlingException, ServerJsonFormatChangedException {
         String tmsJson = httpCrawler.getHttpJson(tmsUrl);
         String walutomatJson = httpCrawler.getHttpJson(walutomatUrl);
         return formatter.formatTmsAndWalutomatJsonToCurrencyDto(tmsJson,walutomatJson);
     }
-
-    private void submitNewData(Map<String, CurrencyDto> newData)
+    private int counter = 1;
+    private void submitNewData(CurrenciesDataFrameDto newData)
     {
+        System.out.print(".");
+        if(counter++ %100 ==0) System.out.println("");
         crawlingController.newDataSubmitted(newData);
     }
 
@@ -42,7 +42,7 @@ public class CrawlingFacade implements Runnable
         while(!interrupted())
         {
             try {
-                Map<String, CurrencyDto> newData = crawl();
+                CurrenciesDataFrameDto newData = crawl();
                 submitNewData(newData);
             } catch (Exception e) {
                 e.printStackTrace();

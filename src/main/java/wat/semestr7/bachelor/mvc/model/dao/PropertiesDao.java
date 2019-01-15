@@ -8,18 +8,32 @@ public abstract class PropertiesDao
     String filePath;
     final Properties loadPropertiesFromFile(String filePath) throws IOException
     {
-        Properties properties = new Properties();
-        InputStream input = new FileInputStream(filePath);
-        properties.load(input);
-        input.close();
-        return properties;
+        InputStream input = null;
+        try{
+            Properties properties = new Properties();
+            input = new FileInputStream(filePath);
+            properties.load(input);
+            return properties;
+        }
+        catch(IOException e)
+        {
+            if(input!=null) input.close();
+            throw new IOException(e);
+        }
+
     }
 
     final void savePropertiesToFile(Properties properties, String filePath)  throws IOException
     {
-        OutputStream output = new FileOutputStream(filePath);
-        properties.store(output, null);
-        output.close();
+        OutputStream output = null;
+        try{
+            output = new FileOutputStream(filePath);
+            properties.store(output, null);
+        }
+        catch (IOException e){
+            if(output!=null) output.close();
+            throw new IOException(e);
+        }
     }
     protected abstract void loadProperties();
 }

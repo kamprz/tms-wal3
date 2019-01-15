@@ -1,8 +1,6 @@
-package wat.semestr7.bachelor.mvc.view.allOffers;
+package wat.semestr7.bachelor.mvc.view.alloffers;
 
 import javafx.beans.property.SimpleStringProperty;
-import lombok.Data;
-import wat.semestr7.bachelor.utils.DateUtils;
 
 public class OfferViewRow {
     private SimpleStringProperty rate;
