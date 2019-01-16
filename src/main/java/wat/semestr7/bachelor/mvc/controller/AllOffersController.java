@@ -2,7 +2,9 @@ package wat.semestr7.bachelor.mvc.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import wat.semestr7.bachelor.listener.NewDataListener;
+import wat.semestr7.bachelor.interfaces.config.ISelectedCurrenciesLoader;
+import wat.semestr7.bachelor.interfaces.newdata.NewDataListener;
+import wat.semestr7.bachelor.interfaces.newdata.NewDataProducer;
 import wat.semestr7.bachelor.mvc.model.crawling.CurrenciesDataFrameDto;
 import wat.semestr7.bachelor.mvc.view.alloffers.AllOffersView;
 
@@ -13,51 +15,33 @@ import java.util.Set;
 public class AllOffersController implements NewDataListener
 {
     @Autowired
-    private CrawlingController crawlingController;
+    private NewDataProducer newDataProducer;
     @Autowired
-    private PropertiesController propertiesController;
-    private AllOffersView view;
+    private ISelectedCurrenciesLoader selectedCurrenciesLoader;
+    private AllOffersView allOffersView;
 
     @PostConstruct
     private void subscribe()
     {
-        crawlingController.addListener(this);
+        newDataProducer.subscribeForNewData(this);
     }
 
     @Override
     public void newDataReceived(CurrenciesDataFrameDto newData)
     {
-        if (view != null)
+        if (allOffersView != null)
         {
-            view.printData(newData);
+            allOffersView.printData(newData);
         }
     }
 
     public Set<String> getSelectedCurrencies()
     {
-        return propertiesController.getSelectedCurrencies();
+        return selectedCurrenciesLoader.getSelectedCurrencies();
     }
 
-    public void viewWasClosed() {
-        view = null;
-    }
-
-    void closeView()
+    void setAllOffersView(AllOffersView allOffersView)
     {
-        view.close();
-        view = null;
-    }
-
-    void openView()
-    {
-        if(view==null)
-        {
-            view = new AllOffersView(this);
-            view.open();
-        }
-    }
-
-    boolean isViewOpened(){
-        return view!=null;
+        this.allOffersView = allOffersView;
     }
 }

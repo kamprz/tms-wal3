@@ -17,7 +17,7 @@ public class SelectedCurrenciesFxmlController {
     @Autowired
     private PropertiesController propertiesController;
     @Autowired
-    private FxMainStageController fxMainStageController;
+    private FxStageController fxStageController;
     @Autowired
     private AllOffersController allOffersController;
     @FXML
@@ -60,18 +60,18 @@ public class SelectedCurrenciesFxmlController {
             if(selected.size() > 0)
             {
                 propertiesController.setSelectedCurrencies(selected);
-                fxMainStageController.switchToProfitableScene();
+                fxStageController.switchToProfitableScene();
                 if(!selected.equals(previous))
                 {
-                    if(allOffersController.isViewOpened())
+                    if(fxStageController.isAllOffersViewOpened())
                     {
-                        allOffersController.closeView();
-                        allOffersController.openView();
+                        fxStageController.closeAllOffersView();
+                        fxStageController.openAllOffersView();
                     }
-                    if(propertiesController.isViewOpened())
+                    if(fxStageController.isPropertiesViewOpened())
                     {
-                        propertiesController.closePropertiesView();
-                        propertiesController.openPropertiesView();
+                        fxStageController.closePropertiesView();
+                        fxStageController.openPropertiesView();
                     }
                 }
             }

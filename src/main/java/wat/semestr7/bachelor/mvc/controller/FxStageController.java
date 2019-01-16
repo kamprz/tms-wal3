@@ -7,6 +7,8 @@ import javafx.scene.control.ButtonType;
 import javafx.stage.Stage;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import wat.semestr7.bachelor.mvc.view.alloffers.AllOffersView;
+import wat.semestr7.bachelor.mvc.view.properties.PropertiesView;
 
 import java.io.IOException;
 import java.net.ConnectException;
@@ -15,11 +17,17 @@ import java.net.UnknownHostException;
 import java.util.Optional;
 
 @Controller
-public class FxMainStageController
+public class FxStageController
 {
     @Autowired
     private ProfitableOffersController profitableOffersController;
+    @Autowired
+    private PropertiesController propertiesController;
+    @Autowired
+    private AllOffersController allOffersController;
 
+    private PropertiesView propertiesView;
+    private AllOffersView allOffersView;
     private Stage mainStage;
     private Scene selectingCurrenciesScene;
     private Scene profitableScene;
@@ -63,6 +71,49 @@ public class FxMainStageController
         mainStage.setTitle("Korzystne zlecenia");
     }
 
+    //Properties View:
+    void openPropertiesView()
+    {
+        if(!isPropertiesViewOpened())
+        {
+            propertiesView = new PropertiesView(propertiesController, this);
+            propertiesView.open();
+        }
+    }
+
+    public void closePropertiesView()
+    {
+        propertiesView.close();
+        propertiesView = null;
+    }
+
+    boolean isPropertiesViewOpened()
+    {
+        return propertiesView != null;
+    }
+
+    //AllOffersView:
+    void openAllOffersView()
+    {
+        if(!isAllOffersViewOpened())
+        {
+            allOffersView = new AllOffersView(allOffersController, this);
+            allOffersView.open();
+            allOffersController.setAllOffersView(allOffersView);
+        }
+    }
+
+    public void closeAllOffersView()
+    {
+        allOffersView.close();
+        allOffersView = null;
+    }
+
+    boolean isAllOffersViewOpened(){
+        return allOffersView !=null;
+    }
+
+    //Exception handling:
     void throwDataCriticalError(String file, boolean isRead, IOException exception)
     {
         Platform.runLater(() ->

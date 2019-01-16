@@ -12,6 +12,7 @@ import javafx.scene.image.Image;
 import javafx.scene.input.KeyCode;
 import javafx.scene.layout.*;
 import javafx.stage.Stage;
+import wat.semestr7.bachelor.mvc.controller.FxStageController;
 import wat.semestr7.bachelor.mvc.controller.PropertiesController;
 import wat.semestr7.bachelor.utils.BackgroundUtils;
 
@@ -19,7 +20,8 @@ import java.util.*;
 
 public class PropertiesView extends VBox
 {
-    private PropertiesController controller;
+    private PropertiesController propertiesController;
+    private FxStageController fxController;
     private Stage stage;
     private Map<String, TextField> textFieldMap;
     private Properties properties;
@@ -27,14 +29,14 @@ public class PropertiesView extends VBox
     private final String profitString = "Zysk";
     private final String offertsString = "Ofert";
 
-    public PropertiesView(PropertiesController controller)
+    public PropertiesView(PropertiesController controller, FxStageController fxStageController)
     {
-        this.controller = controller;
+        this.propertiesController = controller;
+        fxController = fxStageController;
     }
 
     public void close()
     {
-        controller.viewWasClosed();
         stage.close();
     }
 
@@ -88,7 +90,7 @@ public class PropertiesView extends VBox
 
         List<String> pln = new LinkedList<>();
         List<String> foreign = new LinkedList<>();
-        for(String s : controller.getSelectedCurrencies())
+        for(String s : propertiesController.getSelectedCurrencies())
         {
             if(s.toLowerCase().contains("pln")) pln.add(s);
             else foreign.add(s);
@@ -123,7 +125,7 @@ public class PropertiesView extends VBox
     private void setProperties()
     {
         try {
-            controller.setProperties(getEnteredProperties());
+            propertiesController.setProperties(getEnteredProperties());
         }
         catch (NumberFormatException e)
         {
@@ -161,12 +163,15 @@ public class PropertiesView extends VBox
             else if(event.getCode().equals(KeyCode.ESCAPE)) close();
         });
         stage.show();
-        stage.setOnCloseRequest(event -> close());
+        stage.setOnCloseRequest( event -> {
+                    event.consume();
+                    fxController.closePropertiesView();
+                });
     }
 
     private Properties loadPreviousProperties()
     {
-        return controller.getProperties();
+        return propertiesController.getProperties();
     }
 
     private Properties getEnteredProperties() throws NumberFormatException, IllegalArgumentException

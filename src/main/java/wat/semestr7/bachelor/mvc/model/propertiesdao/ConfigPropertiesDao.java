@@ -1,4 +1,4 @@
-package wat.semestr7.bachelor.mvc.model.dao;
+package wat.semestr7.bachelor.mvc.model.propertiesdao;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;

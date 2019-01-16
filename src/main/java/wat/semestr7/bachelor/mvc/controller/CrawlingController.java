@@ -3,7 +3,8 @@ package wat.semestr7.bachelor.mvc.controller;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Controller;
-import wat.semestr7.bachelor.listener.NewDataListener;
+import wat.semestr7.bachelor.interfaces.newdata.NewDataListener;
+import wat.semestr7.bachelor.interfaces.newdata.NewDataProducer;
 import wat.semestr7.bachelor.mvc.model.crawling.CrawlingFacade;
 import wat.semestr7.bachelor.mvc.model.crawling.CurrenciesDataFrameDto;
 
@@ -11,14 +12,14 @@ import java.util.HashSet;
 import java.util.Set;
 
 @Controller
-public class CrawlingController
+public class CrawlingController implements NewDataProducer
 {
     @Autowired
     private CrawlingFacade crawler;
     @Autowired
     private PropertiesController propertiesController;
     @Autowired
-    private FxMainStageController fxMainStageController;
+    private FxStageController fxStageController;
 
     private final Set<NewDataListener> listeners = new HashSet<>();
     private Thread crawlingThread;
@@ -37,6 +38,11 @@ public class CrawlingController
         }
     }
 
+    @Override
+    public void subscribeForNewData(NewDataListener listener) {
+        listeners.add(listener);
+    }
+
     public void startCrawling()
     {
         crawlingThread = new Thread(crawler);
@@ -46,12 +52,9 @@ public class CrawlingController
     public void newDataSubmitted(CurrenciesDataFrameDto newData)
     {
         setLastCrawlingTime(System.currentTimeMillis());
-        synchronized (listeners)
+        for(NewDataListener listener : listeners)
         {
-            for(NewDataListener listener : listeners)
-            {
-                listener.newDataReceived(newData);
-            }
+            listener.newDataReceived(newData);
         }
         holdOn();
     }
@@ -59,19 +62,13 @@ public class CrawlingController
     public void throwCrawlingException(Exception exception)
     {
         crawlingThread.interrupt();
-        fxMainStageController.throwCriticalCrawlingError(exception);
+        fxStageController.throwCriticalCrawlingError(exception);
     }
 
     public void throwInternetException()
     {
         crawlingThread.interrupt();
-        fxMainStageController.throwCriticalCrawlingNetworkError();
-    }
-
-    void addListener(NewDataListener listener) {
-        synchronized (listeners){
-            listeners.add(listener);
-        }
+        fxStageController.throwCriticalCrawlingNetworkError();
     }
 
     private void init()

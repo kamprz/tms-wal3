@@ -1,4 +1,4 @@
-package wat.semestr7.bachelor.listener;
+package wat.semestr7.bachelor.interfaces.newdata;
 
 import wat.semestr7.bachelor.mvc.model.crawling.CurrenciesDataFrameDto;
 

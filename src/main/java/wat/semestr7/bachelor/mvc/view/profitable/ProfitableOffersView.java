@@ -13,6 +13,7 @@ import javafx.scene.text.Font;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
+import wat.semestr7.bachelor.mvc.controller.FxStageController;
 import wat.semestr7.bachelor.mvc.controller.ProfitableOffersController;
 import wat.semestr7.bachelor.mvc.model.profitable.ProfitableOfferDto;
 import wat.semestr7.bachelor.utils.BackgroundUtils;
@@ -27,6 +28,8 @@ public class ProfitableOffersView extends VBox
 {
     @Autowired
     private ProfitableOffersController controller;
+    @Autowired
+    private FxStageController fxController;
 
     private double width = 1078;
     private NewDataIndicator newDataIndicator;

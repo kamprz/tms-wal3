@@ -11,7 +11,7 @@ import org.springframework.boot.builder.SpringApplicationBuilder;
 import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.context.annotation.ComponentScan;
 import wat.semestr7.bachelor.mvc.controller.CrawlingController;
-import wat.semestr7.bachelor.mvc.controller.FxMainStageController;
+import wat.semestr7.bachelor.mvc.controller.FxStageController;
 
 @SpringBootApplication
 @ComponentScan(basePackages = "wat.semestr7.bachelor")
@@ -33,9 +33,9 @@ public class ApplicationConfiguration extends Application
 	public void start(Stage primaryStage) throws Exception {
 		Scene scene = new Scene(rootNode);
 
-		FxMainStageController fxMainStageController = context.getBean("fxMainStageController", FxMainStageController.class);
-		fxMainStageController.setSelectingCurrenciesScene(scene);
-		fxMainStageController.setMainStage(primaryStage);
+		FxStageController fxStageController = context.getBean("fxStageController", FxStageController.class);
+		fxStageController.setSelectingCurrenciesScene(scene);
+		fxStageController.setMainStage(primaryStage);
 
 		primaryStage.setScene(scene);
 		primaryStage.setTitle("Wybór par walutowych");

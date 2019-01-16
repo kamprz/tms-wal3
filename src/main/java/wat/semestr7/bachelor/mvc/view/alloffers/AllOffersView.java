@@ -8,6 +8,7 @@ import javafx.scene.image.Image;
 import javafx.scene.layout.*;
 import javafx.stage.Stage;
 import wat.semestr7.bachelor.mvc.controller.AllOffersController;
+import wat.semestr7.bachelor.mvc.controller.FxStageController;
 import wat.semestr7.bachelor.mvc.model.crawling.CurrenciesDataFrameDto;
 import wat.semestr7.bachelor.mvc.model.crawling.formatter.CurrencyDto;
 
@@ -17,11 +18,13 @@ import java.util.*;
 public class AllOffersView extends GridPane
 {
     private AllOffersController allOffersController;
+    private FxStageController fxController;
     private Map<String, SingleCurrencyView> singleCurrencyViewsMap;
     private Stage stage;
 
-    public AllOffersView(AllOffersController allOffersController) {
+    public AllOffersView(AllOffersController allOffersController, FxStageController fxController) {
         this.allOffersController = allOffersController;
+        this.fxController = fxController;
     }
 
 
@@ -35,7 +38,6 @@ public class AllOffersView extends GridPane
 
     public void close()
     {
-        allOffersController.viewWasClosed();
         stage.close();
     }
 
@@ -93,8 +95,6 @@ public class AllOffersView extends GridPane
         else columns = 1;
         rows = pln.size()>foreign.size() ? pln.size() : foreign.size();
         setStage(columns,rows);
-        Stage stage = (Stage)this.getScene().getWindow();
-        stage.setOnCloseRequest((e) -> close());
     }
 
     private void setStage(int columns, int rows)
@@ -110,6 +110,9 @@ public class AllOffersView extends GridPane
         stage.setHeight(205 * rows + bonusHeight);
         stage.setScene(new Scene(pane));
         stage.show();
-        stage.setOnCloseRequest(event -> close());
+        stage.setOnCloseRequest( event -> {
+            event.consume();
+            fxController.closeAllOffersView();
+        });
     }
 }
