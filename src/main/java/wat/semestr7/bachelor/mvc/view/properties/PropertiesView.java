@@ -127,7 +127,7 @@ public class PropertiesView extends VBox
         }
         catch (NumberFormatException e)
         {
-            String message = "Zły rateFormat danych dla pola " + e.getMessage();
+            String message = "Zły format danych dla pola " + e.getMessage();
             Alert alert = new Alert(Alert.AlertType.ERROR);
             alert.setTitle("Błąd!");
             alert.setHeaderText("Błąd formatu danych.");
@@ -174,8 +174,11 @@ public class PropertiesView extends VBox
         for (Map.Entry<String, TextField> entry : textFieldMap.entrySet()) {
             try {
                 if (entry.getKey().length() == 6 || entry.getKey().equals(offertsString)) Integer.parseInt(entry.getValue().getText());
-                else if (entry.getKey().equals(commissionString)) Double.parseDouble(entry.getValue().getText());
-                else if (entry.getKey().equals(profitString)) Double.parseDouble(entry.getValue().getText());
+                else if (entry.getKey().equals(commissionString) || entry.getKey().equals(profitString))
+                {
+                    entry.getValue().setText(entry.getValue().getText().replace(",","."));
+                    Double.parseDouble(entry.getValue().getText());
+                }
                 if(entry.getValue().getText().charAt(0) == '-')
                 {
                     throw new IllegalArgumentException();

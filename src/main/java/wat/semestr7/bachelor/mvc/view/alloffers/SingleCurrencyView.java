@@ -109,11 +109,9 @@ public class SingleCurrencyView extends HBox {
 
     private void setOffers(List<WalutomatOffer> offers, ObservableList<OfferViewRow> viewList)
     {
-        ObservableList<OfferViewRow> newViewList = FXCollections.observableArrayList();
         List<OfferViewRow> newOffers = offers.stream()
-                .map(o -> walutomatOfferToViewOffer(o))
+                .map(this::walutomatOfferToViewOffer)
                 .collect(Collectors.toList());
-        newViewList.setAll(newOffers);
         viewList.setAll(newOffers);
     }
 
@@ -125,7 +123,7 @@ public class SingleCurrencyView extends HBox {
         String since = DateUtils.transformOffersDate(walOffer);
         String rate = StringUtils.rateFormat(walOffer.getRate(),4);
         return new OfferViewRow(rate,
-                StringUtils.amountFormat(new BigDecimal(amount))+" "+currency,
+                StringUtils.amountFormat(new BigDecimal(amount)) + " " + currency,
                 since);
     }
 

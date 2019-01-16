@@ -2,7 +2,7 @@ package wat.semestr7.bachelor.mvc.model.crawling;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import wat.semestr7.bachelor.exception.CrawlingException;
+import wat.semestr7.bachelor.exception.InternetCrawlingException;
 import wat.semestr7.bachelor.exception.ServerJsonFormatChangedException;
 import wat.semestr7.bachelor.mvc.controller.CrawlingController;
 import wat.semestr7.bachelor.mvc.model.crawling.formatter.Formatter;
@@ -23,7 +23,7 @@ public class CrawlingFacade implements Runnable
     @Autowired
     private CrawlingController crawlingController;
 
-    private CurrenciesDataFrameDto crawl() throws CrawlingException, ServerJsonFormatChangedException {
+    private CurrenciesDataFrameDto crawl() throws InternetCrawlingException, ServerJsonFormatChangedException {
         String tmsJson = httpCrawler.getHttpJson(tmsUrl);
         String walutomatJson = httpCrawler.getHttpJson(walutomatUrl);
         return formatter.formatTmsAndWalutomatJsonToCurrencyDto(tmsJson,walutomatJson);
@@ -44,8 +44,13 @@ public class CrawlingFacade implements Runnable
             try {
                 CurrenciesDataFrameDto newData = crawl();
                 submitNewData(newData);
-            } catch (Exception e) {
-                e.printStackTrace();
+            }
+            catch(InternetCrawlingException e)
+            {
+                crawlingController.throwInternetException();
+            }
+            catch (ServerJsonFormatChangedException e)
+            {
                 crawlingController.throwCrawlingException(e);
             }
         }

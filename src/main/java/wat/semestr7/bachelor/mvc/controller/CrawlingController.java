@@ -58,19 +58,19 @@ public class CrawlingController
 
     public void throwCrawlingException(Exception exception)
     {
+        crawlingThread.interrupt();
         fxMainStageController.throwCriticalCrawlingError(exception);
+    }
+
+    public void throwInternetException()
+    {
+        crawlingThread.interrupt();
+        fxMainStageController.throwCriticalCrawlingNetworkError();
     }
 
     void addListener(NewDataListener listener) {
         synchronized (listeners){
             listeners.add(listener);
-        }
-    }
-
-    void removeListener(NewDataListener listener) {
-        synchronized (listeners)
-        {
-            listeners.remove(listener);
         }
     }
 

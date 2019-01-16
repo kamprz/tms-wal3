@@ -1,7 +1,7 @@
 package wat.semestr7.bachelor.mvc.model.crawling;
 
 import org.springframework.stereotype.Component;
-import wat.semestr7.bachelor.exception.CrawlingException;
+import wat.semestr7.bachelor.exception.InternetCrawlingException;
 
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
@@ -10,7 +10,7 @@ import java.net.URL;
 
 @Component
 public class HttpCrawler {
-    String getHttpJson(String urlToRead) throws CrawlingException
+    String getHttpJson(String urlToRead) throws InternetCrawlingException
     {
         try{
             StringBuilder result = new StringBuilder();
@@ -27,7 +27,7 @@ public class HttpCrawler {
         }
         catch(Exception e)
         {
-            throw new CrawlingException(e);
+            throw new InternetCrawlingException(e);
         }
     }
 }

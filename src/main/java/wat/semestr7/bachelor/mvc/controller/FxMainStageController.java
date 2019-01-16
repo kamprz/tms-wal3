@@ -9,6 +9,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 
 import java.io.IOException;
+import java.net.ConnectException;
+import java.net.SocketTimeoutException;
+import java.net.UnknownHostException;
 import java.util.Optional;
 
 @Controller
@@ -76,13 +79,33 @@ public class FxMainStageController
     }
 
     void throwCriticalCrawlingError(Exception exception) {
-        Alert alert = new Alert(Alert.AlertType.ERROR);
-        alert.setTitle("Błąd!");
-        alert.setHeaderText("Błąd pobierania danych.");
-        alert.setContentText("Nastąpi zamknięcie programu.");
-        alert.showAndWait();
-        Platform.exit();
-        System.exit(1);
+        Platform.runLater(() ->
+                {
+                    String message = "Nastąpi zamknięcie programu.";
+                    Alert alert = new Alert(Alert.AlertType.ERROR);
+                    alert.setTitle("Błąd!");
+                    alert.setHeaderText("Błąd serwerów stanowiących źródła danych.");
+                    alert.setContentText(message);
+                    alert.showAndWait();
+                    Platform.exit();
+                    System.exit(1);
+                }
+        );
+    }
+
+    void throwCriticalCrawlingNetworkError()
+    {
+        Platform.runLater(() ->
+                {
+                    Alert alert = new Alert(Alert.AlertType.ERROR);
+                    alert.setTitle("Błąd!");
+                    alert.setHeaderText("Błąd pobierania danych.");
+                    alert.setContentText("Problem z połączeniem internetowym.");
+                    alert.showAndWait();
+                    Platform.exit();
+                    System.exit(1);
+                }
+        );
     }
 
     private void exitApplication()
