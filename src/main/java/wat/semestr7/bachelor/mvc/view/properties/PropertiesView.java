@@ -62,7 +62,7 @@ public class PropertiesView extends VBox
         pane.add(offertsTf,1,i++);
         textFieldMap.put(offertsString,offertsTf);
 
-        Label commision = new Label(commissionString);
+        Label commision = new Label(commissionString + " [%]");
         GridPane.setHalignment(commision, HPos.CENTER);
         TextField commissionTf = new TextField(properties.getProperty(commissionString));
         commissionTf.setAlignment(Pos.CENTER);
@@ -70,7 +70,7 @@ public class PropertiesView extends VBox
         pane.add(commissionTf,1,i++);
         textFieldMap.put(commissionString,commissionTf);
 
-        Label profit = new Label(profitString);
+        Label profit = new Label(profitString + " [PLN]");
         GridPane.setHalignment(profit, HPos.CENTER);
         TextField profitTf = new TextField(properties.getProperty(profitString));
         profitTf.setAlignment(Pos.CENTER);
@@ -196,6 +196,7 @@ public class PropertiesView extends VBox
                 if(field.equalsIgnoreCase("ofert")) field = "Liczba ofert";
                 throw new IllegalArgumentException(field);
             }
+            //Null jak ktoś zmieni propertiesy
         }
         return properties;
     }

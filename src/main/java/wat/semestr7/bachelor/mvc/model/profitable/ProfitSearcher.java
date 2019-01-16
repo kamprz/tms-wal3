@@ -17,6 +17,7 @@ public class ProfitSearcher {
     {
         List<ProfitableOfferDto> result = new LinkedList<>();
         double commission = Double.parseDouble(currentProperties.getProperty("Prowizja"));
+        commission /= 100;
         BigDecimal minimalProfit = new BigDecimal(currentProperties.getProperty("Zysk"));
 
         Map<String,List<WalutomatOffer>> walutomatOffersPerCurrency = getPotentiallyProfitableOffers(currenciesDataFrameDto.getSelectedCurrenciesDto(), currentProperties, selectedCurrencies);
