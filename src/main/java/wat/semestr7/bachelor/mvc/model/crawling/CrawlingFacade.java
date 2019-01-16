@@ -49,7 +49,7 @@ public class CrawlingFacade implements Runnable
             }
             catch (ServerJsonFormatChangedException e)
             {
-                crawlingController.throwCrawlingException(e);
+                crawlingController.throwCrawlingException();
             }
         }
     }
