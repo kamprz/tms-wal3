@@ -69,7 +69,7 @@ public class FxStageController
     }
 
     //Properties View:
-    public void openPropertiesView()
+    public void openConfigurationView()
     {
         if(!isPropertiesViewOpened())
         {

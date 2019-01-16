@@ -60,6 +60,21 @@ public class ProfitableOffersController implements NewDataListener
         fxStageController.setProfitableScene(scene);
     }
 
+    public void openAllOffersView()
+    {
+        fxStageController.openAllOffersView();
+    }
+
+    public void switchToSelectingScene()
+    {
+        fxStageController.switchToSelectingScene();
+    }
+
+    public void openConfigurationView()
+    {
+        fxStageController.openConfigurationView();
+    }
+
     void setViewOpened(boolean isOpen)
     {
         profitableOffersView.setOpened(isOpen);

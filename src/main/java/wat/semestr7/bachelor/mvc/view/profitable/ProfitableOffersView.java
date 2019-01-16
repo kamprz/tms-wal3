@@ -13,7 +13,6 @@ import javafx.scene.text.Font;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
-import wat.semestr7.bachelor.mvc.controller.FxStageController;
 import wat.semestr7.bachelor.mvc.controller.ProfitableOffersController;
 import wat.semestr7.bachelor.mvc.model.profitable.ProfitableOfferDto;
 import wat.semestr7.bachelor.utils.BackgroundUtils;
@@ -28,8 +27,6 @@ public class ProfitableOffersView extends VBox
 {
     @Autowired
     private ProfitableOffersController controller;
-    @Autowired
-    private FxStageController fxController;
 
     private double width = 1078;
     private NewDataIndicator newDataIndicator;
@@ -181,9 +178,9 @@ public class ProfitableOffersView extends VBox
         Button changeSelected = new Button("Zmiana par walutowych");
         Button options = new Button("Opcje");
 
-        allOffersMenu.setOnAction(event -> fxController.openAllOffersView());
-        changeSelected.setOnAction(event -> fxController.switchToSelectingScene());
-        options.setOnAction(event -> fxController.openPropertiesView());
+        allOffersMenu.setOnAction(event -> controller.openAllOffersView());
+        changeSelected.setOnAction(event -> controller.switchToSelectingScene());
+        options.setOnAction(event -> controller.openConfigurationView());
 
         bottomBox.getChildren().addAll(changeSelected,options,allOffersMenu);
         getChildren().add(bottomBox);
