@@ -13,14 +13,14 @@ import java.util.stream.Collectors;
 @Service
 public class ProfitSearcher {
 
-    public List<ProfitableOfferDto> getProfitableOffers(CurrenciesDataFrameDto currenciesDataFrameDto, Properties currentProperties, Set<String> selectedCurrencies)
+    public List<ProfitableOfferDto> getProfitableOffers(CurrenciesDataFrameDto allData, Properties currentProperties, Set<String> selectedCurrencies)
     {
         List<ProfitableOfferDto> result = new LinkedList<>();
         double commission = Double.parseDouble(currentProperties.getProperty("Prowizja"));
         commission /= 100;
         BigDecimal minimalProfit = new BigDecimal(currentProperties.getProperty("Zysk"));
 
-        Map<String,List<WalutomatOffer>> walutomatOffersPerCurrency = getPotentiallyProfitableOffers(currenciesDataFrameDto.getSelectedCurrenciesDto(), currentProperties, selectedCurrencies);
+        Map<String,List<WalutomatOffer>> walutomatOffersPerCurrency = getPotentiallyProfitableOffers(allData.getSelectedCurrenciesDto(), currentProperties, selectedCurrencies);
 
         for(Map.Entry<String, List<WalutomatOffer>> entry : walutomatOffersPerCurrency.entrySet())
         {
@@ -28,18 +28,16 @@ public class ProfitSearcher {
             ProfitableOfferDto profitableOffer = new ProfitableOfferDto();
             String symbol = entry.getKey();
             List<WalutomatOffer> offers = entry.getValue();
-            double pips = 0.0001 * Integer.parseInt(currentProperties.getProperty(symbol));
-            TmsCurrency tms = currenciesDataFrameDto.getAllTmsCurrencies().get(entry.getKey());
             if(offers.get(0).isBid()) profitableOffer.setAction(ProfitableOfferDto.Action.SELL);
             else profitableOffer.setAction(ProfitableOfferDto.Action.BUY);
 
-            profitableOffer.setTmsRates(currenciesDataFrameDto.getAllTmsCurrencies().get(symbol));
+            profitableOffer.setTmsRates(allData.getAllTmsCurrencies().get(symbol));
             profitableOffer.setSymbol(symbol);
             profitableOffer.setRate(getProfitableOfferRate(offers));
             profitableOffer.setAmount(getProfitableOfferAmount(offers).multiply(new BigDecimal(1+commission)));
             for(WalutomatOffer offer : offers)
             {
-                profit = profit.add(getProfitInPLN(offer,commission,pips,tms,symbol, currenciesDataFrameDto, currentProperties));
+                profit = profit.add(getProfitInPLN(offer,commission,symbol,allData.getAllTmsCurrencies(), currentProperties));
             }
             profit = profit.setScale(2,BigDecimal.ROUND_DOWN);
             profitableOffer.setEstimatedProfit(profit);
@@ -80,20 +78,25 @@ public class ProfitSearcher {
         return profitableOffers;
     }
 
-    private BigDecimal getProfitInPLN(WalutomatOffer offer, double commission, double pips, TmsCurrency tms, String symbol,
-                                      CurrenciesDataFrameDto currenciesDataFrameDto, Properties currentProperties)
+    private double getProfitableOfferRate(List<WalutomatOffer> offers)
+    {
+        return offers.get(offers.size()-1).getRate();
+    }
+
+    private BigDecimal getProfitInPLN(WalutomatOffer offer, double commission, String symbol,
+                                      Map<String,TmsCurrency> allTmsCurrencies, Properties currentProperties)
     {
         BigDecimal walAmount;
         BigDecimal bankRate;
         BigDecimal iPayToWal;
         BigDecimal getFromBank;
         BigDecimal profit;
-
+        double pips = Integer.parseInt(currentProperties.getProperty(symbol)) * 0.001;
         if(offer.isBid())   //for currency XY i want to transact with walutomat : sell X and get Y  (walutomat left table)
         {
             walAmount = new BigDecimal(offer.getCounter_amount() * offer.getCount());   //in currency  Y
             iPayToWal = new BigDecimal(offer.getAmount() * offer.getCount()).multiply(new BigDecimal(1+commission));    // in currency X
-            bankRate = new BigDecimal(tms.getAsk() + pips);
+            bankRate = new BigDecimal(allTmsCurrencies.get(symbol).getAsk() + pips);
             getFromBank = walAmount.divide(bankRate,2,BigDecimal.ROUND_DOWN);   //in currency  X
             profit = getFromBank.subtract(iPayToWal); //in currency X
         }
@@ -101,7 +104,7 @@ public class ProfitSearcher {
         {
             walAmount = new BigDecimal(offer.getAmount() * offer.getCount());   //in currency  X   -> this is what I get from walutomat
             iPayToWal = new BigDecimal(offer.getCounter_amount() * offer.getCount()).multiply(new BigDecimal(1+commission));    //in currency Y
-            bankRate = new BigDecimal(tms.getBid()-pips);
+            bankRate = new BigDecimal(allTmsCurrencies.get(symbol).getBid()-pips);
             getFromBank = walAmount.multiply(bankRate);     // in currency Y
             profit = getFromBank.subtract(iPayToWal);       //in currency  Y
         }
@@ -112,15 +115,10 @@ public class ProfitSearcher {
             if(offer.isBid()) plnCurrency = isPlnCurrency ? symbol : symbol.substring(0,3) + "PLN";
             else plnCurrency = symbol.substring(3,6) + "PLN";
             double plnPips = 0.0001 * Double.parseDouble(currentProperties.getProperty(plnCurrency));
-            BigDecimal tmsBidForPln = new BigDecimal(currenciesDataFrameDto.getAllTmsCurrencies().get(plnCurrency).getBid() - plnPips);
+            BigDecimal tmsBidForPln = new BigDecimal(allTmsCurrencies.get(plnCurrency).getBid() - plnPips);
             profit = profit.multiply(tmsBidForPln);
         }
         return profit.setScale(2,BigDecimal.ROUND_DOWN);
-    }
-
-    private double getProfitableOfferRate(List<WalutomatOffer> offers)
-    {
-        return offers.get(offers.size()-1).getRate();
     }
 
     private BigDecimal getProfitableOfferAmount(List<WalutomatOffer> offers)

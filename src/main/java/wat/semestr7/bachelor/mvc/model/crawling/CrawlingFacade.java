@@ -28,12 +28,10 @@ public class CrawlingFacade implements Runnable
         String walutomatJson = httpCrawler.getHttpJson(walutomatUrl);
         return formatter.formatTmsAndWalutomatJsonToCurrencyDto(tmsJson,walutomatJson);
     }
-    private int counter = 1;
+
     private void submitNewData(CurrenciesDataFrameDto newData)
     {
-        System.out.print(".");
-        if(counter++ %100 ==0) System.out.println("");
-        crawlingController.newDataSubmitted(newData);
+        crawlingController.submitNewData(newData);
     }
 
     @Override

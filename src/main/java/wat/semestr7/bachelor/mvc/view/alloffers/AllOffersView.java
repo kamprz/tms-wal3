@@ -25,6 +25,7 @@ public class AllOffersView extends GridPane
     public AllOffersView(AllOffersController allOffersController, FxStageController fxController) {
         this.allOffersController = allOffersController;
         this.fxController = fxController;
+        init();
     }
 
 
@@ -41,7 +42,7 @@ public class AllOffersView extends GridPane
         stage.close();
     }
 
-    public void open()
+    private void init()
     {
         getChildren().clear();
         setAlignment(Pos.CENTER);

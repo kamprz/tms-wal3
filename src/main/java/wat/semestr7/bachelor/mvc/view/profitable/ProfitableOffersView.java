@@ -33,16 +33,11 @@ public class ProfitableOffersView extends VBox
 
     private double width = 1078;
     private NewDataIndicator newDataIndicator;
-    private ListView profitableOffers;
     private ObservableList<String> observable;
     private Background background;
     private Map<String, CurrencyIndicator> currencyIndicatorsMap;
     private boolean isOpened = false;
-
-    private AnchorPane upperPane;
     private GridPane currencyIndicatorsPane;
-    private VBox lowerBox;
-    private HBox bottomBox;
 
     public void resetView()
     {
@@ -76,6 +71,16 @@ public class ProfitableOffersView extends VBox
         newDataIndicator.newData();
     }
 
+    public boolean isOpened()
+    {
+        return isOpened;
+    }
+
+    public void setOpened(boolean b)
+    {
+        isOpened = b;
+    }
+
     private Parent setView()
     {
         setBackground(background);
@@ -88,7 +93,7 @@ public class ProfitableOffersView extends VBox
 
     private void setUpperBox()
     {
-        upperPane = new AnchorPane();
+        AnchorPane upperPane = new AnchorPane();
         upperPane.setPrefSize(width,80);
         upperPane.setMaxHeight(80);
         Label label = new Label("Walutomat Observer");
@@ -145,7 +150,7 @@ public class ProfitableOffersView extends VBox
 
     private void setLowerBox()
     {
-        lowerBox = new VBox();
+        VBox lowerBox = new VBox();
         lowerBox.setPrefSize(width,230);
         lowerBox.setBackground(background);
         lowerBox.setAlignment(Pos.CENTER);
@@ -153,7 +158,7 @@ public class ProfitableOffersView extends VBox
         label.setPadding(new Insets(15));
         label.setFont(new Font("Arial",17));
 
-        profitableOffers = new ListView<String>();
+        ListView profitableOffers = new ListView<String>();
         observable = FXCollections.observableArrayList();
         profitableOffers.setItems(observable);
         lowerBox.getChildren().addAll(label,profitableOffers);
@@ -163,7 +168,7 @@ public class ProfitableOffersView extends VBox
 
     private void setBottomBox()
     {
-        bottomBox = new HBox();
+        HBox bottomBox = new HBox();
         bottomBox.setPrefSize(width,300);
         bottomBox.setBackground(background);
         bottomBox.setSpacing(100);
@@ -176,22 +181,12 @@ public class ProfitableOffersView extends VBox
         Button changeSelected = new Button("Zmiana par walutowych");
         Button options = new Button("Opcje");
 
-        allOffersMenu.setOnAction(event -> controller.openAllOffersView());
-        changeSelected.setOnAction(event -> controller.switchToSelectedCurrencies());
-        options.setOnAction(event -> controller.openPropertiesView());
+        allOffersMenu.setOnAction(event -> fxController.openAllOffersView());
+        changeSelected.setOnAction(event -> fxController.switchToSelectingScene());
+        options.setOnAction(event -> fxController.openPropertiesView());
 
         bottomBox.getChildren().addAll(changeSelected,options,allOffersMenu);
         getChildren().add(bottomBox);
-    }
-
-    public boolean isOpened()
-    {
-        return isOpened;
-    }
-
-    public void setOpened(boolean b)
-    {
-        isOpened = b;
     }
 
     private String formatOfferToString(ProfitableOfferDto offer)

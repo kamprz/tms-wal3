@@ -15,11 +15,11 @@ import java.util.concurrent.Semaphore;
 
 class NewDataIndicator extends Circle
 {
-    private Stop s1 = new Stop(0, Color.valueOf("#2a1382"));
-    private Stop s2 = new Stop(1.0,Color.WHITE);
-    private Stop s3 = new Stop(0.5,Color.valueOf("#68cfd9"));
-    private List<Stop> stop = new LinkedList<>();
-    private Color s4Color = Color.valueOf("#69d0db");
+    private Stop stop1 = new Stop(0, Color.valueOf("#2a1382"));
+    private Stop stop2 = new Stop(1.0,Color.WHITE);
+    private Stop stop3 = new Stop(0.5,Color.valueOf("#68cfd9"));
+    private List<Stop> stops = new LinkedList<>();
+    private Color stop4Color = Color.valueOf("#69d0db");
     private List<Stop> changeStop = new LinkedList<>();
     private double focusAngle=360, focusDistance=0., centerX=0.5, centerY=0.5, radius=0.6;
     private boolean proportional = true;
@@ -53,7 +53,7 @@ class NewDataIndicator extends Circle
                         catch (InterruptedException e) { e.printStackTrace(); }
                         var += 0.01;
                         changeStop.remove(3);
-                        changeStop.add(new Stop(var, s4Color));
+                        changeStop.add(new Stop(var, stop4Color));
                         setFill(new RadialGradient(focusAngle, focusDistance, centerX, centerY, radius, proportional, CycleMethod.NO_CYCLE, changeStop));
                     }
                     while (var > 0.01) {
@@ -61,7 +61,7 @@ class NewDataIndicator extends Circle
                         catch (InterruptedException e) { e.printStackTrace(); }
                         var -= 0.01;
                         changeStop.remove(3);
-                        changeStop.add(new Stop(var, s4Color));
+                        changeStop.add(new Stop(var, stop4Color));
                         setFill(new RadialGradient(focusAngle, focusDistance, centerX, centerY, radius, proportional, CycleMethod.NO_CYCLE, changeStop));
                     }
                 }
@@ -77,13 +77,13 @@ class NewDataIndicator extends Circle
     }
 
     private void init() {
-        stop.add(s1);
-        stop.add(s2);
-        stop.add(s3);
-        Stop s4 = new Stop(0.0, s4Color);
-        changeStop.addAll(stop);
+        stops.add(stop1);
+        stops.add(stop2);
+        stops.add(stop3);
+        Stop s4 = new Stop(0.0, stop4Color);
+        changeStop.addAll(stops);
         changeStop.add(s4);
-        RadialGradient gradient = new RadialGradient(focusAngle, focusDistance, centerX, centerY, radius, proportional, CycleMethod.NO_CYCLE, stop);
+        RadialGradient gradient = new RadialGradient(focusAngle, focusDistance, centerX, centerY, radius, proportional, CycleMethod.NO_CYCLE, stops);
         setFill(gradient);
         setRadius(20.);
     }

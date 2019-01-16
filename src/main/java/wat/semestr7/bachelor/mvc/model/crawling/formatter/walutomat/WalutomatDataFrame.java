@@ -12,19 +12,19 @@ public class WalutomatDataFrame
 {
     private Map<String, WalutomatOffers> currencies = new HashMap<>();
     private int howManyOffers;
-    public WalutomatDataFrame(WalutomatJsonHolder pojo, int howManyOffers)
+    public WalutomatDataFrame(WalutomatJsonHolder walutomatJsonHolder, int howManyOffers)
     {
-        currencies.put("EURPLN", new WalutomatOffers(pojo.bidEURPLN,pojo.askEURPLN));
-        currencies.put("USDPLN", new WalutomatOffers(pojo.bidUSDPLN,pojo.askUSDPLN));
-        currencies.put("GBPPLN", new WalutomatOffers(pojo.bidGBPPLN,pojo.askGBPPLN));
-        currencies.put("CHFPLN", new WalutomatOffers(pojo.bidCHFPLN,pojo.askCHFPLN));
+        currencies.put("EURPLN", new WalutomatOffers(walutomatJsonHolder.bidEURPLN, walutomatJsonHolder.askEURPLN));
+        currencies.put("USDPLN", new WalutomatOffers(walutomatJsonHolder.bidUSDPLN, walutomatJsonHolder.askUSDPLN));
+        currencies.put("GBPPLN", new WalutomatOffers(walutomatJsonHolder.bidGBPPLN, walutomatJsonHolder.askGBPPLN));
+        currencies.put("CHFPLN", new WalutomatOffers(walutomatJsonHolder.bidCHFPLN, walutomatJsonHolder.askCHFPLN));
 
-        currencies.put("EURUSD", new WalutomatOffers(pojo.bidEURUSD,pojo.askEURUSD));
-        currencies.put("EURGBP", new WalutomatOffers(pojo.bidEURGBP,pojo.askEURGBP));
-        currencies.put("EURCHF", new WalutomatOffers(pojo.bidEURCHF,pojo.askEURCHF));
-        currencies.put("GBPUSD", new WalutomatOffers(pojo.bidGBPUSD,pojo.askGBPUSD));
-        currencies.put("USDCHF", new WalutomatOffers(pojo.bidUSDCHF,pojo.askUSDCHF));
-        currencies.put("GBPCHF", new WalutomatOffers(pojo.bidGBPCHF,pojo.askGBPCHF));
+        currencies.put("EURUSD", new WalutomatOffers(walutomatJsonHolder.bidEURUSD, walutomatJsonHolder.askEURUSD));
+        currencies.put("EURGBP", new WalutomatOffers(walutomatJsonHolder.bidEURGBP, walutomatJsonHolder.askEURGBP));
+        currencies.put("EURCHF", new WalutomatOffers(walutomatJsonHolder.bidEURCHF, walutomatJsonHolder.askEURCHF));
+        currencies.put("GBPUSD", new WalutomatOffers(walutomatJsonHolder.bidGBPUSD, walutomatJsonHolder.askGBPUSD));
+        currencies.put("USDCHF", new WalutomatOffers(walutomatJsonHolder.bidUSDCHF, walutomatJsonHolder.askUSDCHF));
+        currencies.put("GBPCHF", new WalutomatOffers(walutomatJsonHolder.bidGBPCHF, walutomatJsonHolder.askGBPCHF));
         this.howManyOffers = howManyOffers;
     }
 

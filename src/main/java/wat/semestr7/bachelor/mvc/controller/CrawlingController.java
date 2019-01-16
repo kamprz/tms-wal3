@@ -17,14 +17,13 @@ public class CrawlingController implements NewDataProducer
     @Autowired
     private CrawlingFacade crawler;
     @Autowired
-    private PropertiesController propertiesController;
+    private ConfigurationController configurationController;
     @Autowired
     private FxStageController fxStageController;
 
     private final Set<NewDataListener> listeners = new HashSet<>();
     private Thread crawlingThread;
     private long lastCrawlingTime =  System.currentTimeMillis();
-    private final Object lastCrawlingTimeLock = new Object();
     private Integer maxTimeWithoutData;
     
     @Scheduled(cron = "*/10 * * * * *")
@@ -43,13 +42,8 @@ public class CrawlingController implements NewDataProducer
         listeners.add(listener);
     }
 
-    public void startCrawling()
-    {
-        crawlingThread = new Thread(crawler);
-        crawlingThread.start();
-    }
-
-    public void newDataSubmitted(CurrenciesDataFrameDto newData)
+    @Override
+    public void submitNewData(CurrenciesDataFrameDto newData)
     {
         setLastCrawlingTime(System.currentTimeMillis());
         for(NewDataListener listener : listeners)
@@ -59,10 +53,16 @@ public class CrawlingController implements NewDataProducer
         holdOn();
     }
 
-    public void throwCrawlingException(Exception exception)
+    public void startCrawling()
+    {
+        crawlingThread = new Thread(crawler);
+        crawlingThread.start();
+    }
+
+    public void throwCrawlingException()
     {
         crawlingThread.interrupt();
-        fxStageController.throwCriticalCrawlingError(exception);
+        fxStageController.throwCriticalCrawlingError();
     }
 
     public void throwInternetException()
@@ -73,7 +73,7 @@ public class CrawlingController implements NewDataProducer
 
     private void init()
     {
-        maxTimeWithoutData = Integer.parseInt(propertiesController.getProperties().getProperty("maxTimeWithoutDataInMilis"));
+        maxTimeWithoutData = Integer.parseInt(configurationController.getProperties().getProperty("maxTimeWithoutDataInMilis"));
     }
 
     private void resetCrawler()
@@ -83,14 +83,14 @@ public class CrawlingController implements NewDataProducer
     }
 
     private long getLastCrawlingTime() {
-        synchronized (lastCrawlingTimeLock)
+        synchronized (this)
         {
             return lastCrawlingTime;
         }
     }
 
     private void setLastCrawlingTime(long lastCrawlingTime) {
-        synchronized (lastCrawlingTimeLock)
+        synchronized (this)
         {
             this.lastCrawlingTime = lastCrawlingTime;
         }

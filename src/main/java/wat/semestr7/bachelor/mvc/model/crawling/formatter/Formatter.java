@@ -4,7 +4,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import wat.semestr7.bachelor.exception.ServerJsonFormatChangedException;
-import wat.semestr7.bachelor.mvc.controller.PropertiesController;
+import wat.semestr7.bachelor.mvc.controller.ConfigurationController;
 import wat.semestr7.bachelor.mvc.model.crawling.CurrenciesDataFrameDto;
 import wat.semestr7.bachelor.mvc.model.crawling.formatter.tms.TmsDataFrame;
 import wat.semestr7.bachelor.mvc.model.crawling.formatter.tms.TmsJsonHolder;
@@ -19,7 +19,7 @@ import java.util.Map;
 public class Formatter {
     private ObjectMapper objectMapper = new ObjectMapper();
     @Autowired
-    private PropertiesController propertiesController;
+    private ConfigurationController configurationController;
 
     public CurrenciesDataFrameDto formatTmsAndWalutomatJsonToCurrencyDto(String tmsJsonString, String walutomatJsonString) throws ServerJsonFormatChangedException {
         Map<String,CurrencyDto> map = new HashMap<>();
@@ -32,7 +32,7 @@ public class Formatter {
         }
         catch (IOException e){ throw new ServerJsonFormatChangedException(); }
 
-        for(String currencySymbol : propertiesController.getSelectedCurrencies())
+        for(String currencySymbol : configurationController.getSelectedCurrencies())
         {
             CurrencyDto dto = new CurrencyDto(currencySymbol,
                     tmsDataFrame.getCurrency(currencySymbol),
@@ -48,7 +48,7 @@ public class Formatter {
     }
 
     private WalutomatDataFrame getWalutomatOffersDataFrame(String walutomatOffersJsonString) throws IOException {
-        int ofert = Integer.parseInt(propertiesController.getProperties().getProperty("Ofert"));
+        int ofert = Integer.parseInt(configurationController.getProperties().getProperty("Ofert"));
         return new WalutomatDataFrame(objectMapper.readValue(walutomatOffersJsonString,WalutomatJsonHolder.class),ofert);
     }
 }

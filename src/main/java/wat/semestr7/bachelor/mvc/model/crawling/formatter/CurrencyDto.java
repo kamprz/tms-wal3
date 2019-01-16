@@ -2,8 +2,6 @@ package wat.semestr7.bachelor.mvc.model.crawling.formatter;
 
 import lombok.Data;
 import wat.semestr7.bachelor.mvc.model.crawling.formatter.tms.TmsCurrency;
-import wat.semestr7.bachelor.mvc.model.crawling.formatter.tms.TmsDataFrame;
-import wat.semestr7.bachelor.mvc.model.crawling.formatter.walutomat.WalutomatDataFrame;
 import wat.semestr7.bachelor.mvc.model.crawling.formatter.walutomat.WalutomatOffer;
 
 import java.util.LinkedList;

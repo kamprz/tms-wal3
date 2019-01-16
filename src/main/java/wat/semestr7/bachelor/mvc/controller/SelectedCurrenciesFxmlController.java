@@ -15,11 +15,9 @@ import java.util.Set;
 @Controller
 public class SelectedCurrenciesFxmlController {
     @Autowired
-    private PropertiesController propertiesController;
+    private ConfigurationController configurationController;
     @Autowired
     private FxStageController fxStageController;
-    @Autowired
-    private AllOffersController allOffersController;
     @FXML
     private Button selectButton;
     @FXML
@@ -53,13 +51,13 @@ public class SelectedCurrenciesFxmlController {
         Set<String> previous = selectPrevious();
         selectButton.addEventHandler(ActionEvent.ANY, event -> {
             Set<String> selected = new HashSet<>();
-            for(String symbol : propertiesController.getAllExistingCurrencies())
+            for(String symbol : configurationController.getAllExistingCurrencies())
             {
                 if(mapSymbolToCheckBox(symbol).isSelected()) selected.add(symbol);
             }
             if(selected.size() > 0)
             {
-                propertiesController.setSelectedCurrencies(selected);
+                configurationController.setSelectedCurrencies(selected);
                 fxStageController.switchToProfitableScene();
                 if(!selected.equals(previous))
                 {
@@ -79,7 +77,7 @@ public class SelectedCurrenciesFxmlController {
         });
 
         selectAll.addEventHandler(ActionEvent.ANY, event -> {
-            List<String> allCurrencies = propertiesController.getAllExistingCurrencies();
+            List<String> allCurrencies = configurationController.getAllExistingCurrencies();
             for(String symbol : allCurrencies)
             {
                 mapSymbolToCheckBox(symbol).setSelected(true);
@@ -87,7 +85,7 @@ public class SelectedCurrenciesFxmlController {
         });
 
         disselectAll.addEventHandler(ActionEvent.ANY, event -> {
-            for(String symbol : propertiesController.getAllExistingCurrencies())
+            for(String symbol : configurationController.getAllExistingCurrencies())
             {
                 mapSymbolToCheckBox(symbol).setSelected(false);
             }
@@ -96,8 +94,8 @@ public class SelectedCurrenciesFxmlController {
 
     private Set<String> selectPrevious()
     {
-        Set<String> selectedCurrencies = propertiesController.getSelectedCurrencies();
-        for(String currencySymbol : propertiesController.getSelectedCurrencies())
+        Set<String> selectedCurrencies = configurationController.getSelectedCurrencies();
+        for(String currencySymbol : configurationController.getSelectedCurrencies())
         {
             mapSymbolToCheckBox(currencySymbol).setSelected(true);
         }

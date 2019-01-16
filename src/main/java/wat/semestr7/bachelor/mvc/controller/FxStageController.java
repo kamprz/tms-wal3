@@ -8,12 +8,9 @@ import javafx.stage.Stage;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import wat.semestr7.bachelor.mvc.view.alloffers.AllOffersView;
-import wat.semestr7.bachelor.mvc.view.properties.PropertiesView;
+import wat.semestr7.bachelor.mvc.view.properties.ConfigurationView;
 
 import java.io.IOException;
-import java.net.ConnectException;
-import java.net.SocketTimeoutException;
-import java.net.UnknownHostException;
 import java.util.Optional;
 
 @Controller
@@ -22,11 +19,11 @@ public class FxStageController
     @Autowired
     private ProfitableOffersController profitableOffersController;
     @Autowired
-    private PropertiesController propertiesController;
+    private ConfigurationController configurationController;
     @Autowired
     private AllOffersController allOffersController;
 
-    private PropertiesView propertiesView;
+    private ConfigurationView configurationView;
     private AllOffersView allOffersView;
     private Stage mainStage;
     private Scene selectingCurrenciesScene;
@@ -56,7 +53,7 @@ public class FxStageController
         profitableScene = scene;
     }
 
-    void switchToSelectingScene()
+    public void switchToSelectingScene()
     {
         mainStage.setScene(selectingCurrenciesScene);
         profitableOffersController.setViewOpened(false);
@@ -72,33 +69,31 @@ public class FxStageController
     }
 
     //Properties View:
-    void openPropertiesView()
+    public void openPropertiesView()
     {
         if(!isPropertiesViewOpened())
         {
-            propertiesView = new PropertiesView(propertiesController, this);
-            propertiesView.open();
+            configurationView = new ConfigurationView(configurationController, this);
         }
     }
 
     public void closePropertiesView()
     {
-        propertiesView.close();
-        propertiesView = null;
+        configurationView.close();
+        configurationView = null;
     }
 
     boolean isPropertiesViewOpened()
     {
-        return propertiesView != null;
+        return configurationView != null;
     }
 
     //AllOffersView:
-    void openAllOffersView()
+    public void openAllOffersView()
     {
         if(!isAllOffersViewOpened())
         {
             allOffersView = new AllOffersView(allOffersController, this);
-            allOffersView.open();
             allOffersController.setAllOffersView(allOffersView);
         }
     }
@@ -129,7 +124,7 @@ public class FxStageController
         );
     }
 
-    void throwCriticalCrawlingError(Exception exception) {
+    void throwCriticalCrawlingError() {
         Platform.runLater(() ->
                 {
                     String message = "Nastąpi zamknięcie programu.";

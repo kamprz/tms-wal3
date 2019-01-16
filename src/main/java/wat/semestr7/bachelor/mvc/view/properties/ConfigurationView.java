@@ -13,14 +13,14 @@ import javafx.scene.input.KeyCode;
 import javafx.scene.layout.*;
 import javafx.stage.Stage;
 import wat.semestr7.bachelor.mvc.controller.FxStageController;
-import wat.semestr7.bachelor.mvc.controller.PropertiesController;
+import wat.semestr7.bachelor.mvc.controller.ConfigurationController;
 import wat.semestr7.bachelor.utils.BackgroundUtils;
 
 import java.util.*;
 
-public class PropertiesView extends VBox
+public class ConfigurationView extends VBox
 {
-    private PropertiesController propertiesController;
+    private ConfigurationController configurationController;
     private FxStageController fxController;
     private Stage stage;
     private Map<String, TextField> textFieldMap;
@@ -29,21 +29,17 @@ public class PropertiesView extends VBox
     private final String profitString = "Zysk";
     private final String offertsString = "Ofert";
 
-    public PropertiesView(PropertiesController controller, FxStageController fxStageController)
+    public ConfigurationView(ConfigurationController configurationController, FxStageController fxStageController)
     {
-        this.propertiesController = controller;
+        this.configurationController = configurationController;
         fxController = fxStageController;
+        init();
+        setStage();
     }
 
     public void close()
     {
         stage.close();
-    }
-
-    public void open()
-    {
-        init();
-        setStage();
     }
 
     private void init()
@@ -90,7 +86,7 @@ public class PropertiesView extends VBox
 
         List<String> pln = new LinkedList<>();
         List<String> foreign = new LinkedList<>();
-        for(String s : propertiesController.getSelectedCurrencies())
+        for(String s : configurationController.getSelectedCurrencies())
         {
             if(s.toLowerCase().contains("pln")) pln.add(s);
             else foreign.add(s);
@@ -125,7 +121,7 @@ public class PropertiesView extends VBox
     private void setProperties()
     {
         try {
-            propertiesController.setProperties(getEnteredProperties());
+            configurationController.setProperties(getEnteredProperties());
         }
         catch (NumberFormatException e)
         {
@@ -171,7 +167,7 @@ public class PropertiesView extends VBox
 
     private Properties loadPreviousProperties()
     {
-        return propertiesController.getProperties();
+        return configurationController.getProperties();
     }
 
     private Properties getEnteredProperties() throws NumberFormatException, IllegalArgumentException

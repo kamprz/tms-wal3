@@ -3,7 +3,7 @@ package wat.semestr7.bachelor.mvc.controller;
 import javafx.scene.Scene;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import wat.semestr7.bachelor.interfaces.config.IAllSettingsLoader;
+import wat.semestr7.bachelor.interfaces.config.IAllConfigurationLoader;
 import wat.semestr7.bachelor.interfaces.newdata.NewDataListener;
 import wat.semestr7.bachelor.interfaces.newdata.NewDataProducer;
 import wat.semestr7.bachelor.mvc.model.crawling.CurrenciesDataFrameDto;
@@ -24,7 +24,7 @@ public class ProfitableOffersController implements NewDataListener
     @Autowired
     private NewDataProducer newDataProducer;
     @Autowired
-    private IAllSettingsLoader settingsLoader;
+    private IAllConfigurationLoader settingsLoader;
     @Autowired
     private FxStageController fxStageController;
 
@@ -53,21 +53,6 @@ public class ProfitableOffersController implements NewDataListener
     public Set<String> getSelectedCurrencies()
     {
         return settingsLoader.getSelectedCurrencies();
-    }
-
-    public void openAllOffersView()
-    {
-        fxStageController.openAllOffersView();
-    }
-
-    public void switchToSelectedCurrencies()
-    {
-        fxStageController.switchToSelectingScene();
-    }
-
-    public void openPropertiesView()
-    {
-        fxStageController.openPropertiesView();
     }
 
     public void setProfitableScene(Scene scene)
