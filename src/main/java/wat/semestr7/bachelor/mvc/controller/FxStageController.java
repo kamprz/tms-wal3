@@ -50,12 +50,13 @@ public class FxStageController
 
     public void closePropertiesView()
     {
-        configurationView.close();
         configurationView = null;
+        configurationView.close();
     }
 
     public void closeAllOffersView()
     {
+        allOffersController.setAllOffersView(null);
         allOffersView.close();
         allOffersView = null;
     }
