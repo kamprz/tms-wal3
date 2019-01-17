@@ -28,6 +28,7 @@ public class ConfigurationView extends VBox
     private final String commissionString = "Prowizja";
     private final String profitString = "Zysk";
     private final String offertsString = "Ofert";
+    private final Label effect = new Label();
 
     public ConfigurationView(ConfigurationController configurationController, FxStageController fxStageController)
     {
@@ -115,17 +116,19 @@ public class ConfigurationView extends VBox
         this.setSpacing(20);
         this.setPrefWidth(340);
         this.setBackground(BackgroundUtils.getMainBackground());
-        getChildren().addAll(pane,setButton);
+        getChildren().addAll(pane,setButton,effect);
     }
 
     private void setProperties()
     {
         try {
             configurationController.setProperties(getEnteredProperties());
+            effect.setText("Zatwierdzono zmiany");
         }
         catch (NumberFormatException e)
         {
-            String message = "Zły format danych dla pola " + e.getMessage();
+            effect.setText("");
+            String message = "Zły format danych dla pola \"" + e.getMessage() + "\"";
             Alert alert = new Alert(Alert.AlertType.ERROR);
             alert.setTitle("Błąd!");
             alert.setHeaderText("Błąd formatu danych.");
@@ -134,7 +137,8 @@ public class ConfigurationView extends VBox
         }
         catch (IllegalArgumentException e)
         {
-            String message = "Wprowadzono ujemna wartosc dla pola " + e.getMessage();
+            effect.setText("");
+            String message = "Wprowadzono ujemną wartość dla pola \"" + e.getMessage() + "\"";
             Alert alert = new Alert(Alert.AlertType.ERROR);
             alert.setTitle("Błąd!");
             alert.setHeaderText("Błąd formatu danych.");
@@ -189,15 +193,16 @@ public class ConfigurationView extends VBox
             }
             catch(NumberFormatException e)
             {
-                throw new NumberFormatException(entry.getKey() + " : " + entry.getValue().getText());
+                String field = entry.getKey();
+                if(field.toLowerCase().contains("ofert")) field = "Liczba ofert";
+                throw new NumberFormatException(field + " : " + entry.getValue().getText());
             }
             catch(IllegalArgumentException e)
             {
                 String field = entry.getKey();
-                if(field.equalsIgnoreCase("ofert")) field = "Liczba ofert";
+                if(field.toLowerCase().contains("ofert")) field = "Liczba ofert";
                 throw new IllegalArgumentException(field);
             }
-            //Null jak ktoś zmieni propertiesy
         }
         return properties;
     }

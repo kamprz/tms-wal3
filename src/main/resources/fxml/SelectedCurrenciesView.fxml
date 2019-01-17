@@ -10,13 +10,13 @@
 <?import javafx.scene.shape.Line?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane prefHeight="400.0" prefWidth="594.0" style="-fx-background-color: fdfff3;" xmlns="http://javafx.com/javafx/8.0.172-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="wat.semestr7.bachelor.mvc.controller.SelectedCurrenciesFxmlController">
+<AnchorPane prefHeight="400.0" prefWidth="594.0" style="-fx-background-color: fdfff3;" xmlns="http://javafx.com/javafx/8.0.121" xmlns:fx="http://javafx.com/fxml/1" fx:controller="wat.semestr7.bachelor.mvc.controller.SelectedCurrenciesFxmlController">
    <children>
-      <CheckBox fx:id="chEURPLN" layoutX="41.0" layoutY="212.0" mnemonicParsing="false" text="EUR / PLN">
+      <CheckBox fx:id="chCHFPLN" layoutX="41.0" layoutY="212.0" mnemonicParsing="false" text="CHF / PLN">
          <effect>
             <SepiaTone />
          </effect></CheckBox>
-      <CheckBox fx:id="chCHFPLN" layoutX="41.0" layoutY="250.0" mnemonicParsing="false" text="CHF / PLN">
+      <CheckBox fx:id="chEURPLN" layoutX="41.0" layoutY="250.0" mnemonicParsing="false" text="EUR / PLN">
          <effect>
             <SepiaTone />
          </effect></CheckBox>

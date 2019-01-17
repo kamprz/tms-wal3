@@ -11,8 +11,8 @@ import java.util.Map;
 public class WalutomatDataFrame
 {
     private Map<String, WalutomatOffers> currencies = new HashMap<>();
-    private int howManyOffers;
-    public WalutomatDataFrame(WalutomatJsonHolder walutomatJsonHolder, int howManyOffers)
+
+    public WalutomatDataFrame(WalutomatJsonHolder walutomatJsonHolder)
     {
         currencies.put("EURPLN", new WalutomatOffers(walutomatJsonHolder.bidEURPLN, walutomatJsonHolder.askEURPLN));
         currencies.put("USDPLN", new WalutomatOffers(walutomatJsonHolder.bidUSDPLN, walutomatJsonHolder.askUSDPLN));
@@ -25,20 +25,19 @@ public class WalutomatDataFrame
         currencies.put("GBPUSD", new WalutomatOffers(walutomatJsonHolder.bidGBPUSD, walutomatJsonHolder.askGBPUSD));
         currencies.put("USDCHF", new WalutomatOffers(walutomatJsonHolder.bidUSDCHF, walutomatJsonHolder.askUSDCHF));
         currencies.put("GBPCHF", new WalutomatOffers(walutomatJsonHolder.bidGBPCHF, walutomatJsonHolder.askGBPCHF));
-        this.howManyOffers = howManyOffers;
     }
 
-    public List<WalutomatOffer> getTopBids(String symbol)
+    public List<WalutomatOffer> getTopBids(String symbol, int howManyOffers)
     {
-        return getTopOffersOfList(currencies.get(symbol).getBid());
+        return getTopOffersOfList(currencies.get(symbol).getBid(), howManyOffers);
     }
 
-    public List<WalutomatOffer> getTopAsks(String symbol)
+    public List<WalutomatOffer> getTopAsks(String symbol, int howManyOffers)
     {
-        return getTopOffersOfList(currencies.get(symbol).getAsk());
+        return getTopOffersOfList(currencies.get(symbol).getAsk(), howManyOffers);
     }
 
-    private List<WalutomatOffer> getTopOffersOfList(List list)
+    private List<WalutomatOffer> getTopOffersOfList(List list, int howManyOffers)
     {
         List result = new LinkedList();
         int i=0;

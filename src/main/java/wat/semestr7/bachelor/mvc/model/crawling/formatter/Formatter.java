@@ -27,6 +27,7 @@ public class Formatter {
         Map<String,CurrencyDto> map = new HashMap<>();
         TmsDataFrame tmsDataFrame = null;
         WalutomatDataFrame walutomatDataFrame = null;
+        int howManyOffers = Integer.parseInt(configurationController.getProperties().getProperty("Ofert"));
         try{
             tmsDataFrame = getTmsDataFrame(tmsJsonString);
             walutomatDataFrame = getWalutomatOffersDataFrame(walutomatJsonString);
@@ -37,8 +38,8 @@ public class Formatter {
         {
             CurrencyDto dto = new CurrencyDto(currencySymbol,
                     tmsDataFrame.getCurrency(currencySymbol),
-                    walutomatDataFrame.getTopBids(currencySymbol),
-                    walutomatDataFrame.getTopAsks(currencySymbol));
+                    walutomatDataFrame.getTopBids(currencySymbol, howManyOffers),
+                    walutomatDataFrame.getTopAsks(currencySymbol, howManyOffers));
             map.put(currencySymbol, dto);
         }
         return new CurrenciesDataFrameDto(map,tmsDataFrame.getCurrencies());
@@ -49,7 +50,6 @@ public class Formatter {
     }
 
     private WalutomatDataFrame getWalutomatOffersDataFrame(String walutomatOffersJsonString) throws IOException {
-        int ofert = Integer.parseInt(configurationController.getProperties().getProperty("Ofert"));
-        return new WalutomatDataFrame(objectMapper.readValue(walutomatOffersJsonString,WalutomatJsonHolder.class),ofert);
+        return new WalutomatDataFrame(objectMapper.readValue(walutomatOffersJsonString,WalutomatJsonHolder.class));
     }
 }

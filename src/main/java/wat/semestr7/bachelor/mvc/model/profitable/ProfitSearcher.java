@@ -31,10 +31,9 @@ public class ProfitSearcher {
             if(offers.get(0).isBid()) profitableOffer.setAction(ProfitableOfferDto.Action.SELL);
             else profitableOffer.setAction(ProfitableOfferDto.Action.BUY);
 
-            profitableOffer.setTmsRates(allData.getAllTmsCurrencies().get(symbol));
             profitableOffer.setSymbol(symbol);
             profitableOffer.setRate(getProfitableOfferRate(offers));
-            profitableOffer.setAmount(getProfitableOfferAmount(offers).multiply(new BigDecimal(1+commission)));
+            profitableOffer.setAmount(getProfitableOfferAmount(offers, commission));
             for(WalutomatOffer offer : offers)
             {
                 profit = profit.add(getProfitInPLN(offer,commission,symbol,allData.getAllTmsCurrencies(), currentProperties));
@@ -121,7 +120,7 @@ public class ProfitSearcher {
         return profit.setScale(2,BigDecimal.ROUND_DOWN);
     }
 
-    private BigDecimal getProfitableOfferAmount(List<WalutomatOffer> offers)
+    private BigDecimal getProfitableOfferAmount(List<WalutomatOffer> offers, double commission)
     {
         //amount if isBid - amount ; if ask - amount
         BigDecimal value = BigDecimal.ZERO;
@@ -130,7 +129,7 @@ public class ProfitSearcher {
             double amount = offer.isBid() ? offer.getAmount() : offer.getCounter_amount();
             value = value.add(new BigDecimal(amount * offer.getCount())) ;
         }
-        value = value.setScale(2,BigDecimal.ROUND_DOWN);
+        value = value.multiply(new BigDecimal(1+commission)).setScale(2,BigDecimal.ROUND_DOWN);
         return value;
     }
 }

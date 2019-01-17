@@ -10,10 +10,12 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.builder.SpringApplicationBuilder;
 import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.context.annotation.ComponentScan;
+import org.springframework.scheduling.annotation.EnableScheduling;
 import wat.semestr7.bachelor.mvc.controller.CrawlingController;
 import wat.semestr7.bachelor.mvc.controller.FxStageController;
 
 @SpringBootApplication
+@EnableScheduling
 @ComponentScan(basePackages = "wat.semestr7.bachelor")
 public class ApplicationConfiguration extends Application
 {

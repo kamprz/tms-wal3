@@ -48,12 +48,24 @@ public class FxStageController
         this.selectingCurrenciesScene = scene;
     }
 
+    public void closePropertiesView()
+    {
+        configurationView.close();
+        configurationView = null;
+    }
+
+    public void closeAllOffersView()
+    {
+        allOffersView.close();
+        allOffersView = null;
+    }
+
     void setProfitableScene(Scene scene)
     {
         profitableScene = scene;
     }
 
-    public void switchToSelectingScene()
+    void switchToSelectingScene()
     {
         mainStage.setScene(selectingCurrenciesScene);
         profitableOffersController.setViewOpened(false);
@@ -69,18 +81,12 @@ public class FxStageController
     }
 
     //Properties View:
-    public void openConfigurationView()
+    void openConfigurationView()
     {
         if(!isPropertiesViewOpened())
         {
             configurationView = new ConfigurationView(configurationController, this);
         }
-    }
-
-    public void closePropertiesView()
-    {
-        configurationView.close();
-        configurationView = null;
     }
 
     boolean isPropertiesViewOpened()
@@ -89,7 +95,7 @@ public class FxStageController
     }
 
     //AllOffersView:
-    public void openAllOffersView()
+    void openAllOffersView()
     {
         if(!isAllOffersViewOpened())
         {
@@ -98,11 +104,7 @@ public class FxStageController
         }
     }
 
-    public void closeAllOffersView()
-    {
-        allOffersView.close();
-        allOffersView = null;
-    }
+
 
     boolean isAllOffersViewOpened(){
         return allOffersView !=null;

@@ -40,6 +40,7 @@ public class ProfitableOffersView extends VBox
     {
         if(background==null) init();
         currencyIndicatorsPane.getChildren().clear();
+        Platform.runLater(() -> observable.clear());
         setCurrencyIndicatorsPane();
     }
 
@@ -199,14 +200,10 @@ public class ProfitableOffersView extends VBox
         if(isBuyingAction.test(offer))
         {
                operation = "Kup " + firstCurr + " za " + StringUtils.amountFormat(offer.getAmount()) + " "   + secCurr;
-               tms = ". Bid = ";
-               tmsRate = offer.getTmsRates().getBid();
         }
         else
         {
             operation = "Sprzedaj " + StringUtils.amountFormat(offer.getAmount()) + " " + firstCurr + " za " + secCurr;
-            tms = ". Ask = ";
-            tmsRate = offer.getTmsRates().getAsk();
         }
         stringBuilder.append(firstCurr)
                 .append("/")
@@ -215,8 +212,6 @@ public class ProfitableOffersView extends VBox
                 .append(operation)
                 .append(" po kursie ")
                 .append(StringUtils.rateFormat(offer.getRate(),5))
-                .append(tms)
-                .append(StringUtils.rateFormat(tmsRate,5))
                 .append(". Przewidywany zysk = " + StringUtils.amountFormat(offer.getEstimatedProfit()) +" PLN");
         return stringBuilder.toString();
     }
