@@ -33,7 +33,7 @@ public class ConfigPropertiesDao extends PropertiesDao{
     @Override
     protected void loadProperties() {
         try{
-            filePath = "options.properties";
+            filePath = "config.properties";
             properties = super.loadPropertiesFromFile(filePath);
         }
         catch (IOException exception)

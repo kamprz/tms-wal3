@@ -21,11 +21,12 @@ public class Formatter {
     @Autowired
     private ConfigurationController configurationController;
 
-    public CurrenciesDataFrameDto formatTmsAndWalutomatJsonToCurrencyDto(String tmsJsonString, String walutomatJsonString) throws ServerJsonFormatChangedException {
+    public CurrenciesDataFrameDto formatTmsAndWalutomatJsonToCurrenciesDataFrameDto(String tmsJsonString, String walutomatJsonString)
+            throws ServerJsonFormatChangedException
+    {
         Map<String,CurrencyDto> map = new HashMap<>();
         TmsDataFrame tmsDataFrame = null;
         WalutomatDataFrame walutomatDataFrame = null;
-
         try{
             tmsDataFrame = getTmsDataFrame(tmsJsonString);
             walutomatDataFrame = getWalutomatOffersDataFrame(walutomatJsonString);

@@ -154,6 +154,21 @@ public class FxStageController
         );
     }
 
+    void throwCriticalFilesMalformedError()
+    {
+        Platform.runLater(() ->
+                {
+                    Alert alert = new Alert(Alert.AlertType.ERROR);
+                    alert.setTitle("Błąd!");
+                    alert.setHeaderText("Błąd wczytywania danych.");
+                    alert.setContentText("Naruszono strukturę plików.");
+                    alert.showAndWait();
+                    Platform.exit();
+                    System.exit(1);
+                }
+        );
+    }
+
     private void exitApplication()
     {
         mainStage.close();

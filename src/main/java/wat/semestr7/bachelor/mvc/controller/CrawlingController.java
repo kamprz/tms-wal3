@@ -71,9 +71,15 @@ public class CrawlingController implements NewDataProducer
         fxStageController.throwCriticalCrawlingNetworkError();
     }
 
+    public void throwFilesMalformedException()
+    {
+        crawlingThread.interrupt();
+        fxStageController.throwCriticalFilesMalformedError();
+    }
+
     private void init()
     {
-        maxTimeWithoutData = Integer.parseInt(configurationController.getProperties().getProperty("maxTimeWithoutDataInMilis"));
+        maxTimeWithoutData = Integer.parseInt(configurationController.getProperties().getProperty("Czas"));
     }
 
     private void resetCrawler()
@@ -99,6 +105,6 @@ public class CrawlingController implements NewDataProducer
     private void holdOn()
     {
         try { Thread.sleep(1000); }
-        catch (InterruptedException e) { e.printStackTrace(); }
+        catch (InterruptedException e) { crawlingThread.interrupt(); }
     }
 }

@@ -16,9 +16,9 @@ public class CurrencyDto
     private TmsCurrency tmsRates;
 
     CurrencyDto(String symbol,
-                       TmsCurrency tmsCurrency,
-                       List<WalutomatOffer> topBids,
-                       List<WalutomatOffer> topAsks)
+                TmsCurrency tmsCurrency,
+                List<WalutomatOffer> topBids,
+                List<WalutomatOffer> topAsks)
     {
         this.symbol = symbol;
         this.topAsks = topAsks;

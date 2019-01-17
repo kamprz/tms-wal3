@@ -24,9 +24,16 @@ public class CrawlingFacade implements Runnable
     private CrawlingController crawlingController;
 
     private CurrenciesDataFrameDto crawl() throws InternetCrawlingException, ServerJsonFormatChangedException {
-        String tmsJson = httpCrawler.getHttpJson(tmsUrl);
-        String walutomatJson = httpCrawler.getHttpJson(walutomatUrl);
-        return formatter.formatTmsAndWalutomatJsonToCurrencyDto(tmsJson,walutomatJson);
+        try{
+            String tmsJson = httpCrawler.getHttpJson(tmsUrl);
+            String walutomatJson = httpCrawler.getHttpJson(walutomatUrl);
+            return formatter.formatTmsAndWalutomatJsonToCurrenciesDataFrameDto(tmsJson,walutomatJson);
+        }
+        catch(NullPointerException e)
+        {
+            crawlingController.throwFilesMalformedException();
+            return null;
+        }
     }
 
     private void submitNewData(CurrenciesDataFrameDto newData)

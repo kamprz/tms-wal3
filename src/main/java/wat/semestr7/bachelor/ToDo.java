@@ -3,7 +3,7 @@ package wat.semestr7.bachelor;
 public class ToDo
 {
     /*
-        -remove newdata ALL off?
-        - zmieniłem listenery, czy działa?
+       - dodałem exception na zmienione pliki: metody w FxControlerze i CrawlingControlerze
+        - zmiana nazwy metody Formattera
      */
 }
