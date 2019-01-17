@@ -59,7 +59,7 @@ public class EfficiencyTester implements NewDataListener{
         }
     }
 
-    @Scheduled(cron = "00 */5 * * * *")
+    @Scheduled(cron = "0 */5 * * * *")
     private void calculateStats()// throws FileNotFoundException, UnsupportedEncodingException
     {
         System.out.println(new Date() + " : Calculating short-time statistics.");
@@ -92,7 +92,7 @@ public class EfficiencyTester implements NewDataListener{
         }
     }
 
-
+    //@Scheduled(cron = "0 0 * * * *")
     private void globalScheduledCalculation()
     {
         System.out.println(new Date() + " : Calculating long-time statistics.");

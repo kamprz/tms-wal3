@@ -50,8 +50,8 @@ public class FxStageController
 
     public void closePropertiesView()
     {
-        configurationView = null;
         configurationView.close();
+        configurationView = null;
     }
 
     public void closeAllOffersView()
