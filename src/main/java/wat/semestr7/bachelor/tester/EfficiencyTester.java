@@ -54,7 +54,7 @@ public class EfficiencyTester implements NewDataListener{
         {
             crawlingTimeInMilisListLocal.add(duration);
             cpuUsageInPercentListLocal.add(osBean.getProcessCpuLoad()*100);
-            ramUsageLocal.add(runtime.totalMemory()/(8 * 1024 * 1024));
+            ramUsageLocal.add(runtime.totalMemory()/(1024 * 1024));
             semaphore.release();
         }
     }
@@ -62,7 +62,7 @@ public class EfficiencyTester implements NewDataListener{
     @Scheduled(cron = "00 */5 * * * *")
     private void calculateStats()// throws FileNotFoundException, UnsupportedEncodingException
     {
-        System.out.println(new Date() + " : Calculating short-time tatistics.");
+        System.out.println(new Date() + " : Calculating short-time statistics.");
         try {
             semaphore.acquire();
             long testDurationInMinutes = (new Date().getTime() - startTimeLocal) / 1000 / 60;
