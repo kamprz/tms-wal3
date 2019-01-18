@@ -64,7 +64,7 @@ public class ProfitableOffersView extends VBox
         });
     }
 
-    public void newDataReceivedSignal()
+    public synchronized void newDataReceivedSignal()
     {
         newDataIndicator.newData();
     }
@@ -211,17 +211,17 @@ public class ProfitableOffersView extends VBox
                 .append("   :   ")
                 .append(operation)
                 .append(" po kursie ")
-                .append(StringUtils.rateFormat(offer.getRate(),5))
+                .append(StringUtils.rateFormat(offer.getRate(),4))
                 .append(". Przewidywany zysk = " + StringUtils.amountFormat(offer.getEstimatedProfit()) +" PLN");
         return stringBuilder.toString();
     }
 
     //Don't know why, but sometimes this indicator stops moving, despite normal program flow through its while loops; looks like some JavaFX problem
-    @Scheduled(cron = "*/30 * * * * *")
-    private void restartNewDataIndicator()
+    //@Scheduled(cron = "*/30 * * * * *")
+    /*private synchronized void restartNewDataIndicator()
     {
         newDataIndicator = new NewDataIndicator();
-    }
+    }*/
 
     private void init()
     {

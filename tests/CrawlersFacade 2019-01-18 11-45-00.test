@@ -1,0 +1,47 @@
+Test: duration : 4 minutes 59 seconds.
+
+Time statistics [milis]: 
+SummaryStatistics:
+n: 246
+min: 1153.0
+max: 1990.0
+sum: 299712.0
+mean: 1218.341463414634
+geometric mean: 1213.9467555235608
+variance: 18404.103334992553
+population variance: 18329.28990680153
+second moment: 4509005.317073176
+sum of squares: 3.69660562E8
+standard deviation: 135.6617239127992
+sum of logs: 1747.0014995386086
+
+CPU usage statistics [%]:
+SummaryStatistics:
+n: 246
+min: 1.3823945945737262
+max: 5.834722809901266
+sum: 916.9940705901815
+mean: 3.7276181731308213
+geometric mean: 3.647560494775221
+variance: 0.5815503013226662
+population variance: 0.5791862757075333
+second moment: 142.4798238240532
+sum of squares: 3560.683586009223
+standard deviation: 0.7625944540335093
+sum of logs: 318.33841229082367
+
+RAM usage statistics [MB]: 
+SummaryStatistics:
+n: 246
+min: 238.0
+max: 255.0
+sum: 60268.0
+mean: 244.99186991869917
+geometric mean: 244.96161821959117
+variance: 14.979525468724054
+population variance: 14.918633088769893
+second moment: 3669.9837398373934
+sum of squares: 1.476884E7
+standard deviation: 3.8703391929809015
+sum of logs: 1353.2709783342282
+

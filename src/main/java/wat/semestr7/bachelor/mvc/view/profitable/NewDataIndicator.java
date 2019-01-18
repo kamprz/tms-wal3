@@ -23,8 +23,8 @@ class NewDataIndicator extends Circle
     private List<Stop> changeStop = new LinkedList<>();
     private double focusAngle=360, focusDistance=0., centerX=0.5, centerY=0.5, radius=0.6;
     private boolean proportional = true;
-    private final ExecutorService executorService = Executors.newFixedThreadPool(2);
-    private final Semaphore semaphore = new Semaphore(1);
+    private final ExecutorService executorService = Executors.newFixedThreadPool(1);
+    private Semaphore semaphore = new Semaphore(1);
 
     NewDataIndicator()
     {
@@ -49,7 +49,7 @@ class NewDataIndicator extends Circle
                 try{
                     double var = 0.01;
                     while (var < 0.8) {
-                        try { Thread.sleep(4); }
+                        try { Thread.sleep(3); }
                         catch (InterruptedException e) { e.printStackTrace(); }
                         var += 0.01;
                         changeStop.remove(3);
@@ -57,7 +57,7 @@ class NewDataIndicator extends Circle
                         setFill(new RadialGradient(focusAngle, focusDistance, centerX, centerY, radius, proportional, CycleMethod.NO_CYCLE, changeStop));
                     }
                     while (var > 0.01) {
-                        try { Thread.sleep(4); }
+                        try { Thread.sleep(3); }
                         catch (InterruptedException e) { e.printStackTrace(); }
                         var -= 0.01;
                         changeStop.remove(3);
@@ -67,8 +67,9 @@ class NewDataIndicator extends Circle
                 }
                 catch(Exception e){
                     System.out.println("NewDataIndicator Task broke.\n" + e);
+                    e.printStackTrace();
                 }
-                finally{
+                finally {
                     semaphore.release();
                 }
                 return null;

@@ -8,6 +8,7 @@ import wat.semestr7.bachelor.interfaces.newdata.NewDataProducer;
 import wat.semestr7.bachelor.mvc.model.crawling.CrawlingFacade;
 import wat.semestr7.bachelor.mvc.model.crawling.CurrenciesDataFrameDto;
 
+import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -34,6 +35,7 @@ public class CrawlingController implements NewDataProducer
         if(now - getLastCrawlingTime() > maxTimeWithoutData)
         {
             resetCrawler();
+            System.out.println(new Date() + "Crawler reseted");
         }
     }
 
@@ -50,7 +52,15 @@ public class CrawlingController implements NewDataProducer
         {
             listener.newDataReceived(newData);
         }
+        //newData = null;
+        debug();
         holdOn();
+    }
+    private int counter = 1;
+    private void debug()
+    {
+        if(counter++%100==0) System.out.println();
+        System.out.print(".");
     }
 
     public void startCrawling()
