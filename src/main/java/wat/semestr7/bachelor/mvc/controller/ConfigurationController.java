@@ -8,6 +8,7 @@ import wat.semestr7.bachelor.mvc.model.configdao.ConfigPropertiesDao;
 import wat.semestr7.bachelor.mvc.model.configdao.SelectedCurrenciesDao;
 
 import java.io.IOException;
+import java.util.Collection;
 import java.util.List;
 import java.util.Properties;
 import java.util.Set;
@@ -45,7 +46,7 @@ public class ConfigurationController implements IAllConfigurationLoader
         }
         catch(NullPointerException exc)
         {
-            String message = "Can't load chosen-currencies.properties. Place it in project folder.";
+            String message = "Can't load chosen.currencies. Place it in project folder.";
             System.out.println(message);
             throw new ChosenCurrenciesPropertiesLoadingException(message);
         }
@@ -56,7 +57,7 @@ public class ConfigurationController implements IAllConfigurationLoader
         selectedCurrenciesDao.setChosenCurrencies(selectedCurrencies);
     }
 
-    List<String> getAllExistingCurrencies()
+    Collection<String> getAllExistingCurrencies()
     {
         return selectedCurrenciesDao.getallExistingCurrencies();
     }

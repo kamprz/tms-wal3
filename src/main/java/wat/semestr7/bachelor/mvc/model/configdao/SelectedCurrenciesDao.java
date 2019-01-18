@@ -5,14 +5,15 @@ import org.springframework.stereotype.Component;
 import wat.semestr7.bachelor.mvc.controller.ConfigurationController;
 
 import javax.annotation.PostConstruct;
-import java.io.IOException;
+import java.io.*;
 import java.util.*;
 
 @Component
-public class SelectedCurrenciesDao extends PropertiesDao {
+public class SelectedCurrenciesDao //extends PropertiesDao
+{
     @Autowired
     private ConfigurationController controller;
-
+    private final String filePath = "chosen.currencies";
     private Set<String> chosenCurrencies;
     private final List<String> allExistingCurrencies = Arrays.asList(
             "EURPLN", "USDPLN","GBPPLN","CHFPLN","EURUSD","EURGBP","EURCHF","GBPUSD","USDCHF","GBPCHF");
@@ -27,16 +28,12 @@ public class SelectedCurrenciesDao extends PropertiesDao {
         return chosenCurrencies;
     }
 
-    public void setChosenCurrencies(Set<String> chosenCurrencies) {
+    public void setChosenCurrencies(Set<String> selectedCurrencies) {
         try{
-            int currNumber = 1;
-            Properties p = new Properties();
-            for(String currency : chosenCurrencies)
-            {
-                p.put(""+currNumber++, currency);
-            }
-            this.chosenCurrencies = chosenCurrencies;
-            super.savePropertiesToFile(p,filePath);
+            PrintWriter printWriter = new PrintWriter(filePath);
+            for(String s : selectedCurrencies) printWriter.println(s);
+            chosenCurrencies = selectedCurrencies;
+            printWriter.close();
         }
         catch (IOException exception)
         {
@@ -45,17 +42,16 @@ public class SelectedCurrenciesDao extends PropertiesDao {
     }
 
     @PostConstruct
-    @Override
-    protected void loadProperties(){
+    private void loadCurrencies(){
         try{
-            filePath = "chosen-currencies.properties";
-            Properties properties = super.loadPropertiesFromFile(filePath);
-
             chosenCurrencies = new HashSet<>();
-            for(String property : properties.stringPropertyNames())
+            BufferedReader in = new BufferedReader(new FileReader(filePath));
+            String line;
+            while((line = in.readLine()) != null)
             {
-                chosenCurrencies.add(properties.getProperty(property));
+                chosenCurrencies.add(line);
             }
+            in.close();
         }
         catch (IOException exception)
         {

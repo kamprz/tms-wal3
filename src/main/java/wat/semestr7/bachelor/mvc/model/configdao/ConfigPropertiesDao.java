@@ -5,19 +5,28 @@ import org.springframework.stereotype.Component;
 import wat.semestr7.bachelor.mvc.controller.ConfigurationController;
 
 import javax.annotation.PostConstruct;
-import java.io.IOException;
+import java.io.*;
 import java.util.Properties;
 
 @Component
-public class ConfigPropertiesDao extends PropertiesDao{
+public class ConfigPropertiesDao{
     @Autowired
     private ConfigurationController controller;
     private Properties properties;
+    private String filePath = "config.properties";
 
     public void setProperties(Properties properties) {
         try{
-            super.savePropertiesToFile(properties,filePath);
             this.properties = properties;
+            OutputStream output = null;
+            try{
+                output = new FileOutputStream(filePath);
+                properties.store(output, null);
+            }
+            catch (IOException e){
+                if(output!=null) output.close();
+                throw new IOException(e);
+            }
         }
         catch(IOException exception)
         {
@@ -30,11 +39,20 @@ public class ConfigPropertiesDao extends PropertiesDao{
     }
 
     @PostConstruct
-    @Override
-    protected void loadProperties() {
-        try{
-            filePath = "config.properties";
-            properties = super.loadPropertiesFromFile(filePath);
+    private void loadProperties() {
+        try
+        {
+            InputStream input = null;
+            try{
+                properties = new Properties();
+                input = new FileInputStream(filePath);
+                properties.load(input);
+            }
+            catch(IOException e)
+            {
+                if(input!=null) input.close();
+                throw new IOException(e);
+            }
         }
         catch (IOException exception)
         {

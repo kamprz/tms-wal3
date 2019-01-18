@@ -77,8 +77,7 @@ public class SelectedCurrenciesFxmlController {
         });
 
         selectAll.addEventHandler(ActionEvent.ANY, event -> {
-            List<String> allCurrencies = configurationController.getAllExistingCurrencies();
-            for(String symbol : allCurrencies)
+            for(String symbol : configurationController.getAllExistingCurrencies())
             {
                 mapSymbolToCheckBox(symbol).setSelected(true);
             }
