@@ -17,14 +17,14 @@ import wat.semestr7.bachelor.mvc.controller.FxStageController;
 @SpringBootApplication
 @EnableScheduling
 @ComponentScan(basePackages = "wat.semestr7.bachelor")
-public class ApplicationConfiguration extends Application
+public class ApplicationStarter extends Application
 {
 	private ConfigurableApplicationContext context;
 	private Parent rootNode;
 
 	@Override
 	public void init() throws Exception {
-		SpringApplicationBuilder builder = new SpringApplicationBuilder(ApplicationConfiguration.class);
+		SpringApplicationBuilder builder = new SpringApplicationBuilder(ApplicationStarter.class);
 		context = builder.run(getParameters().getRaw().toArray(new String[0]));
 		FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/SelectedCurrenciesView.fxml"));
 		loader.setControllerFactory(context::getBean);
@@ -36,15 +36,9 @@ public class ApplicationConfiguration extends Application
 		Scene scene = new Scene(rootNode);
 
 		FxStageController fxStageController = context.getBean("fxStageController", FxStageController.class);
+
 		fxStageController.setSelectingCurrenciesScene(scene);
 		fxStageController.setMainStage(primaryStage);
-
-		primaryStage.setScene(scene);
-		primaryStage.setTitle("Wybór par walutowych");
-		primaryStage.getIcons().add(new Image("/stageIcon.png"));
-		primaryStage.centerOnScreen();
-		primaryStage.setResizable(false);
-		primaryStage.show();
 
 		CrawlingController controller = context.getBean("crawlingController", CrawlingController.class);
 		controller.startCrawling();

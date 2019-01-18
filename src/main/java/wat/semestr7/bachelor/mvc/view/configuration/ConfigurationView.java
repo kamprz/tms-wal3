@@ -1,4 +1,4 @@
-package wat.semestr7.bachelor.mvc.view.properties;
+package wat.semestr7.bachelor.mvc.view.configuration;
 
 import javafx.geometry.HPos;
 import javafx.geometry.Insets;
@@ -165,7 +165,7 @@ public class ConfigurationView extends VBox
         stage.show();
         stage.setOnCloseRequest( event -> {
                     event.consume();
-                    fxController.closePropertiesView();
+                    fxController.closeConfigurationView();
                 });
     }
 

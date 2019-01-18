@@ -4,8 +4,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import wat.semestr7.bachelor.exception.ChosenCurrenciesPropertiesLoadingException;
 import wat.semestr7.bachelor.interfaces.config.IAllConfigurationLoader;
-import wat.semestr7.bachelor.mvc.model.propertiesdao.ConfigPropertiesDao;
-import wat.semestr7.bachelor.mvc.model.propertiesdao.SelectedCurrenciesDao;
+import wat.semestr7.bachelor.mvc.model.configdao.ConfigPropertiesDao;
+import wat.semestr7.bachelor.mvc.model.configdao.SelectedCurrenciesDao;
 
 import java.io.IOException;
 import java.util.List;

@@ -52,7 +52,6 @@ public class CrawlingController implements NewDataProducer
         {
             listener.newDataReceived(newData);
         }
-        //newData = null;
         debug();
         holdOn();
     }

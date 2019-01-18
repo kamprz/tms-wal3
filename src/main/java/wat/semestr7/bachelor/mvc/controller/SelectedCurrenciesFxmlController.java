@@ -68,7 +68,7 @@ public class SelectedCurrenciesFxmlController {
                     }
                     if(fxStageController.isPropertiesViewOpened())
                     {
-                        fxStageController.closePropertiesView();
+                        fxStageController.closeConfigurationView();
                         fxStageController.openConfigurationView();
                     }
                 }

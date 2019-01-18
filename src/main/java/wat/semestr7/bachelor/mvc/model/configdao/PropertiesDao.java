@@ -1,4 +1,4 @@
-package wat.semestr7.bachelor.mvc.model.propertiesdao;
+package wat.semestr7.bachelor.mvc.model.configdao;
 
 import java.io.*;
 import java.util.Properties;

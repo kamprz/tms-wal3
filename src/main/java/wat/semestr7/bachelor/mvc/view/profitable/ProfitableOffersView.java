@@ -195,8 +195,6 @@ public class ProfitableOffersView extends VBox
         String secCurr = symbol.substring(3,6);
         Predicate<ProfitableOfferDto>  isBuyingAction = p -> p.getAction().toString().equals(ProfitableOfferDto.Action.BUY.toString());
         String operation;
-        String tms;
-        double tmsRate;
         if(isBuyingAction.test(offer))
         {
                operation = "Kup " + firstCurr + " za " + StringUtils.amountFormat(offer.getAmount()) + " "   + secCurr;
@@ -215,13 +213,6 @@ public class ProfitableOffersView extends VBox
                 .append(". Przewidywany zysk = " + StringUtils.amountFormat(offer.getEstimatedProfit()) +" PLN");
         return stringBuilder.toString();
     }
-
-    //Don't know why, but sometimes this indicator stops moving, despite normal program flow through its while loops; looks like some JavaFX problem
-    //@Scheduled(cron = "*/30 * * * * *")
-    /*private synchronized void restartNewDataIndicator()
-    {
-        newDataIndicator = new NewDataIndicator();
-    }*/
 
     private void init()
     {

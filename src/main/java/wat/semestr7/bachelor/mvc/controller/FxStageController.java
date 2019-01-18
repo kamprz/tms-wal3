@@ -4,11 +4,12 @@ import javafx.application.Platform;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.ButtonType;
+import javafx.scene.image.Image;
 import javafx.stage.Stage;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import wat.semestr7.bachelor.mvc.view.alloffers.AllOffersView;
-import wat.semestr7.bachelor.mvc.view.properties.ConfigurationView;
+import wat.semestr7.bachelor.mvc.view.configuration.ConfigurationView;
 
 import java.io.IOException;
 import java.util.Optional;
@@ -32,6 +33,12 @@ public class FxStageController
     public void setMainStage(Stage stage)
     {
         mainStage = stage;
+        mainStage.setScene(selectingCurrenciesScene);
+        mainStage.setTitle("Wybór par walutowych");
+        mainStage.getIcons().add(new Image("/stageIcon.png"));
+        mainStage.centerOnScreen();
+        mainStage.setResizable(false);
+        mainStage.show();
         stage.setOnCloseRequest(event -> {
             Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
             alert.setTitle("Wyjście");
@@ -48,7 +55,7 @@ public class FxStageController
         this.selectingCurrenciesScene = scene;
     }
 
-    public void closePropertiesView()
+    public void closeConfigurationView()
     {
         configurationView.close();
         configurationView = null;
