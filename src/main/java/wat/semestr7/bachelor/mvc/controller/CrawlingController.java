@@ -27,18 +27,6 @@ public class CrawlingController implements NewDataProducer
     private long lastCrawlingTime =  System.currentTimeMillis();
     private Integer maxTimeWithoutData;
     
-    @Scheduled(cron = "*/10 * * * * *")
-    private void checkIfCrawlerIsWorking()
-    {
-        if(maxTimeWithoutData==null) init();
-        long now =  System.currentTimeMillis();
-        if(now - getLastCrawlingTime() > maxTimeWithoutData)
-        {
-            resetCrawler();
-            System.out.println(new Date() + "Crawler reseted");
-        }
-    }
-
     @Override
     public void subscribeForNewData(NewDataListener listener) {
         listeners.add(listener);
@@ -55,13 +43,13 @@ public class CrawlingController implements NewDataProducer
         debug();
         holdOn();
     }
+
     private int counter = 1;
     private void debug()
     {
         if(counter++%100==0) System.out.println();
         System.out.print(".");
     }
-
     public void startCrawling()
     {
         crawlingThread = new Thread(crawler);
@@ -115,5 +103,17 @@ public class CrawlingController implements NewDataProducer
     {
         try { Thread.sleep(1000); }
         catch (InterruptedException e) { crawlingThread.interrupt(); }
+    }
+
+    @Scheduled(cron = "*/10 * * * * *")
+    private void checkIfCrawlerIsWorking()
+    {
+        if(maxTimeWithoutData==null) init();
+        long now =  System.currentTimeMillis();
+        if(now - getLastCrawlingTime() > maxTimeWithoutData)
+        {
+            resetCrawler();
+            System.out.println(new Date() + "Crawler reseted");
+        }
     }
 }

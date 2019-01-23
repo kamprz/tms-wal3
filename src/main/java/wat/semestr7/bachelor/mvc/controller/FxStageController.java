@@ -68,6 +68,20 @@ public class FxStageController
         allOffersView = null;
     }
 
+    void refreshStages()
+    {
+        if(isAllOffersViewOpened())
+        {
+            closeAllOffersView();
+            openAllOffersView();
+        }
+        if(isConfigurationViewOpened())
+        {
+            closeConfigurationView();
+            openConfigurationView();
+        }
+    }
+
     void setProfitableScene(Scene scene)
     {
         profitableScene = scene;
@@ -88,18 +102,13 @@ public class FxStageController
         mainStage.setTitle("Korzystne zlecenia");
     }
 
-    //Properties View:
+    //Configuration View:
     void openConfigurationView()
     {
-        if(!isPropertiesViewOpened())
+        if(!isConfigurationViewOpened())
         {
             configurationView = new ConfigurationView(configurationController, this);
         }
-    }
-
-    boolean isPropertiesViewOpened()
-    {
-        return configurationView != null;
     }
 
     //AllOffersView:
@@ -110,12 +119,6 @@ public class FxStageController
             allOffersView = new AllOffersView(allOffersController, this);
             allOffersController.setAllOffersView(allOffersView);
         }
-    }
-
-
-
-    boolean isAllOffersViewOpened(){
-        return allOffersView !=null;
     }
 
     //Exception handling:
@@ -177,6 +180,15 @@ public class FxStageController
                     System.exit(1);
                 }
         );
+    }
+
+    private boolean isConfigurationViewOpened()
+    {
+        return configurationView != null;
+    }
+
+    private boolean isAllOffersViewOpened(){
+        return allOffersView !=null;
     }
 
     private void exitApplication()

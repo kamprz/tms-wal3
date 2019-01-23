@@ -44,12 +44,14 @@ public class SelectedCurrenciesFxmlController {
     private CheckBox chUSDCHF;
     @FXML
     private CheckBox chGBPCHF;
+    private Set<String> previouslySelected = new HashSet<>();
 
     @FXML
     void initialize()
     {
-        Set<String> previous = selectPrevious();
+        selectPrevious();
         selectButton.addEventHandler(ActionEvent.ANY, event -> {
+
             Set<String> selected = new HashSet<>();
             for(String symbol : configurationController.getAllExistingCurrencies())
             {
@@ -59,18 +61,10 @@ public class SelectedCurrenciesFxmlController {
             {
                 configurationController.setSelectedCurrencies(selected);
                 fxStageController.switchToProfitableScene();
-                if(!selected.equals(previous))
+                if(!selected.equals(previouslySelected))
                 {
-                    if(fxStageController.isAllOffersViewOpened())
-                    {
-                        fxStageController.closeAllOffersView();
-                        fxStageController.openAllOffersView();
-                    }
-                    if(fxStageController.isPropertiesViewOpened())
-                    {
-                        fxStageController.closeConfigurationView();
-                        fxStageController.openConfigurationView();
-                    }
+                    fxStageController.refreshStages();
+                    previouslySelected = selected;
                 }
             }
             else popupDialog();
@@ -91,14 +85,12 @@ public class SelectedCurrenciesFxmlController {
         });
     }
 
-    private Set<String> selectPrevious()
+    private void selectPrevious()
     {
-        Set<String> selectedCurrencies = configurationController.getSelectedCurrencies();
         for(String currencySymbol : configurationController.getSelectedCurrencies())
         {
             mapSymbolToCheckBox(currencySymbol).setSelected(true);
         }
-        return selectedCurrencies;
     }
 
     private void popupDialog()
